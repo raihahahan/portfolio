@@ -45,4 +45,15 @@ export type colorThemeByTheme = {
   dark: colorThemeType;
 };
 
+export type siteColorsType = {
+  header: string;
+  background: string;
+  navbar: string;
+  text: {
+    primary: string;
+    secondar: string;
+    error: string;
+  };
+};
+
 export type Theme = "light" | "dark";

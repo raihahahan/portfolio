@@ -2,6 +2,7 @@ import {
   breakpointsTypes,
   colorThemeByTheme,
   colorThemeType,
+  siteColorsType,
   Theme,
 } from "./styles-types";
 
@@ -62,7 +63,7 @@ export const colorTheme: colorThemeByTheme = {
   },
 };
 
-export const siteColors = (theme: Theme) => {
+export const siteColors = (theme: Theme): siteColorsType => {
   const color = colorTheme[theme];
   return {
     header: color.surface,

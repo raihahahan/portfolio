@@ -8,6 +8,7 @@ import { anchorTitles, routes } from "../types/types-site";
 import { Burger, Header, MediaQuery } from "@mantine/core";
 import React from "react";
 import RectangleTitle from "./components-branding";
+import GenericButton from "./buttons";
 
 export function MyNavbar({ opened }: { opened: boolean }) {
   const { classes, siteColors } = useTheme();
@@ -24,6 +25,7 @@ export function MyNavbar({ opened }: { opened: boolean }) {
 }
 
 export function AnchorLinks({ isSmall }: { isSmall: boolean }) {
+  const router = useRouter();
   return (
     <div style={{ display: "flex", flexDirection: isSmall ? "column" : "row" }}>
       {anchorData.map((item) => {

@@ -1,3 +1,3 @@
-export type anchorTitles = "Home" | "Projects" | "About";
+export type anchorTitles = "Home" | "Projects" | "About" | "Contact";
 
-export type routes = "/" | "/about" | "/projects";
+export type routes = "/" | "/about" | "/projects" | "/contact";
