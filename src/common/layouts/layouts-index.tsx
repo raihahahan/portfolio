@@ -42,6 +42,7 @@ export default function MainLayout({
             justifyContent: "center",
             marginBottom: 0,
             color: siteColors.text.primary,
+            overflow: "hidden",
           }}
         >
           {children}

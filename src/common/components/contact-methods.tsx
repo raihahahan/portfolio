@@ -1,6 +1,6 @@
 import { List } from "@mantine/core";
 import Link from "next/link";
-import { contactDataType } from "../../data/data-contact";
+import { contactData } from "../../data/data-contact";
 import useTheme from "../hooks/useTheme";
 
 export default function ContactMethods() {
@@ -8,7 +8,7 @@ export default function ContactMethods() {
 
   return (
     <List spacing="xs" size="sm" center>
-      {contactDataType.map((item) => {
+      {contactData.map((item) => {
         return (
           <List.Item icon={item.icon(colors)}>
             <Link href={item.link}>

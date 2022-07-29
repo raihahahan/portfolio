@@ -1,10 +1,7 @@
-import { List, Text, ThemeIcon } from "@mantine/core";
-import { IconBrandGithub, IconMessage } from "@tabler/icons";
 import Link from "next/link";
 import React from "react";
 import { BodyText } from "../common/components/components-utils";
 import ContactMethods from "../common/components/contact-methods";
-import useTheme from "../common/hooks/useTheme";
 import { aboutDataType } from "../common/types/types-about";
 import { globalMediaQueriesType, siteColorsType } from "../styles/styles-types";
 
@@ -43,9 +40,9 @@ export const aboutData = (
           work on self projects, take online courses and try to keep up with the
           latest tech.
           <br />
-          <br />I do not have relevant work experience yet, but I am willing to
-          take on an internship before my university starts. You may contact me
-          as shown{" "}
+          <br />I do not have relevant work experience in technology yet, but I
+          am willing to take on an internship before my university starts. You
+          may contact me as shown{" "}
           <Link href="#3">
             <a style={{ color: "blue" }}>below</a>
           </Link>

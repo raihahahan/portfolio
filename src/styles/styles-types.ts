@@ -51,7 +51,7 @@ export type siteColorsType = {
   navbar: string;
   text: {
     primary: string;
-    secondar: string;
+    secondary: string;
     error: string;
   };
 };

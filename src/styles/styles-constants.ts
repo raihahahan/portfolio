@@ -71,7 +71,7 @@ export const siteColors = (theme: Theme): siteColorsType => {
     navbar: color.surface,
     text: {
       primary: color.on.on_primary,
-      secondar: "#F0F0F0",
+      secondary: "#F0F0F0",
       error: color.error,
     },
   };
