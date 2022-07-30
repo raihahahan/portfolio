@@ -4,6 +4,7 @@ import useGlobalMediaQuery from "../hooks/useGlobalMediaQueries";
 import useTheme from "../hooks/useTheme";
 import { projectDataType } from "../types/types-project";
 import GenericButton from "./buttons";
+import { LinkText } from "./components-utils";
 
 export default function ProjectComponent({ item }: { item: projectDataType }) {
   const { xs, sm, md, lg, xl } = useGlobalMediaQuery();
@@ -16,7 +17,13 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
       p="lg"
       radius="md"
       withBorder
-      style={{ margin: 5, marginTop: 10, height: 350 }}
+      style={{
+        // margin: 5,
+        marginTop: 10,
+        height: "30vw",
+        minHeight: 600,
+        width: "90vw",
+      }}
     >
       <Card.Section>
         <Image
@@ -29,26 +36,101 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
         />
       </Card.Section>
 
-      <Group position="apart" mt="md" mb="xs">
-        <Text weight={500}>{item.title}</Text>
-        <Badge
-          color={
-            projectCondition == "stable"
-              ? "green"
-              : projectCondition == "needs refactor"
-              ? "yellow"
-              : "red"
-          }
-          variant="light"
+      <Group
+        position="apart"
+        mt="md"
+        mb="xs"
+        style={{ display: "flex", justifyContent: "center" }}
+      >
+        <Text
+          weight={"bolder"}
+          style={{
+            display: "flex",
+            justifySelf: "center",
+            fontSize: 14,
+            marginTop: 10,
+            textAlign: "center",
+          }}
         >
-          {projectCondition}
-        </Badge>
+          {item.title} - {item.shortDescription}
+        </Text>
       </Group>
+      <Badge
+        color={
+          projectCondition == "stable"
+            ? "green"
+            : projectCondition == "needs refactor"
+            ? "yellow"
+            : "red"
+        }
+        variant="light"
+        style={{ marginTop: 10, marginLeft: 0, marginBottom: 10 }}
+      >
+        {projectCondition}
+      </Badge>
 
-      <Text size="sm" color="dimmed">
+      <br />
+      <Text size="sm" color={siteColors.text.primary} style={{ fontSize: 15 }}>
         {item.description}
       </Text>
+      <br />
+      <div style={{ maxWidth: "90%" }}>
+        <Text
+          style={{
+            color: siteColors.text.primary,
+            fontSize: 14,
+            display: "flex",
+            flexDirection: "row",
+            marginBottom: 10,
+          }}
+        >
+          <Text color="dimmed" style={{ marginRight: 5 }}>
+            Skills: {item.skills.map((i) => ` ${i}`).toString()}
+          </Text>
+        </Text>
+      </div>
 
+      <br />
+      {item.contributors ? (
+        <Text
+          color={siteColors.text.primary}
+          style={{
+            marginRight: 5,
+            fontSize: 14,
+            display: "flex",
+            flexDirection: "row",
+          }}
+        >
+          <Text style={{ marginRight: 5 }}>Contributors:</Text>
+          {item.contributors?.map((c, i) => (
+            <Text>
+              <LinkText
+                text={
+                  item?.contributors && i == item.contributors.length - 1
+                    ? c
+                    : `${c} | `
+                }
+                link={`https://github.com/${c}`}
+                extraTextStyles={{ fontSize: 14, marginRight: 5 }}
+              />
+            </Text>
+          ))}
+        </Text>
+      ) : null}
+      {/* <Badge
+        color={
+          projectCondition == "stable"
+            ? "green"
+            : projectCondition == "needs refactor"
+            ? "yellow"
+            : "red"
+        }
+        variant="light"
+        style={{ marginTop: 10, marginLeft: -7 }}
+      >
+        {projectCondition}
+      </Badge> */}
+      <br />
       <div
         style={{
           display: "flex",
@@ -56,8 +138,7 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
           flexDirection: "row",
         }}
       >
-        <Button
-          key={item.button.title}
+        <Button.Group
           style={{
             display: "flex",
             justifyContent: "center",
@@ -65,40 +146,31 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
             bottom: 0,
             borderTopLeftRadius: 0,
             borderTopRightRadius: 0,
+            width: "100%",
           }}
-          disabled={projectCondition == "not maintained"}
-          variant="light"
-          color="blue"
-          fullWidth
-          mt="md"
-          radius="md"
-          component="a"
-          href={item.button.link}
-          target="_blank"
         >
-          {item.button.title}
-        </Button>
-
-        {/* <Button
-          style={{
-            position: "absolute",
-            bottom: 0,
-            display: "flex",
-            justifyContent: "center",
-            borderTopLeftRadius: 0,
-            borderTopRightRadius: 0,
-          }}
-          disabled={!item.buttons[0]?.title}
-          variant="light"
-          color="blue"
-          fullWidth
-          mt="md"
-          radius="md"
-          component="a"
-          href={item.buttons[0]?.link}
-        >
-          {item.buttons[0]?.title ?? "Not Maintained"}
-        </Button> */}
+          {item.buttons.map((btn) => {
+            return (
+              <Button
+                style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
+                key={btn.title}
+                disabled={projectCondition == "not maintained"}
+                variant="light"
+                color="blue"
+                fullWidth
+                mt="md"
+                radius="md"
+                component={"a"}
+                href={
+                  projectCondition == "not maintained" ? undefined : btn.link
+                }
+                target="_blank"
+              >
+                {btn.title}
+              </Button>
+            );
+          })}
+        </Button.Group>
       </div>
     </Card>
   );

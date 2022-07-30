@@ -1,20 +1,50 @@
+import React from "react";
+
 export interface projectTypeSmall {
   id: string;
   title: string;
   shortDescription: string;
-  description: string;
+  description: string | React.ReactElement;
   lastUpdated: Date;
   importance: number; // 0 to 1
+  skills: skillsType[];
   imgSrc?: string;
   frameworks?: frameworksType[];
   contributors?: string[];
   isAbandoned?: boolean;
 }
 
+export type skillsType =
+  | "JavaScript"
+  | "TypeScript"
+  | "HTML"
+  | "CSS"
+  | "Python"
+  | "Scheme"
+  | "Racket"
+  | "Java"
+  | "C++"
+  | "Figma"
+  | "Firebase"
+  | "MongoDB"
+  | "Supabase"
+  | "React"
+  | "React Native"
+  | "Netlify"
+  | "NodeJS"
+  | "Express"
+  | "Google Analytics"
+  | "NextJS"
+  | "Google Play Console"
+  | "Expo"
+  | "Mapbox SDK"
+  | "Programming Methodologies"
+  | "CLI"
+  | "Google Admob";
+
 export interface projectDataType extends projectTypeSmall {
   projectAnalysis: projectAnalysisType;
-  button: projectButtonDataType;
-  extraStoreButtons?: projectButtonDataType[];
+  buttons: projectButtonDataType[];
 }
 
 export type projectTypes =
@@ -35,6 +65,7 @@ export type projectButtonDataType = {
   title:
     | "Live Demo"
     | "Run Locally"
+    | "View on Github"
     | "App Store"
     | "Play Store"
     | "Learn More";

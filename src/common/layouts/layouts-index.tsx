@@ -26,7 +26,9 @@ export default function MainLayout({
             borderWidth: 0,
           },
         }}
-        style={{ backgroundColor: siteColors.background }}
+        style={{
+          backgroundColor: siteColors.background,
+        }}
         navbarOffsetBreakpoint="sm"
         asideOffsetBreakpoint="sm"
         padding={0}
