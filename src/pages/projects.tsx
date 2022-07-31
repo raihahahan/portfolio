@@ -14,7 +14,7 @@ export default function ProjectsPage() {
     <MainLayout home={false}>
       <Grid
         gutter="lg"
-        justify={"center"}
+        // justify={"center"}
         align="center"
         style={{ maxWidth: breakpoints.xl * 0.8, margin: 10 }}
       >
@@ -29,7 +29,7 @@ export default function ProjectsPage() {
               sm={6}
               lg={4}
             >
-              <ProjectComponent item={item} />
+              <ProjectComponent item={item} key={item.id} />
             </Grid.Col>
           );
         })}

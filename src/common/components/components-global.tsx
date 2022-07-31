@@ -56,19 +56,19 @@ export function CustomAnchor({
   const { colorTheme, siteColors, classes } = useTheme();
   const route = useRouter();
   return (
-    <Anchor style={{ margin: 20 }}>
-      <Link href={anchorRoute} passHref>
-        <a
-          style={{
-            textDecoration:
-              anchorRoute == route.pathname ? "underline" : "none",
-            color: siteColors.text.primary,
-          }}
-        >
-          {title}
-        </a>
-      </Link>
-    </Anchor>
+    // <Anchor style={{ margin: 20 }}>
+    <Link href={anchorRoute} passHref>
+      <Anchor
+        style={{
+          margin: 20,
+          textDecoration: anchorRoute == route.pathname ? "underline" : "none",
+          color: siteColors.text.primary,
+        }}
+      >
+        {title}
+      </Anchor>
+    </Link>
+    // </Anchor>
   );
 }
 

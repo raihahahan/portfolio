@@ -4,7 +4,7 @@ export interface projectTypeSmall {
   id: string;
   title: string;
   shortDescription: string;
-  description: string | React.ReactElement;
+  description: string;
   lastUpdated: Date;
   importance: number; // 0 to 1
   skills: skillsType[];
@@ -40,7 +40,8 @@ export type skillsType =
   | "Mapbox SDK"
   | "Programming Methodologies"
   | "CLI"
-  | "Google Admob";
+  | "Google Admob"
+  | "Web scraping";
 
 export interface projectDataType extends projectTypeSmall {
   projectAnalysis: projectAnalysisType;

@@ -1,5 +1,7 @@
 import { Badge, Button, Card, Grid, Group, Image, Text } from "@mantine/core";
 import { useRouter } from "next/router";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 import useGlobalMediaQuery from "../hooks/useGlobalMediaQueries";
 import useTheme from "../hooks/useTheme";
 import { projectDataType } from "../types/types-project";
@@ -21,7 +23,7 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
         // margin: 5,
         marginTop: 10,
         height: "30vw",
-        minHeight: 600,
+        minHeight: 820,
         width: "90vw",
       }}
     >
@@ -70,9 +72,10 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
       </Badge>
 
       <br />
-      <Text size="sm" color={siteColors.text.primary} style={{ fontSize: 15 }}>
+      {/* <Text size="sm" color={siteColors.text.primary} style={{ fontSize: 15 }}>
         {item.description}
-      </Text>
+      </Text> */}
+      <ReactMarkdown children={item.description} rehypePlugins={[rehypeRaw]} />
       <br />
       <div style={{ maxWidth: "90%" }}>
         <Text

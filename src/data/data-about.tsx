@@ -43,7 +43,7 @@ export const aboutData = (
           <br />I do not have relevant work experience in technology yet, but I
           am willing to take on an internship before my university starts. You
           may contact me as shown{" "}
-          <Link href="#3">
+          <Link href="#contact">
             <a style={{ color: "blue" }}>below</a>
           </Link>
           .
@@ -51,7 +51,7 @@ export const aboutData = (
       ),
     },
     {
-      id: "3",
+      id: "contact",
       title: "Contact",
       body: (
         <BodyText>

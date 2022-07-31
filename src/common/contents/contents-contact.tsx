@@ -12,7 +12,7 @@ export default function ContactContents() {
       center
       colors={colors}
       item={{
-        id: "3",
+        id: "contact",
         title: "Contact",
         body: (
           <BodyText>
