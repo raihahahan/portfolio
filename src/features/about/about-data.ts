@@ -16,6 +16,6 @@ export const aboutData: aboutDataType[] = [
   {
     id: "2",
     title: "Miscellaneous",
-    body: "This site was built with React and NextJS. Coincidentally, this site is my first React NextJS project.",
+    body: "This site was built with React and NextJS. Coincidentally, this is my first React NextJS project. I used <a href='https://www.supabase.com' target='_blank' style='color: ${linkColor};'>**Supabase**</a> for the database of this site to store the project data and images.",
   },
 ];
