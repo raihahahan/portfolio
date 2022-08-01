@@ -8,6 +8,7 @@ import useTheme from "../../common/hooks/useTheme";
 import anchorData from "./site-data";
 import RectangleTitle from "../../common/components/components-branding";
 import { anchorTitles, routes } from "./site-types";
+import ToggleThemeButton from "../theme/theme-components";
 
 export function MyNavbar({ opened }: { opened: boolean }) {
   const { classes, siteColors } = useTheme();
@@ -81,7 +82,7 @@ export default function MainHeader({
     setOpened: React.Dispatch<React.SetStateAction<boolean>>;
   };
 }) {
-  const { siteColors, colorTheme, classes } = useTheme();
+  const { siteColors, classes, themeState } = useTheme();
   const { opened, setOpened } = openControl;
   return (
     <Header
@@ -107,7 +108,10 @@ export default function MainHeader({
         </MediaQuery>
         <Link href="/" passHref>
           <a>
-            <RectangleTitle widthSize={200} type={"default"} />
+            <RectangleTitle
+              widthSize={200}
+              type={themeState == "light" ? "default" : "dark"}
+            />
           </a>
         </Link>
         <Link href="/" passHref>
@@ -115,7 +119,7 @@ export default function MainHeader({
             <div></div>
           </a>
         </Link>
-        {/* <ToggleTheme color={colors.text.text_on_p.color} size={24} /> */}
+        <ToggleThemeButton color={siteColors.text.primary} size={24} />
         <div
           className={classes.links}
           style={{

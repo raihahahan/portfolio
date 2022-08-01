@@ -1,5 +1,3 @@
-import { colorTheme } from "./styles-constants";
-
 export type breakpointsTypes = {
   xs: number;
   sm: number;
@@ -53,6 +51,7 @@ export type siteColorsType = {
     primary: string;
     secondary: string;
     error: string;
+    links: string;
   };
 };
 

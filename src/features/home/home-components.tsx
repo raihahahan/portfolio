@@ -43,12 +43,12 @@ export function HomeIntroText() {
 
 export function HomeViewProjectsButton() {
   const router = useRouter();
-
+  const { themeState } = useTheme();
   return (
     <GenericButton
       text="View Projects"
       onClick={() => router.push("/projects")}
-      color="dark"
+      color={themeState == "light" ? "dark" : "yellow"}
     />
   );
 }

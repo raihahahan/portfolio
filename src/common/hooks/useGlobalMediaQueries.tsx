@@ -1,6 +1,6 @@
 import { useMediaQuery } from "@mantine/hooks";
-import { breakpoints } from "../../styles/styles-constants";
-import { globalMediaQueriesType } from "../../styles/styles-types";
+import { breakpoints } from "../../features/theme/theme-data";
+import { globalMediaQueriesType } from "../../features/theme/theme-types";
 
 export default function useGlobalMediaQuery(): globalMediaQueriesType {
   const xs = useMediaQuery(`(max-width: ${breakpoints.xs}px)"`);

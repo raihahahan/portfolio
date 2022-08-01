@@ -1,8 +1,11 @@
 import { createStyles } from "@mantine/core";
-import { colorTheme, siteColors } from "../../styles/styles-constants";
+import { useSelector } from "react-redux";
+import { colorTheme, siteColors } from "../../features/theme/theme-data";
+import { Theme } from "../../features/theme/theme-types";
+import { selectTheme } from "../../features/theme/themeSlice";
 
 export default function useTheme() {
-  const theme = "light";
+  const theme: Theme = useSelector(selectTheme);
 
   const stylesFunc = createStyles((theme) => ({
     navbar: {
@@ -21,5 +24,10 @@ export default function useTheme() {
   const colors = siteColors(theme);
   const myColorTheme = colorTheme[theme];
 
-  return { siteColors: colors, colorTheme: myColorTheme, classes };
+  return {
+    siteColors: colors,
+    colorTheme: myColorTheme,
+    classes,
+    themeState: theme as Theme,
+  };
 }

@@ -1,10 +1,9 @@
 import {
   breakpointsTypes,
   colorThemeByTheme,
-  colorThemeType,
   siteColorsType,
   Theme,
-} from "./styles-types";
+} from "./theme-types";
 
 export const breakpoints: breakpointsTypes = {
   xs: 500,
@@ -34,7 +33,7 @@ export const colorTheme: colorThemeByTheme = {
       on_primary: "#000000",
       on_secondary: "#000000",
       on_background: "000000",
-      on_surface: "000000",
+      on_surface: "#000000",
       on_error: "#FFFFFF",
     },
   },
@@ -49,15 +48,15 @@ export const colorTheme: colorThemeByTheme = {
       variantLight: "#ffbb93",
       variantDark: "#c75b39",
     },
-    background: "#F0F0F0",
-    surface: "#FFFFFF",
+    background: "#202325",
+    surface: "#161616",
     error: "#B00020",
     placeholder: "#F0F0F0",
     on: {
-      on_primary: "#000000",
-      on_secondary: "#000000",
-      on_background: "000000",
-      on_surface: "000000",
+      on_primary: "#FFFFFF",
+      on_secondary: "#FFFFFF",
+      on_background: "FFFFFF",
+      on_surface: "#FFFFFF",
       on_error: "#FFFFFF",
     },
   },
@@ -73,6 +72,7 @@ export const siteColors = (theme: Theme): siteColorsType => {
       primary: color.on.on_primary,
       secondary: "#F0F0F0",
       error: color.error,
+      links: theme == "light" ? "blue" : "#71a2c7",
     },
   };
 };

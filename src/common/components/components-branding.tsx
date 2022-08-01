@@ -1,11 +1,12 @@
 import Image from "next/image";
+import useTheme from "../hooks/useTheme";
 
 export default function RectangleTitle({
   widthSize,
   type,
 }: {
   widthSize: number;
-  type?: "default" | "white" | "default-dark";
+  type?: "default" | "dark";
 }) {
   const WIDTH = 675;
   const HEIGHT = 245;
@@ -15,13 +16,12 @@ export default function RectangleTitle({
     case "default":
       src = "/images/header-title.png";
       break;
-    case "white":
-      src = "/images/melonbase_rectangle_3.png";
+    case "dark":
+      src = "/images/header-title-light.png";
       break;
-    case "default-dark":
-      src = "/images/melonbase_rectangle_2.png";
     default:
-      src = "/images/melonbase_rectangle_2.png";
+      src = "/images/header-title.png";
+      break;
   }
 
   return (

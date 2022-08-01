@@ -3,10 +3,11 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import { LinkText } from "../../common/components/components-utils";
 import useTheme from "../../common/hooks/useTheme";
+import { stringToBackTick } from "../../common/utils/strings";
 import { projectDataType } from "./project-types";
 
 export default function ProjectComponent({ item }: { item: projectDataType }) {
-  const { siteColors } = useTheme();
+  const { siteColors, colorTheme, themeState } = useTheme();
   const { projectCondition } = item.projectAnalysis;
   return (
     <Card
@@ -15,11 +16,12 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
       radius="md"
       withBorder
       style={{
-        // margin: 5,
         marginTop: 10,
         height: "30vw",
         minHeight: 820,
         width: "90vw",
+        backgroundColor: colorTheme.surface,
+        borderWidth: 0,
       }}
     >
       <Card.Section>
@@ -44,9 +46,10 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
           style={{
             display: "flex",
             justifySelf: "center",
-            fontSize: 14,
+            fontSize: 16,
             marginTop: 10,
             textAlign: "center",
+            color: siteColors.text.primary,
           }}
         >
           {item.title} - {item.shortDescription}
@@ -61,16 +64,38 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
             : "red"
         }
         variant="light"
-        style={{ marginTop: 10, marginLeft: 0, marginBottom: 10 }}
+        style={{
+          marginTop: 10,
+          marginLeft: 0,
+          marginBottom: 10,
+          backgroundColor:
+            themeState == "dark"
+              ? projectCondition == "stable"
+                ? "#1B371C"
+                : projectCondition == "needs refactor"
+                ? "#362D02"
+                : "#3A0B01"
+              : undefined,
+          color:
+            themeState == "dark"
+              ? projectCondition == "stable"
+                ? "#9cd402"
+                : projectCondition == "needs refactor"
+                ? "#d7ff69"
+                : "#E34D54"
+              : undefined,
+        }}
       >
         {projectCondition}
       </Badge>
 
       <br />
-      {/* <Text size="sm" color={siteColors.text.primary} style={{ fontSize: 15 }}>
-        {item.description}
-      </Text> */}
-      <ReactMarkdown children={item.description} rehypePlugins={[rehypeRaw]} />
+      <div style={{ color: siteColors.text.primary }}>
+        <ReactMarkdown
+          children={stringToBackTick(item.description, siteColors.text.links)}
+          rehypePlugins={[rehypeRaw]}
+        />
+      </div>
       <br />
       <div style={{ maxWidth: "90%" }}>
         <Text
@@ -115,19 +140,6 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
           ))}
         </Text>
       ) : null}
-      {/* <Badge
-        color={
-          projectCondition == "stable"
-            ? "green"
-            : projectCondition == "needs refactor"
-            ? "yellow"
-            : "red"
-        }
-        variant="light"
-        style={{ marginTop: 10, marginLeft: -7 }}
-      >
-        {projectCondition}
-      </Badge> */}
       <br />
       <div
         style={{
@@ -150,11 +162,14 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
           {item.buttons.map((btn) => {
             return (
               <Button
-                style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
+                style={{
+                  borderTopLeftRadius: 0,
+                  borderTopRightRadius: 0,
+                }}
                 key={btn.title}
                 disabled={projectCondition == "not maintained"}
-                variant="light"
-                color="blue"
+                variant={themeState == "light" ? "light" : "filled"}
+                color={themeState == "light" ? "blue" : "dark"}
                 fullWidth
                 mt="md"
                 radius="md"

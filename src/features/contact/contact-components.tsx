@@ -12,7 +12,10 @@ export default function ContactMethods() {
         return (
           <List.Item icon={item.icon(colors)}>
             <Link href={item.link}>
-              <a target="_blank" style={{ color: "blue", fontSize: 16 }}>
+              <a
+                target="_blank"
+                style={{ color: colors.text.links, fontSize: 16 }}
+              >
                 {item.title}
               </a>
             </Link>

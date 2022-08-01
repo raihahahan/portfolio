@@ -3,7 +3,7 @@ import Image from "next/image";
 import useGlobalMediaQuery from "../../common/hooks/useGlobalMediaQueries";
 import useTheme from "../../common/hooks/useTheme";
 import { aboutDataType } from "./about-types";
-import { siteColorsType } from "../../styles/styles-types";
+import { siteColorsType } from "../theme/theme-types";
 import { aboutImageSrc } from "./about-data";
 import rehypeRaw from "rehype-raw";
 import ReactMarkdown from "react-markdown";
