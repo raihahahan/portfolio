@@ -93,3 +93,9 @@ export type progLanguages =
   | "Java"
   | "C++"
   | "Others";
+
+export type projectState = {
+  project: {
+    projects: projectDataType[];
+  };
+};

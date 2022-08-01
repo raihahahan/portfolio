@@ -1,18 +1,32 @@
 import { Grid } from "@mantine/core";
-import useTheme from "../../common/hooks/useTheme";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../../redux/store";
 import { breakpoints } from "../theme/theme-data";
 import ProjectComponent from "./project-component";
-import { projectData } from "./project-data";
+import { projectDataType } from "./project-types";
+import { getProjects, selectProjects } from "./projectsSlice";
 
 export default function ProjectsContents() {
-  const { siteColors } = useTheme();
+  const [displayedProjects, setDisplayedProjects] = useState<projectDataType[]>(
+    []
+  );
+  const dispatch = useDispatch<AppDispatch>();
+  const allProjects = useSelector(selectProjects);
+
+  useEffect(() => {
+    dispatch(getProjects());
+    setDisplayedProjects(allProjects);
+  }, [, displayedProjects]);
+
   return (
     <Grid
       gutter="lg"
       align="center"
       style={{ maxWidth: breakpoints.xl * 0.8, margin: 10 }}
     >
-      {projectData(siteColors).map((item, index) => {
+      {displayedProjects.map((item, index) => {
         return (
           <Grid.Col
             style={{
