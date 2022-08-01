@@ -1,5 +1,4 @@
 import { Grid } from "@mantine/core";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../redux/store";

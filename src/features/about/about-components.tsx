@@ -8,6 +8,7 @@ import { aboutImageSrc } from "./about-data";
 import rehypeRaw from "rehype-raw";
 import ReactMarkdown from "react-markdown";
 import ContactMethods from "../contact/contact-components";
+import { stringToBackTick } from "../../common/utils/strings";
 
 export function AboutSection({
   item,
@@ -46,7 +47,10 @@ export function AboutSection({
         </AboutWrapper>
       ) : (
         <AboutWrapper>
-          <ReactMarkdown children={item.body} rehypePlugins={[rehypeRaw]} />
+          <ReactMarkdown
+            children={stringToBackTick(item.body, colors.text.links)}
+            rehypePlugins={[rehypeRaw]}
+          />
         </AboutWrapper>
       )}
       <br />

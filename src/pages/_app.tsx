@@ -27,7 +27,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
         <link rel="icon" href="/favicon.ico" />
-        <meta name="description" content="Welcome to Melonbase." />
+        <meta name="description" content="Portfolio site" />
         <meta
           property="og:image"
           content={`https://og-image.vercel.app/${encodeURI(
