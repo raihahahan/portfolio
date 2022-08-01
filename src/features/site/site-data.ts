@@ -1,4 +1,4 @@
-import { anchorTitles, routes } from "../common/types/types-site";
+import { anchorTitles, routes } from "./site-types";
 
 const anchorData: { title: anchorTitles; anchorRoute: routes }[] = [
   { title: "Home", anchorRoute: "/" },
@@ -10,10 +10,6 @@ const anchorData: { title: anchorTitles; anchorRoute: routes }[] = [
     title: "About",
     anchorRoute: "/about",
   },
-  // {
-  //   title: "Contact",
-  //   anchorRoute: "/contact",
-  // },
 ];
 
 export default anchorData;

@@ -1,20 +1,11 @@
 import React, { useState } from "react";
 import { AppShell, Footer } from "@mantine/core";
-
-// import BackToHomeButton from "../components/buttons/back-to-home";
-// import HomeFooter from "../contents/home/home-footer";
-import useTheme from "../hooks/useTheme";
-import MainHeader, { MyNavbar } from "../components/components-global";
+import useTheme from "../../common/hooks/useTheme";
+import MainHeader, { MyNavbar } from "./site-components";
 
 export const siteTitle = "M.Raihan";
 
-export default function MainLayout({
-  children,
-  home,
-}: {
-  children: any;
-  home: boolean;
-}) {
+export default function SiteLayout({ children }: { children: any }) {
   const [opened, setOpened] = useState(false);
   const { siteColors, colorTheme } = useTheme();
 

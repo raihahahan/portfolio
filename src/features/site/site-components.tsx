@@ -2,13 +2,12 @@ import { Anchor, Navbar } from "@mantine/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { CSSProperties } from "react";
-import anchorData from "../../data/data-links";
-import useTheme from "../hooks/useTheme";
-import { anchorTitles, routes } from "../types/types-site";
 import { Burger, Header, MediaQuery } from "@mantine/core";
 import React from "react";
-import RectangleTitle from "./components-branding";
-import GenericButton from "./buttons";
+import useTheme from "../../common/hooks/useTheme";
+import anchorData from "./site-data";
+import RectangleTitle from "../../common/components/components-branding";
+import { anchorTitles, routes } from "./site-types";
 
 export function MyNavbar({ opened }: { opened: boolean }) {
   const { classes, siteColors } = useTheme();

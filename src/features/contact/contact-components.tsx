@@ -1,7 +1,7 @@
 import { List } from "@mantine/core";
 import Link from "next/link";
-import { contactData } from "../../data/data-contact";
-import useTheme from "../hooks/useTheme";
+import useTheme from "../../common/hooks/useTheme";
+import { contactData } from "./contact-data";
 
 export default function ContactMethods() {
   const { siteColors: colors } = useTheme();

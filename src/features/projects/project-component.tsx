@@ -1,18 +1,13 @@
-import { Badge, Button, Card, Grid, Group, Image, Text } from "@mantine/core";
-import { useRouter } from "next/router";
+import { Badge, Button, Card, Group, Image, Text } from "@mantine/core";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
-import useGlobalMediaQuery from "../hooks/useGlobalMediaQueries";
-import useTheme from "../hooks/useTheme";
-import { projectDataType } from "../types/types-project";
-import GenericButton from "./buttons";
-import { LinkText } from "./components-utils";
+import { LinkText } from "../../common/components/components-utils";
+import useTheme from "../../common/hooks/useTheme";
+import { projectDataType } from "./project-types";
 
 export default function ProjectComponent({ item }: { item: projectDataType }) {
-  const { xs, sm, md, lg, xl } = useGlobalMediaQuery();
-  const { siteColors, colorTheme } = useTheme();
+  const { siteColors } = useTheme();
   const { projectCondition } = item.projectAnalysis;
-  const router = useRouter();
   return (
     <Card
       shadow="sm"

@@ -1,7 +1,7 @@
 import { ThemeIcon } from "@mantine/core";
 import { IconBrandGithub, IconMessage } from "@tabler/icons";
-import { contactDataType } from "../common/types/types-contact";
-import { siteColorsType } from "../styles/styles-types";
+import { contactDataType } from "./contact-types";
+import { siteColorsType } from "../../styles/styles-types";
 
 export const contactData: contactDataType[] = [
   {

@@ -1,7 +1,7 @@
 export type aboutDataType = {
   id: string;
   title: string;
-  body: JSX.Element;
+  body: string;
 };
 
 export type skillsType = {

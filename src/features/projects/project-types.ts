@@ -1,5 +1,3 @@
-import React from "react";
-
 export interface projectTypeSmall {
   id: string;
   title: string;
@@ -41,7 +39,10 @@ export type skillsType =
   | "Programming Methodologies"
   | "CLI"
   | "Google Admob"
-  | "Web scraping";
+  | "Web scraping"
+  | "Lisp"
+  | "Object-oriented Programming"
+  | "Functional Programming";
 
 export interface projectDataType extends projectTypeSmall {
   projectAnalysis: projectAnalysisType;

@@ -1,7 +1,4 @@
-import { Text } from "@mantine/core";
-import Link from "next/link";
-import { LinkText } from "../common/components/components-utils";
-import { projectDataType } from "../common/types/types-project";
+import { projectDataType } from "./project-types";
 
 export const projectData: projectDataType[] = [
   {
@@ -68,7 +65,7 @@ export const projectData: projectDataType[] = [
     imgSrc: "/images/greenapp-header.png",
     shortDescription: "Environmental Habit App",
     description:
-      "I'm the creator of the team project called <a href='https://docs.google.com/presentation/d/1PspER53O7RmHBPSRTn1fTjN4_VwW28T-9jVlQHpVhYE/edit#slide=id.g11c3002af2c_0_321' target='_blank' style='color: blue;'>**Green App**</a>  (see contributors below).\n\nIt is a mobile app that incentivises users to pick up green habits through rewards and incentives. The app allows users to complete tasks and earn `Green Points`. Users are also able to view users' profiles, see their completed tasks and total `Green Points`, and add others as their friend.\n\nAs this was my first React Native project, I plan to refactor this app in the future. This app was used as submission for the <a href='https://drive.google.com/file/d/1jlcl4GeVKO9uDDEL84r6sRBut8pUvD4B/view?usp=sharing' target='_blank' style='color: blue;'>**Climate Hack Hackathon 2022**</a>.",
+      "I'm the creator of the team project called <a href='https://docs.google.com/presentation/d/1PspER53O7RmHBPSRTn1fTjN4_VwW28T-9jVlQHpVhYE/edit#slide=id.g11c3002af2c_0_321' target='_blank' style='color: blue;'>**Green App**</a>  (see contributors below).\n\nIt is a mobile app that incentivises users to pick up green habits through rewards and incentives. The app allows users to complete tasks and earn `Green Points`. Users are also able to view other users' profiles, see their completed tasks and total `Green Points`, and add others as their friend.\n\nAs this was my first React Native project, I plan to refactor this app in the future. This app was used as submission for the <a href='https://drive.google.com/file/d/1jlcl4GeVKO9uDDEL84r6sRBut8pUvD4B/view?usp=sharing' target='_blank' style='color: blue;'>**Climate Hack Hackathon 2022**</a>.",
     lastUpdated: new Date(2022, 4, 17),
     importance: 0.97,
     contributors: ["riamundhra02", "apollo-tan", "Jaynon"],
@@ -146,7 +143,12 @@ export const projectData: projectDataType[] = [
       "This is a <a href='https://github.com/raihahahan/SICP' target='_blank' style='color: blue;'>**Github repository**</a> that tracks my progress in the Computer Science textbook <a href='https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book.html' target='_blank' style='color: blue;'>**Structure and Interpretation of Computer Programs**</a> by Harold Abelson and Gerald Jay Sussman. It includes most exercises in the textbook from Chapter 1 to 3. It is still a work in progress.\n\nThis book has been instrumental in my programming journey due to the deeper insights of programming methodologies such as procedural and data abstraction, functional programming and object-oriented programming. This helped in my understanding of Java, state management systems such as Redux, and improved the way I write and structure my code.",
     lastUpdated: new Date(2022, 4, 23),
     importance: 0.95,
-    skills: ["Racket", "Programming Methodologies"],
+    skills: [
+      "Lisp",
+      "Programming Methodologies",
+      "Object-oriented Programming",
+      "Functional Programming",
+    ],
     projectAnalysis: {
       projectType: "Computer Science study",
       projectCondition: "stable",

@@ -1,9 +1,10 @@
-import { routes } from "../types/types-site";
+import { routes } from "./site-types";
 
 export const siteTitleNames: Record<routes, string> = {
   "/": "",
   "/about": "About",
   "/projects": "Projects",
+  "/contact": "Contact",
 };
 
 export function makeSiteTitle(title: string) {

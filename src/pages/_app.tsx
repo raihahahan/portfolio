@@ -5,9 +5,10 @@ import { MantineProvider } from "@mantine/core";
 // import { ReduxProvider } from "../redux/store";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { makeSiteTitle, siteTitleNames } from "../common/utils/utils-site";
-import { routes } from "../common/types/types-site";
 import { breakpoints } from "../styles/styles-constants";
+import SiteLayout from "../features/site/site-layout";
+import { makeSiteTitle, siteTitleNames } from "../features/site/site-utils";
+import { routes } from "../features/site/site-types";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const route = useRouter();
@@ -49,7 +50,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         }}
       >
         {/* <ReduxProvider> */}
-        <Component {...pageProps} />
+        <SiteLayout>
+          <Component {...pageProps} />
+        </SiteLayout>
         {/* </ReduxProvider> */}
       </MantineProvider>
     </>
