@@ -1,4 +1,4 @@
 export const homeIntroTextData =
-  "I am a newbie developer who is just starting out.";
+  "Hey 👋 I am a new developer who is looking to gain work experience.";
 
 export const homeBannerImgSrc = "/images/main-bg-component.png";

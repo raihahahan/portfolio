@@ -99,6 +99,7 @@ export default function MainHeader({
       >
         <MediaQuery largerThan="sm" styles={{ display: "none" }}>
           <Burger
+            color={siteColors.text.primary}
             style={{ color: siteColors.text.primary }}
             opened={opened}
             onClick={() => setOpened((o) => !o)}

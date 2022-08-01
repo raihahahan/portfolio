@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { projectData } from "./project-data";
+import { getProjectsAsync } from "./project-data";
 import { projectDataType, projectState } from "./project-types";
 
 export const getProjects = createAsyncThunk("projects/get", async () => {
   try {
-    const res = projectData;
+    const res = await getProjectsAsync();
     return res;
   } catch (error) {
     alert(error);

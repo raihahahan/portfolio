@@ -3,7 +3,7 @@ export interface projectTypeSmall {
   title: string;
   shortDescription: string;
   description: string;
-  lastUpdated: Date;
+  lastUpdated: string;
   importance: number; // 0 to 1
   skills: skillsType[];
   imgSrc?: string;
