@@ -9,11 +9,7 @@ export default function ProjectsContents({
   projects: projectDataType[];
 }) {
   return (
-    <Grid
-      gutter="lg"
-      align="center"
-      style={{ maxWidth: breakpoints.xl * 0.8, margin: 10 }}
-    >
+    <Grid gutter="lg" align="center" style={{ margin: 10 }}>
       {projects.map((item, index) => {
         return (
           <Grid.Col

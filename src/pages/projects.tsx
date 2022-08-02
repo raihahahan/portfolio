@@ -9,7 +9,7 @@ export default function ProjectsPage({ projects }: { projects: any }) {
   return <ProjectsContents projects={projects} />;
 }
 
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getStaticProps: GetStaticProps = async () => {
   try {
     const projects = await getProjectsAsync();
     return {
