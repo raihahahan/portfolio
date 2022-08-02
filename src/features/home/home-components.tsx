@@ -3,17 +3,22 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import GenericButton from "../../common/components/components-buttons";
 import useTheme from "../../common/hooks/useTheme";
-import { homeBannerImgSrc, homeIntroTextData } from "./home-data";
+import { homeIntroTextData } from "./home-data";
 
 export function HomeBannerImage({ customHeight }: { customHeight?: 2000 }) {
-  const WIDTH = 1880;
-  const HEIGHT = 422;
+  const WIDTH = 1677;
+  const HEIGHT = 421;
   const RATIO = HEIGHT / WIDTH;
+  const { themeState } = useTheme();
 
   return (
     <Image
       priority
-      src={homeBannerImgSrc}
+      src={
+        themeState == "dark"
+          ? "/images/bg-component-dark-lg-final.png"
+          : "/images/bg-component-light-lg-final.png"
+      }
       alt="raihahahan"
       width={2000}
       height={customHeight ? RATIO * customHeight : RATIO * 2000}
