@@ -10,21 +10,37 @@ import RectangleTitle from "../../common/components/components-branding";
 import { anchorTitles, routes } from "./site-types";
 import ToggleThemeButton from "../theme/theme-components";
 
-export function MyNavbar({ opened }: { opened: boolean }) {
+export function MyNavbar({
+  openControl,
+}: {
+  openControl: {
+    opened: boolean;
+    setOpened: React.Dispatch<React.SetStateAction<boolean>>;
+  };
+}) {
   const { classes, siteColors } = useTheme();
   return (
     <Navbar
       className={`${classes.navbar}`}
       style={{ backgroundColor: siteColors.navbar }}
       width={{ base: "100%", sm: 0 }}
-      hidden={!opened}
+      hidden={!openControl.opened}
     >
-      <AnchorLinks isSmall />
+      <AnchorLinks isSmall openControl={openControl} />
     </Navbar>
   );
 }
 
-export function AnchorLinks({ isSmall }: { isSmall: boolean }) {
+export function AnchorLinks({
+  isSmall,
+  openControl,
+}: {
+  isSmall: boolean;
+  openControl?: {
+    opened: boolean;
+    setOpened: React.Dispatch<React.SetStateAction<boolean>>;
+  };
+}) {
   const router = useRouter();
   return (
     <div style={{ display: "flex", flexDirection: isSmall ? "column" : "row" }}>
@@ -34,7 +50,7 @@ export function AnchorLinks({ isSmall }: { isSmall: boolean }) {
             key={item.anchorRoute}
             title={item.title}
             anchorRoute={item.anchorRoute}
-            isSmall={isSmall}
+            openControl={openControl}
           />
         );
       })}
@@ -45,12 +61,14 @@ export function AnchorLinks({ isSmall }: { isSmall: boolean }) {
 export function CustomAnchor({
   title,
   anchorRoute,
-  isSmall,
-  extraTextStyles,
+  openControl,
 }: {
   title: anchorTitles;
   anchorRoute: routes;
-  isSmall: boolean;
+  openControl?: {
+    opened: boolean;
+    setOpened: React.Dispatch<React.SetStateAction<boolean>>;
+  };
   extraTextStyles?: CSSProperties | undefined;
 }) {
   const { colorTheme, siteColors, classes } = useTheme();
@@ -59,6 +77,7 @@ export function CustomAnchor({
     // <Anchor style={{ margin: 20 }}>
     <Link href={anchorRoute} passHref>
       <Anchor
+        onClick={openControl ? () => openControl.setOpened(false) : undefined}
         style={{
           margin: 20,
           textDecoration: anchorRoute == route.pathname ? "underline" : "none",
@@ -108,7 +127,7 @@ export default function MainHeader({
           />
         </MediaQuery>
         <Link href="/" passHref>
-          <a>
+          <a onClick={() => setOpened(false)}>
             <RectangleTitle
               widthSize={200}
               type={themeState == "light" ? "default" : "dark"}

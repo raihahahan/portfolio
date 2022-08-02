@@ -24,7 +24,7 @@ export default function SiteLayout({ children }: { children: any }) {
         asideOffsetBreakpoint="sm"
         padding={0}
         fixed
-        navbar={<MyNavbar opened={opened} />}
+        navbar={<MyNavbar openControl={{ opened, setOpened }} />}
         header={<MainHeader openControl={{ opened, setOpened }} />}
       >
         <div
