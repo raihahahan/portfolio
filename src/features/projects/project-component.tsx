@@ -90,7 +90,7 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
       </Badge>
 
       <br />
-      <div style={{ color: siteColors.text.primary }}>
+      <div style={{ color: siteColors.text.primary, fontSize: "1em" }}>
         <ReactMarkdown rehypePlugins={[rehypeRaw]}>
           {stringToBackTick(item.description, siteColors.text.links)}
         </ReactMarkdown>
