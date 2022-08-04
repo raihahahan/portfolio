@@ -32,7 +32,7 @@ export function HomeBannerImage({ customHeight }: { customHeight?: number }) {
       ? "/images/final-xs-dark-1.png"
       : "/images/final-xs-light.png"
     : themeState == "dark"
-    ? "/images/bg-component-dark-lg-final-2.png"
+    ? "/images/final-lg-dark.png"
     : "/images/bg-component-light-lg-final.png";
 
   return (
