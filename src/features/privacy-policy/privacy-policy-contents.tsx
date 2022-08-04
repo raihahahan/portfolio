@@ -19,7 +19,7 @@ export default function PrivacyPolicyContents({ data }: { data: string }) {
         alignItems: "flex-start",
       }}
     >
-      <ReactMarkdown children={data} />
+      <ReactMarkdown>{data}</ReactMarkdown>
     </HomeContentLayout>
   );
 }

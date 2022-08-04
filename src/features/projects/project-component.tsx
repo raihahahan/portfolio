@@ -91,10 +91,9 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
 
       <br />
       <div style={{ color: siteColors.text.primary }}>
-        <ReactMarkdown
-          children={stringToBackTick(item.description, siteColors.text.links)}
-          rehypePlugins={[rehypeRaw]}
-        />
+        <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+          {stringToBackTick(item.description, siteColors.text.links)}
+        </ReactMarkdown>
       </div>
       <br />
       <div style={{ maxWidth: "90%" }}>
@@ -126,7 +125,7 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
         >
           <Text style={{ marginRight: 5 }}>Contributors:</Text>
           {item.contributors?.map((c, i) => (
-            <Text>
+            <Text key={c}>
               <LinkText
                 text={
                   item?.contributors && i == item.contributors.length - 1
