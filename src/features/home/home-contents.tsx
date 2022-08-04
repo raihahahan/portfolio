@@ -7,7 +7,7 @@ import {
   HomeViewProjectsButton,
 } from "./home-components";
 
-export default function HomeContents() {
+export default function HomeContents({ tagline }: { tagline: string }) {
   const { siteColors } = useTheme();
   const { sm, md } = useGlobalMediaQuery();
 
@@ -20,7 +20,7 @@ export default function HomeContents() {
     >
       <HomeBannerImage customHeight={2000} />
       <div style={{ width: !md ? "40vw" : "100vw" }}>
-        <HomeIntroText />
+        <HomeIntroText text={tagline} />
       </div>
       <div style={{ marginTop: 60 }}>
         <HomeViewProjectsButton />
