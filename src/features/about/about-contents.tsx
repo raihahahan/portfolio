@@ -2,10 +2,10 @@ import { Text } from "@mantine/core";
 import useGlobalMediaQuery from "../../common/hooks/useGlobalMediaQueries";
 import useTheme from "../../common/hooks/useTheme";
 import { AboutProfileIcon, AboutSection } from "./about-components";
-import { aboutData } from "./about-data";
 import AboutLayout from "./about-layout";
+import { aboutDataType } from "./about-types";
 
-export default function AboutContents() {
+export default function AboutContents({ about }: { about: aboutDataType[] }) {
   const { siteColors: colors } = useTheme();
   const mediaQueries = useGlobalMediaQuery();
   return (
@@ -28,7 +28,7 @@ export default function AboutContents() {
         </Text>
 
         <div style={{ width: !mediaQueries.md ? "60vw" : "100vw" }}>
-          {aboutData.map((item) => {
+          {about.map((item) => {
             return <AboutSection item={item} colors={colors} />;
           })}
         </div>

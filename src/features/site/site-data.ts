@@ -16,7 +16,11 @@ export default anchorData;
 
 export const footerData: { title: anchorTitles; anchorRoute: routes }[] = [
   {
-    title: "hello@melonbase.com" as any,
-    anchorRoute: "mailto:hello@melonbase.com" as any,
+    title: "mraihandev@gmail.com" as any,
+    anchorRoute: "mailto:mraihandev@gmail.com" as any,
+  },
+  {
+    title: "Privacy Policy",
+    anchorRoute: "/privacy-policy",
   },
 ];

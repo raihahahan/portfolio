@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { AppShell, Footer } from "@mantine/core";
 import useTheme from "../../common/hooks/useTheme";
-import MainHeader, { MyNavbar } from "./site-components";
+import MainHeader, { MyFooter, MyNavbar } from "./site-components";
 
 export const siteTitle = "M.Raihan";
 
@@ -26,6 +26,7 @@ export default function SiteLayout({ children }: { children: any }) {
         fixed
         navbar={<MyNavbar openControl={{ opened, setOpened }} />}
         header={<MainHeader openControl={{ opened, setOpened }} />}
+        footer={<MyFooter />}
       >
         <div
           style={{
@@ -40,9 +41,7 @@ export default function SiteLayout({ children }: { children: any }) {
         >
           {children}
         </div>
-        {/* <BackToHomeButton home={home} /> */}
       </AppShell>
-      {/* <HomeFooter stylesArr={[myTheme, classes, colors]} /> */}
     </>
   );
 }

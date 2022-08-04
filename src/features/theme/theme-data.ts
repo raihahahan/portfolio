@@ -48,7 +48,7 @@ export const colorTheme: colorThemeByTheme = {
       variantLight: "#ffbb93",
       variantDark: "#c75b39",
     },
-    background: "#202325",
+    background: "#0e0e0e",
     surface: "#161616",
     error: "#B00020",
     placeholder: "#F0F0F0",
@@ -70,7 +70,7 @@ export const siteColors = (theme: Theme): siteColorsType => {
     navbar: color.surface,
     text: {
       primary: color.on.on_primary,
-      secondary: "#F0F0F0",
+      secondary: "grey",
       error: color.error,
       links: theme == "light" ? "blue" : "#71a2c7",
     },

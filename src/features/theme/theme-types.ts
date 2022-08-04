@@ -55,4 +55,11 @@ export type siteColorsType = {
   };
 };
 
+export type useThemeReturnType = {
+  siteColors: siteColorsType;
+  colorTheme: colorThemeType;
+  classes: Record<"navbar" | "links", string>;
+  themeState: Theme;
+};
+
 export type Theme = "light" | "dark";

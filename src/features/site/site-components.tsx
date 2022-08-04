@@ -1,14 +1,16 @@
-import { Anchor, Navbar } from "@mantine/core";
+import { Anchor, Navbar, Text } from "@mantine/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { CSSProperties } from "react";
 import { Burger, Header, MediaQuery } from "@mantine/core";
 import React from "react";
 import useTheme from "../../common/hooks/useTheme";
-import anchorData from "./site-data";
+import anchorData, { footerData } from "./site-data";
 import RectangleTitle from "../../common/components/components-branding";
 import { anchorTitles, routes } from "./site-types";
 import ToggleThemeButton from "../theme/theme-components";
+import { useThemeReturnType } from "../theme/theme-types";
+import useGlobalMediaQuery from "../../common/hooks/useGlobalMediaQueries";
 
 export function MyNavbar({
   openControl,
@@ -62,6 +64,7 @@ export function CustomAnchor({
   title,
   anchorRoute,
   openControl,
+  extraTextStyles,
 }: {
   title: anchorTitles;
   anchorRoute: routes;
@@ -71,10 +74,9 @@ export function CustomAnchor({
   };
   extraTextStyles?: CSSProperties | undefined;
 }) {
-  const { colorTheme, siteColors, classes } = useTheme();
+  const { siteColors } = useTheme();
   const route = useRouter();
   return (
-    // <Anchor style={{ margin: 20 }}>
     <Link href={anchorRoute} passHref>
       <Anchor
         onClick={openControl ? () => openControl.setOpened(false) : undefined}
@@ -82,16 +84,65 @@ export function CustomAnchor({
           margin: 20,
           textDecoration: anchorRoute == route.pathname ? "underline" : "none",
           color: siteColors.text.primary,
+          ...extraTextStyles,
         }}
       >
         {title}
       </Anchor>
     </Link>
-    // </Anchor>
   );
 }
 
-export function MyFooter() {}
+export function MyFooter({ extraStyles }: { extraStyles?: CSSProperties }) {
+  const { siteColors: colors } = useTheme();
+  const { sm } = useGlobalMediaQuery();
+  return (
+    <section
+      id="FOOTER"
+      style={{
+        backgroundColor: colors.header,
+        width: "100vw",
+        height: "auto",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
+        paddingTop: sm ? 20 : 0,
+        ...extraStyles,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: sm ? "column" : "row",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <a href="https://www.github.com/raihahahan" target={"_blank"}>
+          <Text
+            style={{
+              color: colors.text.secondary,
+              fontSize: 14,
+              marginBottom: sm ? 15 : 0,
+            }}
+          >
+            M.Raihan
+          </Text>
+        </a>
+        {footerData.map((item) => {
+          return (
+            <CustomAnchor
+              title={item.title}
+              anchorRoute={item.anchorRoute}
+              extraTextStyles={{ color: colors.text.secondary, fontSize: 14 }}
+            />
+          );
+        })}
+      </div>
+    </section>
+  );
+}
 
 export default function MainHeader({
   openControl,

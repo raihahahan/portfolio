@@ -41,7 +41,7 @@ export function AboutSection({
       >
         {item.title}
       </Text>
-      {item.id == "contact" ? (
+      {item.title == "Contact" ? (
         <AboutWrapper>
           <ContactMethods />
         </AboutWrapper>

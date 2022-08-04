@@ -6,7 +6,7 @@ import useGlobalMediaQuery from "../../common/hooks/useGlobalMediaQueries";
 import useTheme from "../../common/hooks/useTheme";
 import { homeIntroTextData } from "./home-data";
 
-export function HomeBannerImage({ customHeight }: { customHeight?: 2000 }) {
+export function HomeBannerImage({ customHeight }: { customHeight?: number }) {
   const WIDTH = 1677;
   const HEIGHT = 421;
   const RATIO = HEIGHT / WIDTH;
@@ -32,7 +32,7 @@ export function HomeBannerImage({ customHeight }: { customHeight?: 2000 }) {
       ? "/images/final-xs-dark-1.png"
       : "/images/final-xs-light.png"
     : themeState == "dark"
-    ? "/images/bg-component-dark-lg-final-1.png"
+    ? "/images/bg-component-dark-lg-final-2.png"
     : "/images/bg-component-light-lg-final.png";
 
   return (

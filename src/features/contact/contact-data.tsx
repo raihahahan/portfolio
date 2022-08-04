@@ -10,7 +10,7 @@ export const contactData: contactDataType[] = [
     link: "mailto:mraihandev@gmail.com",
     icon: (colors: siteColorsType) => (
       <ThemeIcon color="yellow" size={28} radius="xl">
-        <IconMessage size={16} color={colors.text.primary} />
+        <IconMessage size={16} color={"black"} />
       </ThemeIcon>
     ),
   },
@@ -20,7 +20,7 @@ export const contactData: contactDataType[] = [
     link: "https://www.github.com/raihahahan",
     icon: (colors: siteColorsType) => (
       <ThemeIcon color="yellow" size={28} radius="xl">
-        <IconBrandGithub size={16} color={colors.text.primary} />
+        <IconBrandGithub size={16} color={"black"} />
       </ThemeIcon>
     ),
   },

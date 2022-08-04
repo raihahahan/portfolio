@@ -1,6 +1,7 @@
 import { supabase } from "../../server/config";
+import { projectDataType } from "./project-types";
 
-export const getProjectsAsync = async () => {
+export const getProjectsAsync = async (): Promise<projectDataType[]> => {
   try {
     const { data, error } = await supabase
       .from("projects")

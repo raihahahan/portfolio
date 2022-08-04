@@ -9,13 +9,14 @@ import {
 
 export default function HomeContents() {
   const { siteColors } = useTheme();
-  const { md } = useGlobalMediaQuery();
+  const { sm, md } = useGlobalMediaQuery();
 
   return (
     <HomeContentLayout
       id="ABOUT"
       height={"calc(100vh - 70px)"}
       backgroundColor={siteColors.background}
+      extraStyles={{ padding: sm ? 60 : 140 }}
     >
       <HomeBannerImage customHeight={2000} />
       <div style={{ width: !md ? "40vw" : "100vw" }}>
