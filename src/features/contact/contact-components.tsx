@@ -10,7 +10,7 @@ export default function ContactMethods() {
     <List spacing="xs" size="sm" center>
       {contactData.map((item) => {
         return (
-          <List.Item icon={item.icon(colors)}>
+          <List.Item key={item.id.toString()} icon={item.icon(colors)}>
             <Link href={item.link}>
               <a
                 target="_blank"

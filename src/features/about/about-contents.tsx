@@ -29,7 +29,13 @@ export default function AboutContents({ about }: { about: aboutDataType[] }) {
 
         <div style={{ width: !mediaQueries.md ? "60vw" : "100vw" }}>
           {about.map((item) => {
-            return <AboutSection item={item} colors={colors} />;
+            return (
+              <AboutSection
+                key={item.id.toString()}
+                item={item}
+                colors={colors}
+              />
+            );
           })}
         </div>
       </div>

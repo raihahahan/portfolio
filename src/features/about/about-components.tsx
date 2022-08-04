@@ -47,10 +47,9 @@ export function AboutSection({
         </AboutWrapper>
       ) : (
         <AboutWrapper>
-          <ReactMarkdown
-            children={stringToBackTick(item.body, colors.text.links)}
-            rehypePlugins={[rehypeRaw]}
-          />
+          <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+            {stringToBackTick(item.body, colors.text.links)}
+          </ReactMarkdown>
         </AboutWrapper>
       )}
       <br />
@@ -61,6 +60,7 @@ export function AboutSection({
 export function AboutProfileIcon({ size }: { size?: number | string }) {
   return (
     <Image
+      alt="profile-icon"
       priority
       src={aboutImageSrc}
       width={size ?? "100vw"}

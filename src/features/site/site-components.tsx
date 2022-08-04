@@ -119,7 +119,11 @@ export function MyFooter({ extraStyles }: { extraStyles?: CSSProperties }) {
           alignItems: "center",
         }}
       >
-        <a href="https://www.github.com/raihahahan" target={"_blank"}>
+        <a
+          href="https://www.github.com/raihahahan"
+          target={"_blank"}
+          rel="noreferrer"
+        >
           <Text
             style={{
               color: colors.text.secondary,
@@ -133,6 +137,7 @@ export function MyFooter({ extraStyles }: { extraStyles?: CSSProperties }) {
         {footerData.map((item) => {
           return (
             <CustomAnchor
+              key={item.title}
               title={item.title}
               anchorRoute={item.anchorRoute}
               extraTextStyles={{ color: colors.text.secondary, fontSize: 14 }}
