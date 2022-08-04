@@ -46,7 +46,7 @@ export function HomeBannerImage({ customHeight }: { customHeight?: number }) {
   );
 }
 
-export function HomeIntroText() {
+export function HomeIntroText({ text }: { text: string }) {
   const TEXT_PADDING = 40;
   const { siteColors } = useTheme();
 
@@ -61,7 +61,7 @@ export function HomeIntroText() {
         marginTop: 40,
       }}
     >
-      {homeIntroTextData}
+      {text}
     </Text>
   );
 }
