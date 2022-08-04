@@ -7,7 +7,6 @@ import { siteColorsType } from "../theme/theme-types";
 import { aboutImageSrc } from "./about-data";
 import rehypeRaw from "rehype-raw";
 import ReactMarkdown from "react-markdown";
-import ContactMethods from "../contact/contact-components";
 import { stringToBackTick } from "../../common/utils/strings";
 
 export function AboutSection({
@@ -41,17 +40,13 @@ export function AboutSection({
       >
         {item.title}
       </Text>
-      {item.title == "Contact" ? (
-        <AboutWrapper>
-          <ContactMethods />
-        </AboutWrapper>
-      ) : (
-        <AboutWrapper>
-          <ReactMarkdown rehypePlugins={[rehypeRaw]}>
-            {stringToBackTick(item.body, colors.text.links)}
-          </ReactMarkdown>
-        </AboutWrapper>
-      )}
+
+      <AboutWrapper>
+        <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+          {stringToBackTick(item.body, colors.text.links)}
+        </ReactMarkdown>
+      </AboutWrapper>
+
       <br />
     </section>
   );
