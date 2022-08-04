@@ -1,4 +1,4 @@
-import { siteColorsType } from "../../styles/styles-types";
+import { siteColorsType } from "../theme/theme-types";
 
 export type contactDataType = {
   id: string;
