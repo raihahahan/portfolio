@@ -8,7 +8,7 @@ export default function ProjectsContents({
   projects: projectDataType[];
 }) {
   return (
-    <Grid gutter="lg" align="center" style={{ margin: 10 }}>
+    <Grid gutter="lg" align="stretch" style={{ margin: 10 }}>
       {projects.map((item, index) => {
         return (
           <Grid.Col
