@@ -9,6 +9,7 @@ import { projectDataType } from "./project-types";
 export default function ProjectComponent({ item }: { item: projectDataType }) {
   const { siteColors, colorTheme, themeState } = useTheme();
   const { projectCondition } = item.projectAnalysis;
+
   return (
     <Card
       shadow="sm"
@@ -17,8 +18,7 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
       withBorder
       style={{
         marginTop: 10,
-        height: "30vw",
-        minHeight: 820,
+        minHeight: "30vw",
         width: "90vw",
         backgroundColor: colorTheme.surface,
         borderWidth: 0,
@@ -90,7 +90,12 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
       </Badge>
 
       <br />
-      <div style={{ color: siteColors.text.primary, fontSize: "1em" }}>
+      <div
+        style={{
+          color: siteColors.text.primary,
+          fontSize: "1em",
+        }}
+      >
         <ReactMarkdown rehypePlugins={[rehypeRaw]}>
           {stringToBackTick(item.description, siteColors.text.links)}
         </ReactMarkdown>
