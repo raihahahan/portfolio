@@ -31,3 +31,8 @@
 yarn dev
 
 ```
+
+## License
+_Please feel free to use any bits of this code in your own work, but please link to my site somewhere._
+
+MIT License: See [https://github.com/raihahahan/portfolio/blob/main/LICENSE](https://github.com/raihahahan/portfolio/blob/main/LICENSE)
