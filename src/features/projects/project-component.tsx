@@ -132,11 +132,7 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
           {item.contributors?.map((c, i) => (
             <Text key={c}>
               <LinkText
-                text={
-                  item?.contributors && i == item.contributors.length - 1
-                    ? c
-                    : `${c} | `
-                }
+                text={c}
                 link={`https://github.com/${c}`}
                 extraTextStyles={{ fontSize: 14, marginRight: 5 }}
               />
