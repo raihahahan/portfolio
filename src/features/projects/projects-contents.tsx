@@ -1,5 +1,4 @@
 import { Grid } from "@mantine/core";
-import useGlobalMediaQuery from "../../common/hooks/useGlobalMediaQueries";
 import ProjectComponent from "./project-component";
 import { projectDataType } from "./project-types";
 
@@ -8,13 +7,8 @@ export default function ProjectsContents({
 }: {
   projects: projectDataType[];
 }) {
-  const { lg } = useGlobalMediaQuery();
   return (
-    <Grid
-      gutter="lg"
-      align="stretch"
-      style={{ margin: 10, width: !lg ? "80vw" : undefined }}
-    >
+    <Grid gutter="lg" align="stretch" style={{ margin: 10 }}>
       {projects.map((item, index) => {
         return (
           <Grid.Col
