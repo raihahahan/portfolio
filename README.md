@@ -1,6 +1,6 @@
-# Porfolio
+# Portfolio
 ## About
-This is the code for the portfolio site for [https://mraihan.vercel.app](https://mraihan.vercel.app)
+This is the source code for the portfolio site for [https://mraihan.vercel.app](https://mraihan.vercel.app)
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -10,6 +10,10 @@ This is the code for the portfolio site for [https://mraihan.vercel.app](https:/
 * npm
   ```sh
   npm install npm@latest -g
+  ```
+* yarn
+  ```sh
+  npm install --global yarn
   ```
 * Supabase account: https://supabase.com/
 
@@ -23,7 +27,7 @@ This is the code for the portfolio site for [https://mraihan.vercel.app](https:/
    yarn
    ```
 3. Create a `.env.local` file at the root of the project.
-4. Enter your supabase API keys in `.env.local`
+4. Enter your supabase API key and url in `.env.local`
    ```.env
    NEXT_PUBLIC_SUPABASE_URL=YOUR_KEY_0
    NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_KEY_1
