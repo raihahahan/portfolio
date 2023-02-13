@@ -13,7 +13,7 @@ import { ReduxProvider } from "../redux/store";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const route = useRouter();
-  const [siteTitle, setSiteTitle] = useState("Melonbase");
+  const [siteTitle, setSiteTitle] = useState("M.Raihan");
 
   useEffect(() => {
     setSiteTitle(makeSiteTitle(siteTitleNames[route.pathname as routes]));
