@@ -1,11 +1,9 @@
 import { GetStaticProps } from "next";
 import ProjectsContents from "../features/projects/projects-contents";
 import { getProjectsAsync } from "../features/projects/project-data";
+import Error from "next/error";
 
 export default function ProjectsPage({ projects }: { projects: any }) {
-  if (projects.length == 0) {
-    alert("An error occurred while fetching data.");
-  }
   return <ProjectsContents projects={projects} />;
 }
 

@@ -69,11 +69,43 @@ export function HomeIntroText({ text }: { text: string }) {
 export function HomeViewProjectsButton() {
   const router = useRouter();
   const { themeState } = useTheme();
+  const { xs, sm } = useGlobalMediaQuery();
   return (
-    <GenericButton
-      text="View Projects"
-      onClick={() => router.push("/projects")}
-      color={themeState == "light" ? "dark" : "yellow"}
-    />
+    <div
+      style={{
+        display: "flex",
+        flexDirection: xs ? "column" : "row",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <GenericButton
+        text="Projects"
+        onClick={() => router.push("/projects")}
+        color={"yellow"}
+        customVariant={themeState == "light" ? "filled" : "outline"}
+        extraStyles={{ margin: 5 }}
+      />
+
+      <GenericButton
+        text="Linkedin"
+        href={process.env.NEXT_PUBLIC_LINKEDIN}
+        color={"blue"}
+        customVariant={themeState == "light" ? "filled" : "outline"}
+        extraStyles={{ margin: 5 }}
+        isLinkable
+        newTab
+      />
+
+      <GenericButton
+        text="Resume"
+        href={process.env.NEXT_PUBLIC_RESUME}
+        color={"cyan"}
+        customVariant={themeState == "light" ? "filled" : "outline"}
+        extraStyles={{ margin: 5 }}
+        isLinkable
+        newTab
+      />
+    </div>
   );
 }
