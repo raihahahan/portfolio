@@ -82,17 +82,27 @@ export function HomeViewProjectsButton() {
       <GenericButton
         text="Projects"
         onClick={() => router.push("/projects")}
-        color={"yellow"}
-        customVariant={themeState == "light" ? "filled" : "outline"}
-        extraStyles={{ margin: 5 }}
+        color={"orange"}
+        customVariant={"filled"}
+        extraStyles={{ margin: 5, width: xs ? 200 : undefined }}
       />
 
       <GenericButton
         text="Linkedin"
         href={process.env.NEXT_PUBLIC_LINKEDIN}
-        color={"blue"}
-        customVariant={themeState == "light" ? "filled" : "outline"}
-        extraStyles={{ margin: 5 }}
+        color={"cyan"}
+        customVariant={"filled"}
+        extraStyles={{ margin: 5, width: xs ? 200 : undefined }}
+        isLinkable
+        newTab
+      />
+
+      <GenericButton
+        text="GitHub"
+        href={process.env.NEXT_PUBLIC_GITHUB}
+        color={"teal"}
+        customVariant={"filled"}
+        extraStyles={{ margin: 5, width: xs ? 200 : undefined }}
         isLinkable
         newTab
       />
@@ -100,9 +110,9 @@ export function HomeViewProjectsButton() {
       <GenericButton
         text="Resume"
         href={process.env.NEXT_PUBLIC_RESUME}
-        color={"cyan"}
-        customVariant={themeState == "light" ? "filled" : "outline"}
-        extraStyles={{ margin: 5 }}
+        color={"red"}
+        customVariant={"filled"}
+        extraStyles={{ margin: 5, width: xs ? 200 : undefined }}
         isLinkable
         newTab
       />
