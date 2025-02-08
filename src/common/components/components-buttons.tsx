@@ -1,5 +1,5 @@
-import { Button, ButtonVariant } from "@mantine/core";
-import { CSSProperties } from "react";
+import { Button, ButtonVariant, MantineColor } from "@mantine/core";
+import React, { CSSProperties } from "react";
 export default function GenericButton({
   text,
   onClick,
@@ -9,15 +9,17 @@ export default function GenericButton({
   href,
   customVariant,
   newTab,
+  icon,
 }: {
   text: string;
   onClick?: () => void;
-  color: string;
+  color: MantineColor;
   extraStyles?: CSSProperties | undefined;
   isLinkable?: boolean;
   href?: string;
   customVariant?: ButtonVariant | undefined;
   newTab?: boolean;
+  icon?: React.ReactNode;
 }) {
   return (
     <Button
