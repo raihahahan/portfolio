@@ -6,11 +6,11 @@ import {
 } from "./theme-types";
 
 export const breakpoints: breakpointsTypes = {
-  xs: 500,
-  sm: 850,
-  md: 1000,
-  lg: 1275,
-  xl: 1800,
+  xs: 480, // Extra Small: Typical phone screens
+  sm: 768, // Small: Tablets (e.g., iPads in portrait mode)
+  md: 992, // Medium: Small laptops and larger tablets
+  lg: 1200, // Large: Standard desktop screens
+  xl: 1600, // Extra Large: Large desktop screens
 };
 
 export const colorTheme: colorThemeByTheme = {
@@ -25,7 +25,7 @@ export const colorTheme: colorThemeByTheme = {
       variantLight: "#ffbb93",
       variantDark: "#c75b39",
     },
-    background: "#F0F0F0",
+    background: "#FFFFFF",
     surface: "#FFFFFF",
     error: "#B00020",
     placeholder: "#F0F0F0",

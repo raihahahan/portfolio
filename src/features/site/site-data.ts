@@ -7,6 +7,10 @@ const anchorData: { title: anchorTitles; anchorRoute: routes }[] = [
     anchorRoute: "/projects",
   },
   {
+    title: "Resume",
+    anchorRoute: process.env.NEXT_PUBLIC_RESUME as any,
+  },
+  {
     title: "About",
     anchorRoute: "/about",
   },
@@ -16,12 +20,8 @@ export default anchorData;
 
 export const footerData: { title: anchorTitles; anchorRoute: routes }[] = [
   {
-    title: "M.Raihan" as any,
+    title: "Raihan Rizqullah" as any,
     anchorRoute: "/about",
-  },
-  {
-    title: "Github" as any,
-    anchorRoute: "https://www.github.com/raihahahan" as any,
   },
   {
     title: "mraihandev@gmail.com" as any,

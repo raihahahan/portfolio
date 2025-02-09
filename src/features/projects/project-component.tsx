@@ -6,7 +6,13 @@ import useTheme from "../../common/hooks/useTheme";
 import { stringToBackTick } from "../../common/utils/strings";
 import { projectDataType } from "./project-types";
 
-export default function ProjectComponent({ item }: { item: projectDataType }) {
+export default function ProjectComponent({
+  item,
+  width,
+}: {
+  item: projectDataType;
+  width?: string;
+}) {
   const { siteColors, colorTheme, themeState } = useTheme();
   const { projectCondition } = item.projectAnalysis;
 
@@ -19,7 +25,7 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
       style={{
         marginTop: 10,
         minHeight: "30vw",
-        width: "90vw",
+        width: width ?? "90vw",
         backgroundColor: colorTheme.surface,
         borderWidth: 0,
       }}
@@ -169,7 +175,7 @@ export default function ProjectComponent({ item }: { item: projectDataType }) {
                 key={btn.title}
                 disabled={projectCondition == "not maintained"}
                 variant={themeState == "light" ? "light" : "filled"}
-                color={themeState == "light" ? "blue" : "dark"}
+                color={themeState == "light" ? "orange" : "dark"}
                 fullWidth
                 mt="md"
                 radius="md"

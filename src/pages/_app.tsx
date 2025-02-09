@@ -13,7 +13,7 @@ import { ReduxProvider } from "../redux/store";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const route = useRouter();
-  const [siteTitle, setSiteTitle] = useState("M.Raihan");
+  const [siteTitle, setSiteTitle] = useState("Raihan Rizqullah");
 
   useEffect(() => {
     setSiteTitle(makeSiteTitle(siteTitleNames[route.pathname as routes]));
@@ -26,7 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
-        <link rel="icon" href="/favicon.ico" />
+
         <meta name="description" content="Portfolio site" />
         <meta
           property="og:image"

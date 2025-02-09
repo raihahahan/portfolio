@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { AppShell, Footer } from "@mantine/core";
 import useTheme from "../../common/hooks/useTheme";
-import MainHeader, { MyFooter, MyNavbar } from "./site-components";
+import MainHeader, { MainHeader2, MyFooter, MyNavbar } from "./site-components";
 
-export const siteTitle = "M.Raihan";
+export const siteTitle = "Raihan Rizqullah";
 
 export default function SiteLayout({ children }: { children: any }) {
   const [opened, setOpened] = useState(false);
@@ -25,7 +25,7 @@ export default function SiteLayout({ children }: { children: any }) {
         padding={0}
         fixed
         navbar={<MyNavbar openControl={{ opened, setOpened }} />}
-        header={<MainHeader openControl={{ opened, setOpened }} />}
+        header={<MainHeader2 openControl={{ opened, setOpened }} />}
         footer={<MyFooter />}
       >
         <div

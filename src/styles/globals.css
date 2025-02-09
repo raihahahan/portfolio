@@ -6,6 +6,7 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   max-width: 100%;
   overflow-x: hidden;
+  background-color: black;
 }
 
 a {
@@ -22,7 +23,7 @@ a {
     color-scheme: dark;
   }
   body {
-    color: white;
+    color: black;
     background: black;
   }
 }

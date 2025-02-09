@@ -14,14 +14,31 @@ export default function ToggleThemeButton({
 }) {
   const dispatch = useDispatch<AppDispatch>();
   const { siteColors, themeState } = useTheme();
+
   return (
-    <Anchor onClick={() => dispatch(toggleTheme())} style={{ margin: 20 }}>
-      {themeState == "dark" ? (
-        <FiMoon
-          size={size ?? 26}
-          color={siteColors.text.primary}
-          style={{ alignSelf: "center" }}
-        />
+    <Anchor
+      onClick={() => dispatch(toggleTheme())}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: size ? `${size + 20}px` : "46px",
+        height: size ? `${size + 20}px` : "46px",
+        backgroundColor: siteColors.header,
+        borderRadius: "50%",
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+        cursor: "pointer",
+        transition: "transform 0.2s ease",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "scale(1.1)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "scale(1)";
+      }}
+    >
+      {themeState === "dark" ? (
+        <FiMoon size={size ?? 26} color={siteColors.text.primary} />
       ) : (
         <FiSun size={size ?? 26} color={siteColors.text.primary} />
       )}

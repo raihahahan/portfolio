@@ -7,12 +7,13 @@ export const siteTitleNames: Record<routes, string> = {
   "/contact": "Contact",
   "/privacy-policy": "Privacy Policy",
   "/terms-of-use": "Terms of Use",
+  "#": "",
 };
 
 export function makeSiteTitle(title: string) {
   if (title == "" || !title) {
-    return "M.Raihan";
+    return "Raihan Rizqullah";
   } else {
-    return title + " | M.Raihan";
+    return title + " | Raihan Rizqullah";
   }
 }

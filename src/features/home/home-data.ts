@@ -15,3 +15,15 @@ export const getTaglineAsync = async (): Promise<string> => {
     return homeIntroTextData;
   }
 };
+
+interface ILink {
+  title: string;
+  link: string;
+}
+
+export const links: ILink[] = [
+  { title: "GitHub", link: process.env.NEXT_PUBLIC_GITHUB ?? "" },
+  { title: "Email", link: process.env.NEXT_PUBLIC_EMAIL ?? "" },
+  { title: "LinkedIn", link: process.env.NEXT_PUBLIC_LINKEDIN ?? "" },
+  { title: "Resume", link: process.env.NEXT_PUBLIC_RESUME ?? "" },
+];

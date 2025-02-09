@@ -1,15 +1,17 @@
-import { Text } from "@mantine/core";
 import useGlobalMediaQuery from "../../common/hooks/useGlobalMediaQueries";
 import useTheme from "../../common/hooks/useTheme";
-import { AboutProfileIcon, AboutSection } from "./about-components";
-import AboutLayout from "./about-layout";
+import { AboutSection } from "./about-components";
 import { aboutDataType } from "./about-types";
+import HomeContentLayout from "../home/home-layout";
+import { useState } from "react";
+import FilmStrip from "./about-components";
 
 export default function AboutContents({ about }: { about: aboutDataType[] }) {
   const { siteColors: colors } = useTheme();
   const mediaQueries = useGlobalMediaQuery();
+  const [isFlipped, setIsFlipped] = useState(false);
   return (
-    <AboutLayout>
+    <HomeContentLayout id="ABOUT">
       <div
         style={{
           display: "flex",
@@ -18,14 +20,7 @@ export default function AboutContents({ about }: { about: aboutDataType[] }) {
           flexDirection: "column",
         }}
       >
-        <AboutProfileIcon size={"100vw"} />
-        <br style={{ height: 60 }} />
-
-        <Text
-          style={{ color: colors.text.primary, fontSize: 24, marginBottom: 30 }}
-        >
-          ABOUT
-        </Text>
+        {!mediaQueries.sm && <FilmStrip />}
 
         <div style={{ width: !mediaQueries.md ? "60vw" : "100vw" }}>
           {about.map((item) => {
@@ -39,6 +34,6 @@ export default function AboutContents({ about }: { about: aboutDataType[] }) {
           })}
         </div>
       </div>
-    </AboutLayout>
+    </HomeContentLayout>
   );
 }
