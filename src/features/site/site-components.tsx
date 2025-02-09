@@ -51,9 +51,17 @@ export function AnchorLinks({
     setOpened: React.Dispatch<React.SetStateAction<boolean>>;
   };
 }) {
+  const { siteColors } = useTheme();
   const router = useRouter();
   return (
-    <div style={{ display: "flex", flexDirection: isSmall ? "column" : "row" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: isSmall ? "column" : "row",
+        backgroundColor: !isSmall ? "transparent" : siteColors.background,
+        height: isSmall ? "100vh" : undefined,
+      }}
+    >
       {anchorData.map((item) => {
         return (
           <CustomAnchor
@@ -260,10 +268,10 @@ export function MainHeader2({
         display: "flex",
         alignItems: "center",
         justifyContent: "center", // Center all content
-        backgroundColor: "transparent",
+        backgroundColor: sm && opened ? siteColors.background : "transparent",
         margin: 10,
         position: "fixed",
-        top: isHeaderVisible ? 0 : "-90px",
+        top: sm && opened ? 0 : isHeaderVisible ? 0 : "-90px",
         transition: "top 0.3s ease",
       }}
     >
@@ -299,7 +307,7 @@ export function MainHeader2({
             boxShadow: sm ? undefined : "0 4px 10px rgba(0, 0, 0, 0.1)",
             padding: "10px 30px",
             borderRadius: "100px",
-            backgroundColor: sm ? "transparent" : siteColors.header,
+            backgroundColor: sm ? "transparent" : siteColors.background,
             flexGrow: 1, // Allow the links area to adjust flexibly
             maxWidth: "40%", // Ensure links container doesn't grow too large
             minWidth: sm ? 0 : 400,
@@ -307,7 +315,7 @@ export function MainHeader2({
           }}
         >
           <div className={classes.links}>
-            <AnchorLinks isSmall={false} />
+            <AnchorLinks isSmall={sm} openControl={openControl} />
           </div>
         </div>
 
