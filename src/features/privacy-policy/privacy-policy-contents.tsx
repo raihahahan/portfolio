@@ -9,8 +9,6 @@ export default function PrivacyPolicyContents({ data }: { data: string }) {
   return (
     <HomeContentLayout
       id="priv"
-      height="auto"
-      backgroundColor={siteColors.background}
       extraStyles={{
         color: siteColors.text.primary,
         width: sm ? "100vw" : "60vw",
