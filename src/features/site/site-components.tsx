@@ -307,7 +307,11 @@ export function MainHeader2({
             boxShadow: sm ? undefined : "0 4px 10px rgba(0, 0, 0, 0.1)",
             padding: "10px 30px",
             borderRadius: "100px",
-            backgroundColor: sm ? "transparent" : siteColors.background,
+            backgroundColor: sm
+              ? "transparent"
+              : themeState == "dark"
+              ? siteColors.header
+              : siteColors.background,
             flexGrow: 1, // Allow the links area to adjust flexibly
             maxWidth: "40%", // Ensure links container doesn't grow too large
             minWidth: sm ? 0 : 400,
