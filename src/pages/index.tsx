@@ -1,10 +1,7 @@
 import { GetStaticProps } from "next";
 import HomeContents from "../features/home/home-contents";
 import { getTaglineAsync, homeIntroTextData } from "../features/home/home-data";
-import {
-  projectDataType,
-  projectTypeSmall,
-} from "../features/projects/project-types";
+import { projectDataType } from "../features/projects/project-types";
 import { getProjectsAsync } from "../features/projects/project-data";
 import {
   getEducationAsync,

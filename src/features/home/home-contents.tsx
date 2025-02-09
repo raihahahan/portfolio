@@ -76,15 +76,17 @@ export default function HomeContents({
               maxWidth: breakpoints.lg + 100,
             }}
           >
-            <Grid.Col span={12} style={{ display: "flex" }}>
-              <Title sx={{ color: siteColors.background }} order={4}>
-                {"."}
-              </Title>
-            </Grid.Col>
+            {!sm && (
+              <Grid.Col span={12} style={{ display: "flex" }}>
+                <Title sx={{ color: siteColors.background }} order={4}>
+                  {"."}
+                </Title>
+              </Grid.Col>
+            )}
             <Grid.Col key={"resume"} span={12}>
               <Resume resume={resume} type="💼 Work" />
             </Grid.Col>
-            <Grid.Col key={"resume"} span={12}>
+            <Grid.Col key={"education"} span={12}>
               <Resume resume={education} type="📚 Education" hideDownload />
             </Grid.Col>
           </Grid>

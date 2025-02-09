@@ -1,10 +1,19 @@
-import { ActionIcon, Anchor, Card, Grid, Title, Tooltip } from "@mantine/core";
+import {
+  ActionIcon,
+  Anchor,
+  Button,
+  Card,
+  Grid,
+  Title,
+  Tooltip,
+} from "@mantine/core";
 import { CSSProperties } from "react";
 import useTheme from "../../common/hooks/useTheme";
 import { breakpoints } from "../theme/theme-data";
 import {
   IconBrandGithub,
   IconBrandLinkedin,
+  IconDownload,
   IconMail,
   IconPaperclip,
 } from "@tabler/icons";
@@ -26,30 +35,41 @@ export function LayoutAnchorLinks() {
       icon: <IconMail />,
       tooltip: "Email",
     },
-    Resume: {
-      icon: <IconPaperclip />,
-      tooltip: "Resume",
-    },
   };
   return (
     <div
       style={{
         display: "flex",
         justifyContent: "flex-start",
+        flexDirection: "column",
         gap: "10px",
       }}
     >
-      {links.map((l) => {
-        const { icon, tooltip } = (iconMap as any)[l.title] || {};
-        if (!icon || !tooltip) return null;
-        return (
-          <Tooltip label={tooltip} key={l.title}>
-            <Anchor href={l.link} target="_blank">
-              <ActionIcon>{icon}</ActionIcon>
-            </Anchor>
-          </Tooltip>
-        );
-      })}
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        {links.map((l) => {
+          const { icon, tooltip } = (iconMap as any)[l.title] || {};
+          if (!icon || !tooltip) return null;
+          return (
+            <Tooltip label={tooltip} key={l.title}>
+              <div>
+                <Anchor href={l.link} target="_blank">
+                  <ActionIcon>{icon}</ActionIcon>
+                </Anchor>
+              </div>
+            </Tooltip>
+          );
+        })}
+      </div>
+      <Button
+        component="a"
+        href={process.env.NEXT_PUBLIC_RESUME}
+        target="_blank"
+        color="dark"
+        style={{ width: 120 }}
+      >
+        <IconDownload size={12} style={{ marginRight: 10 }} />
+        Resume
+      </Button>
     </div>
   );
 }

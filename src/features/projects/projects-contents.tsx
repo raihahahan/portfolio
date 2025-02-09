@@ -12,7 +12,7 @@ export default function ProjectsContents({
   return (
     <HomeContentLayout
       id="PROJECTS"
-      headerTitle="Projects"
+      headerTitle="Projects and Hackathons"
       headerDescription="My favourite projects so far. More on my GitHub."
     >
       <Grid
