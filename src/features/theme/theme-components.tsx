@@ -30,10 +30,10 @@ export default function ToggleThemeButton({
         cursor: "pointer",
         transition: "transform 0.2s ease",
       }}
-      onMouseEnter={(e) => {
+      onMouseEnter={(e: any) => {
         e.currentTarget.style.transform = "scale(1.1)";
       }}
-      onMouseLeave={(e) => {
+      onMouseLeave={(e: any) => {
         e.currentTarget.style.transform = "scale(1)";
       }}
     >
