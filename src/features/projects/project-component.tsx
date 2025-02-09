@@ -24,7 +24,6 @@ export default function ProjectComponent({
       withBorder
       style={{
         marginTop: 10,
-        minHeight: "30vw",
         width: width ?? "90vw",
         backgroundColor: colorTheme.surface,
         borderWidth: 0,
