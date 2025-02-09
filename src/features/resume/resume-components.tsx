@@ -2,6 +2,7 @@ import { Avatar, Button, Card, Group, Stack, Text } from "@mantine/core";
 import { ResumeItem } from "./resume-types";
 import { IconDownload } from "@tabler/icons";
 import useTheme from "../../common/hooks/useTheme";
+import useGlobalMediaQuery from "../../common/hooks/useGlobalMediaQueries";
 
 export function Resume({
   resume,
@@ -13,6 +14,7 @@ export function Resume({
   hideDownload?: boolean;
 }) {
   const { siteColors, themeState } = useTheme();
+  const { sm } = useGlobalMediaQuery();
   return (
     <Card
       withBorder
@@ -37,16 +39,37 @@ export function Resume({
           <Group key={index} align="center" spacing="sm">
             <Avatar src={item.iconUrl} radius="xl" size="lg" />
             <Stack spacing={0} style={{ flex: 1 }}>
-              <Text color={siteColors.text.primary} weight={500} size="sm">
-                {item.company}
-              </Text>
-              <Text color="dimmed" size="sm">
-                {item.position}
-              </Text>
+              <Group
+                align="center"
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text color={siteColors.text.primary} weight={500} size="sm">
+                  {item.company}
+                </Text>
+                {sm ? (
+                  <Text color="dimmed" size="sm">
+                    {item.position}
+                  </Text>
+                ) : (
+                  <Text color="dimmed" size="sm">
+                    {item.start} — {item.end}
+                  </Text>
+                )}
+              </Group>
+              {sm ? (
+                <Text color="dimmed" size="sm">
+                  {item.start} — {item.end}
+                </Text>
+              ) : (
+                <Text color="dimmed" size="sm">
+                  {item.position}
+                </Text>
+              )}
             </Stack>
-            <Text color="dimmed" size="sm">
-              {item.start} — {item.end}
-            </Text>
           </Group>
         ))}
       </Stack>
@@ -54,11 +77,13 @@ export function Resume({
         <Button
           component="a"
           href={process.env.NEXT_PUBLIC_RESUME}
+          target="_blank"
           style={{ justifySelf: "flex-end", marginTop: 20 }}
           color="orange"
-          variant={themeState == "dark" ? "filled" : "light"}
+          variant={"subtle"}
         >
-          <IconDownload style={{ marginRight: 10 }} /> Download Resume
+          <IconDownload style={{ marginRight: 10, fontWeight: "lighter" }} />{" "}
+          Download Resume
         </Button>
       )}
     </Card>

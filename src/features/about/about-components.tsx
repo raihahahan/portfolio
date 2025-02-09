@@ -97,11 +97,12 @@ export function AboutWrapper({ children }: { children: JSX.Element }) {
 }
 
 const BackSide = ({ title }: { title: string }) => {
+  const { xs } = useGlobalMediaQuery();
   return (
     <div
       style={{
-        width: "200px",
-        height: "200px",
+        width: xs ? "150px" : "200px",
+        height: xs ? "150px" : "200px",
         backgroundColor: "orange",
         display: "flex",
         alignItems: "center",
@@ -152,16 +153,18 @@ const BackSide = ({ title }: { title: string }) => {
 
 const FlipCard = ({ title, index }: { title: string; index: number }) => {
   const [isFlipped, setIsFlipped] = useState(false);
-
+  const { xs } = useGlobalMediaQuery();
   return (
     <div
       onMouseEnter={() => setIsFlipped(true)}
       onMouseLeave={() => setIsFlipped(false)}
+      onTouchStart={() => setIsFlipped(true)}
+      onTouchEnd={() => setIsFlipped(false)}
       style={{
         marginTop: 30,
         marginBottom: 30,
-        width: "200px",
-        height: "200px",
+        width: xs ? "150px" : "200px",
+        height: xs ? "150px" : "200px",
         marginLeft: index === 0 ? "0px" : "-30px", // Overlapping effect
         transform: `rotate(${index % 2 === 0 ? "-8deg" : "8deg"})`, // Alternate tilt
         transition: "transform 0.3s ease",
@@ -171,8 +174,8 @@ const FlipCard = ({ title, index }: { title: string; index: number }) => {
         <Image
           src={`/images/about/${title}`}
           objectFit="cover"
-          width={200}
-          height={200}
+          width={xs ? 150 : 200}
+          height={xs ? 150 : 200}
           alt={title}
           style={{
             borderRadius: 10,
@@ -186,7 +189,10 @@ const FlipCard = ({ title, index }: { title: string; index: number }) => {
 };
 
 const FilmStrip = () => {
-  const titles = ["cycling.jpg", "piano.jpg", "turkiye.jpg", "orbital.jpg"];
+  const { sm, xs } = useGlobalMediaQuery();
+  const titles = sm
+    ? ["cycling.jpg", "piano.jpg"]
+    : ["cycling.jpg", "piano.jpg", "turkiye.jpg", "orbital.jpg"];
 
   return (
     <div

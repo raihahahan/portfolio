@@ -10,7 +10,11 @@ export default function ProjectsContents({
   projects: projectDataType[];
 }) {
   return (
-    <HomeContentLayout id="PROJECTS">
+    <HomeContentLayout
+      id="PROJECTS"
+      headerTitle="Projects"
+      headerDescription="My favourite projects so far. More on my GitHub."
+    >
       <Grid
         gutter="lg"
         align="stretch"

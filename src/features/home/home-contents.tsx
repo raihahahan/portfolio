@@ -1,17 +1,10 @@
 import useGlobalMediaQuery from "../../common/hooks/useGlobalMediaQueries";
 import useTheme from "../../common/hooks/useTheme";
 import HomeContentLayout from "./home-layout";
-import { ActionIcon, Anchor, Grid, Title, Tooltip } from "@mantine/core";
+import { Anchor, Grid, Group, Title } from "@mantine/core";
 import { projectDataType } from "../projects/project-types";
 import ProjectComponent from "../projects/project-component";
 import { breakpoints } from "../theme/theme-data";
-import { links } from "./home-data";
-import {
-  IconBrandGithub,
-  IconBrandLinkedin,
-  IconMail,
-  IconPaperclip,
-} from "@tabler/icons";
 import { ResumeItem } from "../resume/resume-types";
 import { Resume } from "../resume/resume-components";
 
@@ -28,76 +21,15 @@ export default function HomeContents({
 }) {
   const { siteColors, colorTheme } = useTheme();
   const { sm, md, xs } = useGlobalMediaQuery();
-  const iconMap = {
-    GitHub: {
-      icon: <IconBrandGithub />,
-      tooltip: "GitHub",
-    },
-    LinkedIn: {
-      icon: <IconBrandLinkedin />,
-      tooltip: "LinkedIn",
-    },
-    Email: {
-      icon: <IconMail />,
-      tooltip: "Email",
-    },
-    Resume: {
-      icon: <IconPaperclip />,
-      tooltip: "Resume",
-    },
-  };
 
   return (
-    <HomeContentLayout id="ABOUT">
+    <HomeContentLayout
+      id="ABOUT"
+      headerTitle="Raihan Rizqullah"
+      headerDescription={tagline}
+    >
       <Grid grow style={{ width: "100%", marginTop: 30 }}>
-        {/* Profile Section */}
-        <Grid.Col span={12} style={{ marginBottom: 10 }}>
-          <Title
-            order={1}
-            sx={{
-              color: siteColors.text.primary,
-              marginTop: 10,
-              marginBottom: 10,
-            }}
-          >
-            Raihan Rizqullah
-          </Title>
-
-          <Title
-            color={"white"}
-            order={4}
-            sx={{
-              color: siteColors.text.primary,
-              fontWeight: "lighter",
-              marginTop: 10,
-              marginBottom: 10,
-            }}
-          >
-            {tagline}
-          </Title>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-start",
-              gap: "10px",
-            }}
-          >
-            {links.map((l) => {
-              const { icon, tooltip } = (iconMap as any)[l.title] || {};
-              if (!icon || !tooltip) return null;
-              return (
-                <Tooltip label={tooltip} key={l.title}>
-                  <Anchor href={l.link} target="_blank">
-                    <ActionIcon>{icon}</ActionIcon>
-                  </Anchor>
-                </Tooltip>
-              );
-            })}
-          </div>
-        </Grid.Col>
-
         {/* Projects Section */}
-
         <Grid.Col
           span={sm ? 12 : 6}
           style={{ width: xs ? "80%" : sm ? "60%" : "50%" }}
@@ -109,10 +41,14 @@ export default function HomeContents({
             }}
           >
             <Grid.Col span={12} style={{ display: "flex" }}>
-              <Title sx={{ color: siteColors.text.primary }} order={4}>
-                📌 Featured Project{" "}
-                <Anchor href="/projects">(View more)</Anchor>
-              </Title>
+              <Group>
+                <Title sx={{ color: siteColors.text.primary }} order={4}>
+                  📌 Featured Project{" "}
+                </Title>
+                <Anchor href="/projects" color="orange">
+                  View all
+                </Anchor>
+              </Group>
             </Grid.Col>
             {projects.map((item) => (
               <Grid.Col
@@ -146,10 +82,10 @@ export default function HomeContents({
               </Title>
             </Grid.Col>
             <Grid.Col key={"resume"} span={12}>
-              <Resume resume={resume} type="Work" />
+              <Resume resume={resume} type="💼 Work" />
             </Grid.Col>
             <Grid.Col key={"resume"} span={12}>
-              <Resume resume={education} type="Education" hideDownload />
+              <Resume resume={education} type="📚 Education" hideDownload />
             </Grid.Col>
           </Grid>
         </Grid.Col>

@@ -5,13 +5,18 @@ import { aboutDataType } from "./about-types";
 import HomeContentLayout from "../home/home-layout";
 import { useState } from "react";
 import FilmStrip from "./about-components";
+import { breakpoints } from "../theme/theme-data";
 
 export default function AboutContents({ about }: { about: aboutDataType[] }) {
   const { siteColors: colors } = useTheme();
   const mediaQueries = useGlobalMediaQuery();
   const [isFlipped, setIsFlipped] = useState(false);
   return (
-    <HomeContentLayout id="ABOUT">
+    <HomeContentLayout
+      id="ABOUT"
+      headerTitle="Hi, I'm Raihan Rizqullah"
+      headerDescription="I enjoy building software."
+    >
       <div
         style={{
           display: "flex",
@@ -20,9 +25,20 @@ export default function AboutContents({ about }: { about: aboutDataType[] }) {
           flexDirection: "column",
         }}
       >
-        {!mediaQueries.sm && <FilmStrip />}
+        {<FilmStrip />}
 
-        <div style={{ width: !mediaQueries.md ? "60vw" : "100vw" }}>
+        <div
+          style={{
+            width: mediaQueries.sm
+              ? "100vw"
+              : mediaQueries.md
+              ? "90vw"
+              : mediaQueries.lg
+              ? "70vw"
+              : "70vw",
+            maxWidth: breakpoints.lg - 20,
+          }}
+        >
           {about.map((item) => {
             return (
               <AboutSection
