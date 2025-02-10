@@ -7,17 +7,21 @@ import ProjectComponent from "../projects/project-component";
 import { breakpoints } from "../theme/theme-data";
 import { ResumeItem } from "../resume/resume-types";
 import { Resume } from "../resume/resume-components";
+import { Post } from "../../../tina/__generated__/types";
+import { BlogCard } from "../blog/blog-components";
 
 export default function HomeContents({
   tagline,
   projects,
   resume,
   education,
+  blog,
 }: {
   tagline: string;
   projects: projectDataType[];
   resume: ResumeItem[];
   education: ResumeItem[];
+  blog: Post[];
 }) {
   const { siteColors, colorTheme } = useTheme();
   const { sm, md, xs } = useGlobalMediaQuery();
@@ -86,9 +90,13 @@ export default function HomeContents({
             <Grid.Col key={"resume"} span={12}>
               <Resume resume={resume} type="💼 Work" />
             </Grid.Col>
-            <Grid.Col key={"education"} span={12}>
-              <Resume resume={education} type="📚 Education" hideDownload />
-            </Grid.Col>
+            {blog.map((p) => {
+              return (
+                <Grid.Col key={p.title} span={12}>
+                  <BlogCard post={p} />
+                </Grid.Col>
+              );
+            })}
           </Grid>
         </Grid.Col>
       </Grid>

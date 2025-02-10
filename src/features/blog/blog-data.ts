@@ -1,6 +1,6 @@
 import client from "../../../tina/__generated__/client";
 
-export async function fetchBlogs() {
+export async function fetchBlogs(limit?: number) {
   const postsResponse = await client.queries.postConnection();
   if (
     postsResponse === null ||
@@ -11,7 +11,7 @@ export async function fetchBlogs() {
   ) {
     throw new Error("Failed to fetch.");
   }
-  const posts = postsResponse?.data?.postConnection?.edges
+  let posts = postsResponse?.data?.postConnection?.edges
     .map((post) => {
       return {
         slug: post?.node?._sys.filename ?? "",
@@ -30,5 +30,5 @@ export async function fetchBlogs() {
       );
     });
 
-  return posts;
+  return limit && posts.length > 0 ? posts.slice(0, limit) : posts;
 }

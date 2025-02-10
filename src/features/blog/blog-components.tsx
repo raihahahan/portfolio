@@ -15,8 +15,13 @@ import {
   Transition,
   List,
   ThemeIcon,
+  Card,
+  Text,
+  Grid,
+  Badge,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
+import { useRouter } from "next/router";
 
 export const Codeblock = ({ children, language }) => {
   return (
@@ -195,5 +200,49 @@ export function TableOfContents({ headings }) {
         })}
       </List>
     </aside>
+  );
+}
+
+export function BlogCard({ post }) {
+  const router = useRouter();
+  const { siteColors, themeState } = useTheme();
+  return (
+    <Card
+      key={post.slug}
+      shadow="sm"
+      p="lg"
+      onClick={() => router.push(`/blog/${post.slug}`)}
+      style={{
+        cursor: "pointer",
+        backgroundColor: siteColors.header,
+        color: siteColors.text.primary,
+      }}
+    >
+      <Group
+        position="apart"
+        style={{
+          marginBottom: 5,
+        }}
+      >
+        <Text size={20} weight={500}>
+          {post.title}
+        </Text>
+        <Text style={{ color: siteColors.text.secondary }}>{post.excerpt}</Text>
+        <Grid>
+          <Badge
+            color={"gray"}
+            variant={themeState == "light" ? "light" : "filled"}
+          >
+            {post.read_time} min read
+          </Badge>
+          <Badge
+            color={"orange"}
+            variant={themeState == "light" ? "light" : "filled"}
+          >
+            {new Date(post.published_at).toLocaleDateString()}
+          </Badge>
+        </Grid>
+      </Group>
+    </Card>
   );
 }

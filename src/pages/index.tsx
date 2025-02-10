@@ -8,17 +8,21 @@ import {
   getResumeAsync,
 } from "../features/resume/resume-data";
 import { ResumeItem } from "../features/resume/resume-types";
+import { fetchBlogs } from "../features/blog/blog-data";
+import { Post } from "../../tina/__generated__/types";
 
 export default function Home({
   tagline,
   projects,
   resume,
   education,
+  blog,
 }: {
   tagline: string;
   projects: projectDataType[];
   resume: ResumeItem[];
   education: ResumeItem[];
+  blog: Post[];
 }) {
   return (
     <HomeContents
@@ -26,6 +30,7 @@ export default function Home({
       projects={projects}
       resume={resume}
       education={education}
+      blog={blog}
     />
   );
 }
@@ -36,9 +41,10 @@ export const getStaticProps: GetStaticProps = async () => {
     const projects = await getProjectsAsync(1);
     const resume = await getResumeAsync();
     const education = await getEducationAsync();
+    const blog = await fetchBlogs(2);
 
     return {
-      props: { tagline, projects, resume, education },
+      props: { tagline, projects, resume, education, blog },
       revalidate: 10,
     };
   } catch (error) {
@@ -48,6 +54,7 @@ export const getStaticProps: GetStaticProps = async () => {
         projects: [],
         resume: [],
         education: [],
+        blog: [],
       },
       revalidate: 10,
     };

@@ -333,6 +333,9 @@ export function MainHeader2({
               justifyContent: "space-between",
             }}
           >
+            <Button component="a" href="/blog" color="orange">
+              Blog
+            </Button>
             <Button
               color="orange"
               onClick={() => setOpened((o) => !o)}
