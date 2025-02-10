@@ -7,6 +7,7 @@ export const siteTitleNames: Record<routes, string> = {
   "/contact": "Contact",
   "/privacy-policy": "Privacy Policy",
   "/terms-of-use": "Terms of Use",
+  "/blog": "Blog",
   "#": "",
 };
 
