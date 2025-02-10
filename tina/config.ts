@@ -52,6 +52,32 @@ export default defineConfig({
             label: "Published at",
             required: false,
           },
+          {
+            type: "number",
+            name: "read_time",
+            label: "Read Time",
+            required: false,
+          },
+          {
+            type: "reference",
+            name: "prev_post",
+            label: "Previous Post",
+            collections: ["post"],
+            required: false,
+          },
+          {
+            type: "reference",
+            name: "next_post",
+            label: "Next Post",
+            collections: ["post"],
+            required: false,
+          },
+          {
+            type: "string",
+            name: "excerpt",
+            label: "Excerpt",
+            required: false,
+          },
         ],
         ui: {
           router: ({ document }) => `/blog/${document._sys.filename}`,

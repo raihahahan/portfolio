@@ -1,8 +1,8 @@
-import { Card, Text, Group, SimpleGrid, Badge } from "@mantine/core";
+import { Card, Text, Group, SimpleGrid, Badge, Grid } from "@mantine/core";
 import HomeContentLayout from "../../features/home/home-layout";
-import { client } from "../../../tina/__generated__/client";
 import { useRouter } from "next/router";
 import useTheme from "../../common/hooks/useTheme";
+import { fetchBlogs } from "../../features/blog/blog-data";
 
 export default function BlogList({ posts }) {
   const router = useRouter();
@@ -11,7 +11,7 @@ export default function BlogList({ posts }) {
     <HomeContentLayout
       id="BLOG"
       headerTitle="Blog"
-      headerDescription="This is where I occasionally write stuff. (work in progress)"
+      headerDescription="This is where I occasionally write stuff."
     >
       <br />
       <SimpleGrid cols={3} breakpoints={[{ maxWidth: "sm", cols: 1 }]}>
@@ -27,16 +27,32 @@ export default function BlogList({ posts }) {
               color: siteColors.text.primary,
             }}
           >
-            <Group position="apart" style={{ marginBottom: 5 }}>
+            <Group
+              position="apart"
+              style={{
+                marginBottom: 5,
+              }}
+            >
               <Text size={20} weight={500}>
                 {post.title}
               </Text>
-              <Badge
-                color={"orange"}
-                variant={themeState == "light" ? "light" : "filled"}
-              >
-                {new Date(post.published_at).toLocaleDateString()}
-              </Badge>
+              <Text style={{ color: siteColors.text.secondary }}>
+                {post.excerpt}
+              </Text>
+              <Grid>
+                <Badge
+                  color={"gray"}
+                  variant={themeState == "light" ? "light" : "filled"}
+                >
+                  {post.read_time} min read
+                </Badge>
+                <Badge
+                  color={"orange"}
+                  variant={themeState == "light" ? "light" : "filled"}
+                >
+                  {new Date(post.published_at).toLocaleDateString()}
+                </Badge>
+              </Grid>
             </Group>
           </Card>
         ))}
@@ -46,28 +62,10 @@ export default function BlogList({ posts }) {
 }
 
 export async function getStaticProps() {
-  // Simulating fetching data from TinaCMS content stored in the `content/posts` directory
   try {
-    const postsResponse = await client.queries.postConnection();
-    if (
-      postsResponse === null ||
-      postsResponse === undefined ||
-      !postsResponse.data ||
-      !postsResponse.data.postConnection ||
-      !postsResponse.data.postConnection.edges
-    ) {
-      throw new Error("Failed to fetch.");
-    }
-    const posts = postsResponse?.data?.postConnection?.edges.map((post) => {
-      return {
-        slug: post?.node?._sys.filename ?? "",
-        title: post?.node?.title ?? "",
-        published_at: post?.node?.published_at ?? "",
-      };
-    });
+    const posts = await fetchBlogs();
 
     return { props: { posts } };
-    // This would return an array like: [ { slug: 'HelloWorld.md'}, /*...*/ ]
   } catch (e) {
     console.log(e);
     return { props: { posts: [] } };
