@@ -5,7 +5,8 @@ export type anchorTitles =
   | "Contact"
   | "Resume"
   | "Privacy Policy"
-  | "Terms of Use";
+  | "Terms of Use"
+  | "Blog";
 
 export type routes =
   | "/"
@@ -14,4 +15,5 @@ export type routes =
   | "/contact"
   | "#"
   | "/privacy-policy"
-  | "/terms-of-use";
+  | "/terms-of-use"
+  | "/blog";

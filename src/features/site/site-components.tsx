@@ -313,9 +313,11 @@ export function MainHeader2({
               ? siteColors.header
               : siteColors.background,
             flexGrow: 1, // Allow the links area to adjust flexibly
-            maxWidth: "40%", // Ensure links container doesn't grow too large
-            minWidth: sm ? 0 : 400,
+            maxWidth: "60%", // Ensure links container doesn't grow too large
+            minWidth: sm ? 0 : 420,
             width: sm ? "10px" : undefined,
+            marginLeft: 4,
+            marginRight: 4,
           }}
         >
           <div className={classes.links}>

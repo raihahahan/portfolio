@@ -14,6 +14,10 @@ const anchorData: { title: anchorTitles; anchorRoute: routes }[] = [
     title: "About",
     anchorRoute: "/about",
   },
+  {
+    title: "Blog",
+    anchorRoute: "/blog",
+  },
 ];
 
 export default anchorData;
@@ -31,5 +35,9 @@ export const footerData: { title: anchorTitles; anchorRoute: routes }[] = [
   {
     title: "About",
     anchorRoute: "/about",
+  },
+  {
+    title: "Blog",
+    anchorRoute: "/blog",
   },
 ];

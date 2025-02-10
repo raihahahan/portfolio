@@ -45,7 +45,7 @@ export function AboutSection({
       </Text>
 
       <AboutWrapper>
-        <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+        <ReactMarkdown rehypePlugins={[rehypeRaw] as any}>
           {stringToBackTick(item.body, colors.text.links)}
         </ReactMarkdown>
       </AboutWrapper>

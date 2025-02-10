@@ -101,7 +101,7 @@ export default function ProjectComponent({
           fontSize: "1em",
         }}
       >
-        <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+        <ReactMarkdown rehypePlugins={[rehypeRaw] as any}>
           {stringToBackTick(item.description, siteColors.text.links)}
         </ReactMarkdown>
       </div>
