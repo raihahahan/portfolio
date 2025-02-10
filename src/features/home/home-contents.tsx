@@ -87,7 +87,7 @@ export default function HomeContents({
                 </Title>
               </Grid.Col>
             )}
-            <Grid.Col key={"resume"} span={12}>
+            <Grid.Col key={"resume"} span={12} mb={8}>
               <Resume resume={resume} type="💼 Work" />
             </Grid.Col>
             {blog.map((p) => {
