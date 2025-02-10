@@ -61,9 +61,9 @@ export async function getStaticProps() {
     const posts = postsResponse?.data?.postConnection?.edges.map((post) => {
       console.log(post);
       return {
-        slug: (post as any).node._sys.filename,
-        title: post.node.title,
-        published_at: post?.node?.published_at,
+        slug: post?.node?._sys.filename ?? "",
+        title: post?.node?.title ?? "",
+        published_at: post?.node?.published_at ?? "",
       };
     });
 
