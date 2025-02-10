@@ -59,7 +59,6 @@ export async function getStaticProps() {
       throw new Error("Failed to fetch.");
     }
     const posts = postsResponse?.data?.postConnection?.edges.map((post) => {
-      console.log(post);
       return {
         slug: post?.node?._sys.filename ?? "",
         title: post?.node?.title ?? "",
