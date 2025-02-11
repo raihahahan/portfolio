@@ -32,11 +32,15 @@ The system operates as follows:
 
 ## Message Queue Design
 
-Originally, a Pub/Sub model was used but was found to be unsuitable due to scalability issues (as seen below).
+Originally, a Pub/Sub model was used as seen below. The backend service publishes jobs while the ml service subscribes to the exchange routed by the "job" key. Simultaneously, the ml service publishes results to the exchange while the backend service subscribes to the route "result".\
+\
+However, we [ran into scalability issues](https://www.linkedin.com/posts/raihan-rizqullah_makemysheet-activity-7222552492658606080-zRKB?utm_source=share\&utm_medium=member_desktop) upon launching MakeMySheet to the public. With the pub/sub exchange, the spike in load resulted in a huge backlog in the exchange. Users had to wait long periods of time for their job to be processed. This is because only one instance of the ml service is subscribed to the exchange. As a result, the server crashed.
 
 ![](/images/blog/makemysheet/image6.png)
 
-Instead, a Work Queue design was implemented to better distribute tasks among multiple worker nodes, preventing bottlenecks.
+Instead, a Work Queue design was implemented to better distribute tasks among multiple worker nodes, preventing bottlenecks.\
+\
+As seen in the diagram below, we now have multiple replicas of the ML services to handle messages from the job queue. This means that the workload is spread amongst the worker nodes. Thus, each client spends a shorter time waiting for their job to be processed. Furthermore, the nodes follow a round-robin algorithm to assign tasks amongst one another efficiently.
 
 ![](/images/blog/makemysheet/image61.png)
 

@@ -25,7 +25,6 @@ import { useMediaQuery } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import { constructHeading, isHeaderLink } from "./blog-utils";
 import { TinaMarkdown } from "tinacms/dist/rich-text";
-import Image from "next/image";
 
 export const Codeblock = ({ children, language }) => {
   return (
@@ -34,11 +33,8 @@ export const Codeblock = ({ children, language }) => {
         code={children || ""}
         language={language || "jsx"}
         style={atomOneDark}
-        wrapLongLines
         showInlineLineNumbers={true}
-        lineProps={{
-          style: { wordBreak: "break-all", whiteSpace: "pre-wrap" },
-        }}
+        customStyle={{ width: "calc(100vw - 50px)" }}
         wrapLines={true}
       />
     </div>
