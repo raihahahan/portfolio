@@ -29,5 +29,14 @@ export const extractHeaderId = (props) => {
 
 export const constructHeading = (props, level) => {
   const id = extractHeaderId(props);
-  return <Title order={level} id={id} className="mt-6 mb-6" {...props} />;
+
+  return (
+    <Title
+      order={level}
+      id={id}
+      style={{ color: "orangered" }}
+      className="mt-6 mb-6"
+      {...props}
+    />
+  );
 };

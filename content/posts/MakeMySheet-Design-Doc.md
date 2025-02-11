@@ -7,9 +7,7 @@ next_post: ''
 excerpt: System Design and Architecture
 ---
 
-> [MakeMySheet](https://makemysheet.com) is an AI music transcriber tool that converts music audio into music sheet. MakeMySheet is a project I created with [Shi Xin](https://github.com/apollo-tan) for NUS Orbital at the Artemis level. The contents here were taken from our [ReadMe](https://drive.google.com/file/d/1MSCzP2GQiQ_NtrvwtkeRR3pjgD7xxjvQ/view), with some portions cut off to reduce redundancy. This post is part of a series of posts where I break down the technical decisions behind MakeMySheet.\
-> \
-> However, do note that the ideas shared here may not be the best. MakeMySheet is currently undergoing refactoring to ensure best practices are maintained.
+> [MakeMySheet](https://makemysheet.com) is an AI music transcriber tool that converts music audio into music sheet. MakeMySheet is a project I created with [Shi Xin](https://github.com/apollo-tan) for NUS Orbital at the Artemis level. The contents here were taken from our [ReadMe](https://drive.google.com/file/d/1MSCzP2GQiQ_NtrvwtkeRR3pjgD7xxjvQ/view), with some portions cut off to reduce redundancy. This post is part of a series of posts where I break down the technical decisions behind MakeMySheet.
 
 # Introduction
 
@@ -17,9 +15,13 @@ This post covers the Architecture and hosting behind MakeMySheet. For an overvie
 
 # Architecture
 
+![](/images/blog/makemysheet/image16.png)
+
 MakeMySheet follows a microservices architecture, designed for scalability and minimal coupling. The core services are hosted on EC2 instances with Docker Compose, while communication between services is handled via RabbitMQ. The backend integrates with PostgreSQL (hosted on CockroachDB) and uses AWS S3 for file storage. Nginx serves as a reverse proxy, and OAuth 2.0 is used for authentication via JWT.
 
 ## Communication Between Services
+
+![](/images/blog/makemysheet/image2.png)
 
 The system operates as follows:
 
@@ -30,7 +32,15 @@ The system operates as follows:
 
 ## Message Queue Design
 
-Originally, a Pub/Sub model was used but was found to be unsuitable due to scalability issues. A Work Queue design was implemented to better distribute tasks among multiple worker nodes, preventing bottlenecks. The Work Queue offers several advantages:
+Originally, a Pub/Sub model was used but was found to be unsuitable due to scalability issues (as seen below).
+
+![](/images/blog/makemysheet/image6.png)
+
+Instead, a Work Queue design was implemented to better distribute tasks among multiple worker nodes, preventing bottlenecks.
+
+![](/images/blog/makemysheet/image61.png)
+
+The Work Queue offers several advantages:
 
 1. Load Distribution: Tasks are spread across multiple workers, preventing overloads.
 2. Scalability: The number of worker nodes can be easily adjusted.
@@ -39,8 +49,10 @@ Originally, a Pub/Sub model was used but was found to be unsuitable due to scala
 
 ### Load Management
 
-The queues in MakeMySheet act as buffers to manage the flow of messages between producers (clients) and consumers (backend services). Producers send messages to the queue, where they are stored until consumers are ready to process them. This decouples message production from message consumption, enabling each to operate at its own pace.
+![](/images/blog/makemysheet/image13.png)
 
+The queues in MakeMySheet act as buffers to manage the flow of messages between producers (clients) and consumers (backend services). Producers send messages to the queue, where they are stored until consumers are ready to process them. This decouples message production from message consumption, enabling each to operate at its own pace.\
+\
 Unlike traditional REST APIs, which require clients to wait for immediate server responses, queues provide an asynchronous approach. This allows the backend to handle large loads or spikes in demand without overwhelming the server. In the case of a high message influx, RabbitMQ stores the tasks in a queue. Consumers then process these tasks as they are ready, ensuring that no consumer is overwhelmed by sudden bursts of requests. For REST APIs, each request is processed in real time, making it difficult to handle surges in traffic without risking slower response times or server failures.
 
 ### Fault Tolerance
@@ -61,10 +73,12 @@ When the ML service completes its process, the frontend clients need to be notif
 8. Once the ML process is complete, the backend receives the result from RabbitMQ and calls the provided callback\_url to notify the Telegram bot.
 9. The callback URL is an endpoint exposed in the Telegram service, which processes the callback and updates the user on the conversion completion.
 
-### Benefits of Event-Driven Communication over Direct HTTP Requests
+### Decoupling
 
-While HTTP POST requests could be used to initiate a conversion, this approach has limitations. Since the conversion process is long-running, a direct HTTP request would result in timeouts or delays. Using event-driven communication, with RabbitMQ and Websockets/Webhooks, allows the server to immediately acknowledge the request without blocking, reducing client-side waiting time and avoiding timeouts.
+![](/images/blog/makemysheet/image76.png)
 
+While HTTP POST requests could be used to initiate a conversion, this approach has limitations. Since the conversion process is long-running, a direct HTTP request would result in timeouts or delays. Using event-driven communication, with RabbitMQ and Websockets/Webhooks, allows the server to immediately acknowledge the request without blocking, reducing client-side waiting time and avoiding timeouts.\
+\
 The decoupling of task initiation and completion provides asynchronous processing, which enhances reliability. RabbitMQ ensures that tasks are processed without loss, and clients are notified in real time via Websockets (for web clients) or Webhooks (for Telegram). This approach improves system scalability and fault tolerance, enabling a more efficient and responsive service.
 
 ## API Contract
@@ -153,6 +167,8 @@ By making the backend generic and adaptable, we ensure that different client typ
 
 #### Authentication on API Gateway Level
 
+![](/images/blog/makemysheet/image51.png)
+
 * JWT validation is centralised at the API gateway level, where a middleware verifies the token and injects user data into requests. This ensures consistent security policies across services, simplifying authentication management.
 * The ML service is isolated within a private IP address and can only be accessed through RabbitMQ, further securing the system.
 
@@ -168,15 +184,23 @@ Our application follows a microservices architecture with each service in its ow
 
 The core functionality of our app relies on the Pop2Piano model, which converts pop music audio to MIDI. We use Spotify's Basic Pitch model for instrument detection, and the output is then converted to a PDF piano score.
 
-Initially, we explored Music21 and LilyPond for MIDI to PDF conversion but found the output inadequate. After experimenting, we integrated MuseScore 4 into our Docker container, which provided the best quality output. Converted PDFs are stored in an S3 bucket for easier access due to file size limitations.
+### Music21
 
-### Challenges and Solutions
+Music21 is a Python-based toolkit for computer-aided musicology developed by MIT. We found out that it was able to parse MIDI files into MusicXML which can later be converted into a PDF file.
 
-* Model Integration: Pop2Piano was chosen for its promising results despite limited documentation. We overcame installation issues with WSL2 and Docker.
-* MIDI to PDF Conversion: We tested multiple tools but ultimately used MuseScore 4 for high-quality notation. It’s run in a headless Docker container.
-* File Storage: Converted PDFs are stored on an S3 bucket to address file size issues in HTTP transfers.
+![](/images/blog/makemysheet/image19.png)
 
-This approach ensures a robust CI/CD pipeline and efficient handling of complex music data processing tasks.
+However, the output was less than optimal. Firstly, all the notes were squeezed into one part, when a piano cover had two parts: a left and right hand. Secondly the way the notes were represented were also very strange and greatly deviated from what a normal piano score would look like. The poor output quality was supported by the fact that the Music21 documentation recommends that we use external software that were more specialised in this process, such as Finale.
+
+### LilyPond
+
+We realised that Music21 also supported a conversion from MIDI to LilyPond format, which is a file format used for another popular music notation software LilyPond.
+
+![](/images/blog/makemysheet/image15.png)However, the program failed to split into Treble and Bass clef, and instead placed all the notes in one part. The program also failed to correctly identify the key and use appropriate key signatures, instead opting to put accidentals which complicates and clutters the notation.
+
+### MuseScore
+
+While MuseScore offers more than just a MIDI to PDF converter, and using it is definitely overkill for our use-case, it was the best solution we could find that strikes a good balance between efficiency and accuracy. We ended up downloading MuseScore 4 into our Docker Container, and using CLI commands to interact with it. This part proved to be challenging, as we were using MuseScore 4 in an unusual way and hence involved unfamiliar tasks, such as downloading external software into a container and configuring it for headless operation due to the lack of a graphical interface. We were finally able to convert MIDI files to PDF files. However, we soon encountered limitations regarding file size transmission over HTTP , prompting us to store conversions on an S3 Bucket for improved accessibility and retrieval by users.
 
 ### Migration to RabbitMQ
 
@@ -188,12 +212,16 @@ Training Pop2Piano faced hurdles such as limited access to quality data and insu
 
 ## Database and Storage
 
+![](/images/blog/makemysheet/image23.png)
+
 * CockroachDB: We used CockroachDB for a serverless PostgreSQL database with two schemas: Conversion (storing conversion history) and RegisteredTelegramUser (mapping Auth0 users to Telegram accounts). The backend client is the sole service with database credentials, ensuring secure access.
 * S3 Bucket: Initially, we stored audio files as base64, causing latency issues. We shifted to generating pre-signed S3 URLs for more efficient uploads. For large files, we leveraged Telegram’s file hosting, but faced security concerns. In Milestone 2, we migrated S3 URL generation to the backend for enhanced security and scalability.
 
 # Hosting
 
 ## EC2 Configuration
+
+![](/images/blog/makemysheet/image16.png)
 
 * Milestone 1: Started with T2.micro, but ML service performance led to upgrading to T2.medium. Exposed multiple ports (HTTP, HTTPS, Backend, Frontend, SSH) for access.
 * Milestone 2: Implemented Nginx with SSL and domain setup to avoid exposing ports directly. Used reverse proxy for port mapping.
@@ -210,8 +238,8 @@ This restructuring improved performance, scalability, and security across our sy
 
 # Summary
 
-In this project, we optimised the workflow for a music-to-piano-sheet conversion system, starting with a shift to RabbitMQ for improved task handling, replacing the earlier Flask-based server. We faced challenges in model training due to limited access to high-quality data and insufficient computational resources, which slowed progress. We addressed these issues by using a serverless PostgreSQL database, CockroachDB, for secure data management, and streamlined file uploads with S3 pre-signed URLs, improving file handling performance.
-
+In this project, we optimised the workflow for a music-to-piano-sheet conversion system, starting with a shift to RabbitMQ for improved task handling, replacing the earlier Flask-based server. We faced challenges in model training due to limited access to high-quality data and insufficient computational resources, which slowed progress. We addressed these issues by using a serverless PostgreSQL database, CockroachDB, for secure data management, and streamlined file uploads with S3 pre-signed URLs, improving file handling performance.\
+\
 Our hosting setup evolved through multiple milestones. Initially, we used a T2.micro EC2 instance, which struggled with resource limitations during ML processing. We scaled to a T2.medium and later split services into separate EC2 instances, improving performance and scalability. To enhance security and manageability, we introduced Nginx reverse proxy configurations for SSL and domain handling.
 
 ## What's Next

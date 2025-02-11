@@ -7,11 +7,11 @@ next_post: content/posts/MakeMySheet-Design-Doc.md
 excerpt: Introduction to MakeMySheet
 ---
 
-> [MakeMySheet](https://makemysheet.com) is an AI music transcriber tool that converts music audio into music sheet. MakeMySheet is a project I created with [Shi Xin](https://github.com/apollo-tan) for NUS Orbital at the Artemis level. The contents here were taken from our [ReadMe](https://drive.google.com/file/d/1MSCzP2GQiQ_NtrvwtkeRR3pjgD7xxjvQ/view), with some portions cut off to reduce redundancy. This post is part of a series of posts where I break down the technical decisions behind MakeMySheet.\
-> \
-> However, do note that the ideas shared here may not be the best. MakeMySheet is currently undergoing refactoring to ensure best practices are maintained.
+> [MakeMySheet](https://makemysheet.com) is an AI music transcriber tool that converts music audio into music sheet. MakeMySheet is a project I created with [Shi Xin](https://github.com/apollo-tan) for NUS Orbital at the Artemis level. The contents here were taken from our [ReadMe](https://drive.google.com/file/d/1MSCzP2GQiQ_NtrvwtkeRR3pjgD7xxjvQ/view), with some portions cut off to reduce redundancy. This post is part of a series of posts where I break down the technical decisions behind MakeMySheet.
 
 # Introduction
+
+![](/images/blog/makemysheet/image69.png)
 
 MakeMySheet is an AI-driven tool designed to convert audio files into piano sheet music, catering to hobbyist musicians, aspiring songwriters, music students, and professionals. It provides an efficient way to transcribe pop songs into piano arrangements, eliminating the need for manual transcription. The platform offers both a web interface and a Telegram bot for easy access to the service.
 

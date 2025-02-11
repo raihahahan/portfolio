@@ -19,9 +19,13 @@ import {
   Text,
   Grid,
   Badge,
+  ActionIcon,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { useRouter } from "next/router";
+import { constructHeading, isHeaderLink } from "./blog-utils";
+import { TinaMarkdown } from "tinacms/dist/rich-text";
+import Image from "next/image";
 
 export const Codeblock = ({ children, language }) => {
   return (
@@ -154,9 +158,6 @@ export function TableOfContents({ headings }) {
                   if (isExpandable) {
                     e.preventDefault();
                     toggleExpand(heading.id);
-                    document
-                      .getElementById(heading.id)
-                      ?.scrollIntoView({ behavior: "smooth" });
                   }
                 }}
               >
@@ -248,3 +249,106 @@ export function BlogCard({ post }) {
     </Card>
   );
 }
+
+const PageSection = (props) => {
+  return (
+    <>
+      <h1>{props.heading}</h1>
+      <p>{props.content}</p>
+    </>
+  );
+};
+
+const components = (siteColors) => ({
+  PageSection: PageSection,
+  h1: (props) => constructHeading(props, 1),
+  h2: (props) => constructHeading(props, 2),
+  h3: (props) => constructHeading(props, 3),
+  h4: (props) => constructHeading(props, 4),
+  h5: (props) => constructHeading(props, 5),
+  h6: (props) => constructHeading(props, 6),
+  p: (props) => <p {...props} />,
+  ol: (props) => <ol className="list-decimal ml-5 mt-4" {...props} />, // Numbered lists
+  ul: (props) => <ul className="list-disc ml-5 mt-4" {...props} />, // Bullet lists
+  li: (props) => <li className="mt-1" {...props} />, // List items spacing
+  br: (props) => <br className="my-2" {...props} />,
+  a: (props) => (
+    <Anchor
+      className="text-orangered-500 underline hover:text-orangered-700 transition duration-200"
+      target={isHeaderLink(props) ? undefined : "_blank"}
+      id={isHeaderLink(props) ? (props.url as string).substring(1) : undefined}
+      rel="noopener noreferrer"
+      href={props.url}
+      {...props}
+    />
+  ),
+  code_block: (props) => {
+    return <Codeblock language={props.lang}>{props.value}</Codeblock>;
+  },
+  blockquote: (props) => {
+    return (
+      <blockquote
+        color={siteColors.text.secondary}
+        className="border-l-4 border-gray-500 pl-4 italic"
+      >
+        {props.children}
+      </blockquote>
+    );
+  },
+  img: (props) => {
+    console.log(props);
+    return (
+      <>
+        <br />
+        <img {...props} src={props.url} />
+        <br />
+      </>
+    );
+  },
+});
+
+export const ContentSection = ({ content, min_read }) => {
+  const { siteColors, themeState } = useTheme();
+  return (
+    <div
+      style={{
+        backgroundColor: siteColors.background,
+        color: siteColors.text.primary,
+      }}
+      className="relative py-16 bg-white overflow-auto text-black sm:max-w-full lg:max-w-screen-lg mx-auto"
+    >
+      <div className="relative px-4 sm:px-6 lg:px-8">
+        {min_read && (
+          <Badge
+            mb={30}
+            color={"gray"}
+            variant={themeState == "light" ? "light" : "filled"}
+          >
+            {min_read} min read
+          </Badge>
+        )}
+        <div className="text-lg mx-auto">
+          <TinaMarkdown components={components(siteColors)} content={content} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const BlogBackButton = () => {
+  return (
+    <ActionIcon component="a" href="/blog">
+      <div
+        style={{
+          display: "flex",
+          alignSelf: "flex-start",
+          justifySelf: "flex-start",
+          flexDirection: "row",
+        }}
+      >
+        <IconArrowLeft />
+        <Text>Back</Text>
+      </div>
+    </ActionIcon>
+  );
+};
