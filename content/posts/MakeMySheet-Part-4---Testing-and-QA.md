@@ -3,7 +3,7 @@ title: MakeMySheet Part 4 - Testing and QA
 published_at: 2025-02-11T16:00:00.000Z
 read_time: 12
 prev_post: content/posts/MakeMySheet-Part-3---SWE-and-Design-Patterns.md
-next_post: ''
+next_post: content/posts/MakeMySheet-Part-5---Conclusion.md
 excerpt: Quality Assurance
 ---
 
