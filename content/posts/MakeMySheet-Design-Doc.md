@@ -3,7 +3,7 @@ title: MakeMySheet Part 2 - System Design
 published_at: 2025-02-09T16:00:00.000Z
 read_time: 9
 prev_post: content/posts/MakeMySheet-Part-1---Introduction.md
-next_post: ''
+next_post: content/posts/MakeMySheet-Part-3---SWE-and-Design-Patterns.md
 excerpt: System Design and Architecture
 ---
 
@@ -11,7 +11,7 @@ excerpt: System Design and Architecture
 
 # Introduction
 
-This post covers the Architecture, CI/CD pipeline and Hosting of MakeMySheet. For an overview and explanation of its features, see the Introduction page.
+This post covers the Architecture, CI/CD pipeline and Hosting of MakeMySheet. For an overview and explanation of its features, see the [Introduction](/blog/MakeMySheet-Part-1---Introduction) page.
 
 # Architecture
 
@@ -244,4 +244,4 @@ Our hosting setup evolved through multiple milestones. Initially, we used a T2.m
 
 ## What's Next
 
-In the next section, we'll cover the system's features from the user's perspective, as well as the software engineering practices employed to ensure scalability, security, and efficient development.
+In the next section, we'll cover the the software engineering design patterns employed to ensure scalability, security, and efficient development.

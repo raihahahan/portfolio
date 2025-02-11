@@ -25,6 +25,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import { constructHeading, isHeaderLink } from "./blog-utils";
 import { TinaMarkdown } from "tinacms/dist/rich-text";
+import useGlobalMediaQuery from "../../common/hooks/useGlobalMediaQueries";
 
 export const Codeblock = ({ children, language }) => {
   return (
@@ -43,30 +44,29 @@ export const Codeblock = ({ children, language }) => {
 
 export const NavigationButtons = ({ prev, next }: { prev: any; next: any }) => {
   const { siteColors, themeState } = useTheme();
-  const NavButton = ({ type, post, icon }) => (
+  const { sm, md } = useGlobalMediaQuery();
+
+  const NavButton = ({ type, post }) => (
     <Button
       color="red"
       variant="default"
-      rightIcon={icon}
       component="a"
       href={`/blog/${post._sys.filename}`}
-      styles={{
-        root: {
-          backgroundColor: siteColors.header,
-          borderRadius: "8px",
-          padding: "20px 24px",
-          height: "auto",
-          border: themeState == "dark" ? 0 : undefined,
-        },
-        inner: {
-          gap: "12px",
-        },
-        label: {
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-end",
-          gap: "4px",
-        },
+      style={{
+        flex: 1,
+        margin: 10,
+        justifyContent: "flex-start",
+        alignContent: "center",
+        backgroundColor: siteColors.header,
+        width: "100%",
+        borderRadius: "8px",
+        padding: "20px 24px",
+        height: "auto",
+        border: themeState == "dark" ? 0 : undefined,
+        display: "flex",
+        flexDirection: "row",
+        minWidth: "max-content",
+        minHeight: "max-content",
       }}
     >
       <div>
@@ -75,6 +75,7 @@ export const NavigationButtons = ({ prev, next }: { prev: any; next: any }) => {
             color: siteColors.text.primary,
             fontSize: "16px",
             marginBottom: 4,
+            flex: 1,
           }}
         >
           {type}
@@ -84,6 +85,7 @@ export const NavigationButtons = ({ prev, next }: { prev: any; next: any }) => {
             color: siteColors.text.secondary,
             fontSize: "14px",
             fontWeight: "lighter",
+            wordWrap: "break-word",
           }}
         >
           {post.title}
@@ -93,22 +95,31 @@ export const NavigationButtons = ({ prev, next }: { prev: any; next: any }) => {
   );
 
   return (
-    <Group p="md">
-      {prev && (
-        <NavButton
-          type="Previous"
-          post={prev}
-          icon={<IconArrowLeft size={16} color={siteColors.text.secondary} />}
-        />
-      )}
+    <Group
+      p="md"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        alignSelf: "center",
+        width: "100%",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: sm ? "column" : "row",
+          width: "100%",
+        }}
+      >
+        {/* Previous Button */}
+        {prev && <NavButton type="Previous" post={prev} />}
 
-      {next && (
-        <NavButton
-          type="Next"
-          post={next}
-          icon={<IconArrowRight size={16} color={siteColors.text.secondary} />}
-        />
-      )}
+        {/* Next Button */}
+        {next && <NavButton type="Next" post={next} />}
+      </div>
     </Group>
   );
 };

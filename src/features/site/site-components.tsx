@@ -1,4 +1,4 @@
-import { Anchor, Button, Navbar, Text } from "@mantine/core";
+import { Anchor, Button, Navbar } from "@mantine/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { CSSProperties, useEffect, useState } from "react";
@@ -9,16 +9,10 @@ import anchorData, { footerData } from "./site-data";
 import RectangleTitle from "../../common/components/components-branding";
 import { anchorTitles, routes } from "./site-types";
 import ToggleThemeButton from "../theme/theme-components";
-import { useThemeReturnType } from "../theme/theme-types";
 import useGlobalMediaQuery from "../../common/hooks/useGlobalMediaQueries";
 import { AboutProfileIcon } from "../about/about-components";
 import { faceImageSrc } from "../about/about-data";
 import { breakpoints } from "../theme/theme-data";
-import {
-  IconCaretDown,
-  IconChevronDown,
-  IconChevronsDown,
-} from "@tabler/icons";
 
 export function MyNavbar({
   openControl,
@@ -279,7 +273,8 @@ export function MainHeader2({
       <div
         style={{
           width: !sm ? "70%" : "100%", // Limit content width to 70%
-          maxWidth: breakpoints.lg,
+          maxWidth: breakpoints.lg - 50,
+          minWidth: 600,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between", // Space out the icon, links, and toggle
@@ -313,8 +308,8 @@ export function MainHeader2({
               ? siteColors.header
               : siteColors.background,
             flexGrow: 1, // Allow the links area to adjust flexibly
-            maxWidth: "60%", // Ensure links container doesn't grow too large
-            minWidth: sm ? 0 : 420,
+            maxWidth: 500, // Ensure links container doesn't grow too large
+            minWidth: sm ? 0 : 440,
             width: sm ? "10px" : undefined,
             marginLeft: 4,
             marginRight: 4,

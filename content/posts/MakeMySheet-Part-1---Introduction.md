@@ -13,7 +13,7 @@ excerpt: Introduction to MakeMySheet
 
 ![](/images/blog/makemysheet/image69.png)
 
-MakeMySheet is an AI-driven tool designed to convert audio files into piano sheet music, catering to hobbyist musicians, aspiring songwriters, music students, and professionals. It provides an efficient way to transcribe pop songs into piano arrangements, eliminating the need for manual transcription. The platform offers both a web interface and a Telegram bot for easy access to the service.
+MakeMySheet is an AI-driven tool ([website](https://makemysheet.com), [Telegram bot](https://t.me/makemysheet_bot)) designed to convert audio files into piano sheet music, catering to hobbyist musicians, aspiring songwriters, music students, and professionals. It provides an efficient way to transcribe pop songs into piano arrangements, eliminating the need for manual transcription. The platform offers both a web interface and a Telegram bot for easy access to the service.
 
 ## Motivation
 
