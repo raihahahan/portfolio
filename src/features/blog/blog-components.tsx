@@ -58,7 +58,7 @@ export const NavigationButtons = ({ prev, next }: { prev: any; next: any }) => {
         justifyContent: "flex-start",
         alignContent: "center",
         backgroundColor: siteColors.header,
-        width: "100%",
+        width: sm ? "97vw" : "100%",
         borderRadius: "8px",
         padding: "20px 24px",
         height: "auto",
