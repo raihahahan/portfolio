@@ -63,19 +63,19 @@ Unlike traditional REST APIs, which require clients to wait for immediate server
 
 RabbitMQ offers built-in message acknowledgment, ensuring that messages are only removed from the queue once they are successfully processed. This guarantees that messages persist even in the event of a server failure. Additionally, queues can be set to durable, ensuring that the queue data survives broker restarts. In the event of a failure, the messages will still reach their intended destination once the system recovers.
 
-### Event-Driven Communication: Websockets vs Webhooks
+### Event-Driven Communication: Websockets and Webhooks
 
 When the ML service completes its process, the frontend clients need to be notified of the result. Here’s how we achieve that using Websockets and Webhooks:
 
-1. Web Frontend (Websockets):
-2. After submitting a POST request to /api/convert or /api/telegram/convert, the request returns a job ID.
-3. The web frontend connects to the backend via WebSocket, listens for the "messageFromServer" event, and navigates to a loading screen.
-4. Upon receiving a result from RabbitMQ, the backend emits the "messageFromServer" event over the WebSocket, signaling that the job is done.
-5. The WebSocket connection is then closed, and the frontend navigates to the result page.
-6. Telegram Client (Webhooks):
-7. The Telegram bot sends the callback\_url in the request body when calling /api/telegram/convert.
-8. Once the ML process is complete, the backend receives the result from RabbitMQ and calls the provided callback\_url to notify the Telegram bot.
-9. The callback URL is an endpoint exposed in the Telegram service, which processes the callback and updates the user on the conversion completion.
+1. **Web Frontend (Websockets)**:
+   1. After submitting a POST request to /api/convert or /api/telegram/convert, the request returns a job ID.
+   2. The web frontend connects to the backend via WebSocket, listens for the "messageFromServer" event, and navigates to a loading screen.
+   3. Upon receiving a result from RabbitMQ, the backend emits the "messageFromServer" event over the WebSocket, signaling that the job is done.
+   4. The WebSocket connection is then closed, and the frontend navigates to the result page.
+2. **Telegram Client (Webhooks)**:
+   1. The Telegram bot sends the callback\_url in the request body when calling /api/telegram/convert.
+   2. Once the ML process is complete, the backend receives the result from RabbitMQ and calls the provided callback\_url to notify the Telegram bot.
+   3. The callback URL is an endpoint exposed in the Telegram service, which processes the callback and updates the user on the conversion completion.
 
 ### Decoupling
 
@@ -89,7 +89,7 @@ The decoupling of task initiation and completion provides asynchronous processin
 
 In a microservices infrastructure, a well-defined API contract is essential for maintaining modularity and extensibility. Below is the API contract for the /convert endpoint, which caters to both web and Telegram clients.
 
-#### /convert POST Request Body
+**/convert POST Request Body**
 
 ```
 {
@@ -112,7 +112,7 @@ In a microservices infrastructure, a well-defined API contract is essential for 
 }
 ```
 
-#### /convert POST Response Body
+**/convert POST Response Body**
 
 ```
 {
@@ -142,7 +142,7 @@ In a microservices infrastructure, a well-defined API contract is essential for 
 }
 ```
 
-### Key Notes:
+### Key Notes
 
 * source: Indicates the client type (either "telegram" or "web\_frontend").
 * user\_id, song\_name, audio\_url: Required for task initiation.
@@ -152,31 +152,31 @@ In a microservices infrastructure, a well-defined API contract is essential for 
 
 By making the backend generic and adaptable, we ensure that different client types, including open-source API clients, can utilise the service efficiently. The system's flexibility helps extend the platform to other clients in the future, maintaining a high level of scalability and reliability.
 
-## Dockerization and Cross-Platform Compatibility
+## Containerisation: Docker Compose
 
 * All services are packaged as Docker images and share the default "bridge" network defined in the Docker Compose configuration. This simplifies service-to-service communication using service names (e.g., `http://backend:5000`), resolving to the container’s IP.
 * For browser access, use `http://localhost:5000` for development or `https://api.makemysheet.com` for production.
 * Docker allows cross-platform development, enabling consistent builds on Windows and Mac without requiring local installation of dependencies (e.g., RabbitMQ).
 
-#### Simplified Deployment
+### Simplified Deployment
 
 * By using Docker images, services like RabbitMQ are pulled and run directly, eliminating the need for complex local setups and ensuring consistent environments across systems.
 
 ## Security: Authentication and Authorization
 
-#### Overview
+### Overview
 
 * OAuth 2.0 with Auth0 handles authentication. The frontend logs in via Auth0 and receives an access token, which is passed as a JWT for backend calls. The token is set to expire after 30 days, with refresh tokens handling auto-renewal.
 * RS256 asymmetric encryption is used for JWT validation, with dynamic generation of public keys using the OAuth 2.0 `.wellknown` endpoint.
 
-#### Authentication on API Gateway Level
+### Authentication on API Gateway Level
 
 ![](/images/blog/makemysheet/image51.png)
 
 * JWT validation is centralised at the API gateway level, where a middleware verifies the token and injects user data into requests. This ensures consistent security policies across services, simplifying authentication management.
 * The ML service is isolated within a private IP address and can only be accessed through RabbitMQ, further securing the system.
 
-#### Telegram Endpoint Authentication
+### Telegram Endpoint Authentication
 
 * Telegram endpoints use a custom middleware that checks the bot token (stored as an environment variable) and the Telegram user ID against the RegisteredTelegramUser database. This ensures that only authenticated and authorised Telegram users can access the endpoints, as registration requires explicit user consent via the Telegram app.
 
@@ -209,10 +209,6 @@ While MuseScore offers more than just a MIDI to PDF converter, and using it is d
 ### Migration to RabbitMQ
 
 To improve ML inference performance, we migrated from a Flask server to a RabbitMQ-based work queue, enhancing efficiency and scalability for task handling.
-
-### Model Training and Refinement
-
-Training Pop2Piano faced hurdles such as limited access to quality data and insufficient hardware. Online platforms like Google Colab and SageMaker had limited computational power and usage caps, further slowing progress.
 
 ## Database and Storage
 
