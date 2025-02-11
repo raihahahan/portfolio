@@ -274,7 +274,7 @@ export function MainHeader2({
         style={{
           width: !sm ? "70%" : "100%", // Limit content width to 70%
           maxWidth: breakpoints.lg - 50,
-          minWidth: 600,
+          minWidth: !sm ? 600 : undefined,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between", // Space out the icon, links, and toggle
