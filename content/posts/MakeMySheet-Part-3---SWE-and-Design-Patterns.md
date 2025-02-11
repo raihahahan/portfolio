@@ -7,9 +7,9 @@ next_post: content/posts/MakeMySheet-Part-4---Testing-and-QA.md
 excerpt: Software Engineering and Design Patterns
 ---
 
-# Software Design Patterns
-
 > [MakeMySheet](https://makemysheet.com) is an AI music transcriber tool that converts music audio into music sheet. MakeMySheet is a project I created with [Shi Xin](https://github.com/apollo-tan) for NUS Orbital at the Artemis level. The contents here were taken from our [ReadMe](https://drive.google.com/file/d/1MSCzP2GQiQ_NtrvwtkeRR3pjgD7xxjvQ/view), with some portions cut off to reduce redundancy. This post is part of a series of posts where I break down the technical decisions behind MakeMySheet.
+
+# Software Design Patterns
 
 ## Singleton
 
@@ -185,11 +185,11 @@ Failures can occur in any microservice, so we employ multiple fault tolerance me
 
 By combining fault tolerance mechanisms and structured error handling, we ensure a resilient and self-recovering system.
 
-## Development Strategies {#development-strategies}
+## Development Strategies
 
 The two main development strategies we adopted were test-driven development and iterative development. Both have its merits, and we found ourselves using a balance of both in areas where we deem fit.
 
-### Test-Driven Development {#test-driven-development}
+### Test-Driven Development
 
 In software engineering, test-driven development (TDD) is a technique where test cases are formulated, and clear expectations of the end result are established before coding begins. TDD is recognized as one of the most important strategies in software development, offering major benefits such as higher code quality, a faster feedback loop, and improved regression safety.\
 \
