@@ -11,7 +11,7 @@ excerpt: System Design and Architecture
 
 # Introduction
 
-This post covers the Architecture and hosting behind MakeMySheet. For an overview and explanation of its features, see the Introduction page.
+This post covers the Architecture, CI/CD pipeline and Hosting of MakeMySheet. For an overview and explanation of its features, see the Introduction page.
 
 # Architecture
 
@@ -19,7 +19,7 @@ This post covers the Architecture and hosting behind MakeMySheet. For an overvie
 
 MakeMySheet follows a microservices architecture, designed for scalability and minimal coupling. The core services are hosted on EC2 instances with Docker Compose, while communication between services is handled via RabbitMQ. The backend integrates with PostgreSQL (hosted on CockroachDB) and uses AWS S3 for file storage. Nginx serves as a reverse proxy, and OAuth 2.0 is used for authentication via JWT.
 
-## Communication Between Services
+## High Level Design
 
 ![](/images/blog/makemysheet/image2.png)
 
@@ -180,10 +180,6 @@ By making the backend generic and adaptable, we ensure that different client typ
 
 * Telegram endpoints use a custom middleware that checks the bot token (stored as an environment variable) and the Telegram user ID against the RegisteredTelegramUser database. This ensures that only authenticated and authorised Telegram users can access the endpoints, as registration requires explicit user consent via the Telegram app.
 
-## CI/CD Pipeline and Microservices Architecture
-
-Our application follows a microservices architecture with each service in its own GitHub repository. Each repository has two workflows for development and production. The workflows trigger Docker builds on pull requests, run unit tests, and push images to the Docker registry. The production workflow SSHs into the AWS server, pulls the new Docker images, and runs them. We enforce PRs to the development branch first and only merge to the main branch once checks are complete.
-
 ## ML Service: Pop2Piano and MIDI Conversion
 
 The core functionality of our app relies on the Pop2Piano model, which converts pop music audio to MIDI. We use Spotify's Basic Pitch model for instrument detection, and the output is then converted to a PDF piano score.
@@ -216,6 +212,10 @@ To improve ML inference performance, we migrated from a Flask server to a Rabbit
 
 * CockroachDB: We used CockroachDB for a serverless PostgreSQL database with two schemas: Conversion (storing conversion history) and RegisteredTelegramUser (mapping Auth0 users to Telegram accounts). The backend client is the sole service with database credentials, ensuring secure access.
 * S3 Bucket: Initially, we stored audio files as base64, causing latency issues. We shifted to generating pre-signed S3 URLs for more efficient uploads. For large files, we leveraged Telegram’s file hosting, but faced security concerns. In Milestone 2, we migrated S3 URL generation to the backend for enhanced security and scalability.
+
+# CI/CD Pipeline
+
+Our application follows a microservices architecture with each service in its own GitHub repository. Each repository has two workflows for development and production. The workflows trigger Docker builds on pull requests, run unit tests, and push images to the Docker registry. The production workflow SSHs into the AWS server, pulls the new Docker images, and runs them. We enforce PRs to the development branch first and only merge to the main branch once checks are complete.
 
 # Hosting
 
