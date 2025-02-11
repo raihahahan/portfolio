@@ -156,7 +156,6 @@ export function TableOfContents({ headings }) {
                 className="flex items-center text-gray-700 hover:text-blue-600 font-medium transition-all"
                 onClick={(e) => {
                   if (isExpandable) {
-                    e.preventDefault();
                     toggleExpand(heading.id);
                   }
                 }}
