@@ -19,7 +19,7 @@ MakeMySheet is an AI-driven tool designed to convert audio files into piano shee
 
 The project stems from a passion for music, especially for those who wish to play piano covers but lack the technical expertise for transcribing and arranging songs. While quality arrangements are available online, they often come at a cost, and free resources may be inaccurate. MakeMySheet aims to offer an accessible solution by automating transcription, benefiting both hobbyists and professional musicians alike.
 
-## User Stories
+# User Stories
 
 * Enthusiast Instrumentalists: Upload audio and receive piano sheet music for covers or leisurely play.
 * Bandmates: Identify harmonies and vocal parts, collaborate on arrangements for events or gigs.
@@ -29,7 +29,7 @@ The project stems from a passion for music, especially for those who wish to pla
 * Music Producers: Transcribe tracks into sheet music for remixing or rearranging.
 * Music Students: Transcribe pop songs for coursework and analyze compositions.
 
-## Service Overview and Tech Stack
+# Service Overview and Tech Stack
 
 * Web Frontend: React with Next.js (TypeScript), Redux
 * Web API Backend: Node.js, Express.js (TypeScript)
@@ -41,7 +41,7 @@ The project stems from a passion for music, especially for those who wish to pla
 * File Storage: AWS S3
 * DevOps: Docker Compose for service orchestration
 
-## Core Features
+# Core Features
 
 * Audio File Conversion: Upload audio and receive a PDF piano arrangement, with file storage in AWS S3.
 * Interactive Music Sheet: View and interact with MIDI playback, compare with original audio.

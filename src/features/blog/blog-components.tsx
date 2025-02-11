@@ -98,7 +98,7 @@ export const NavigationButtons = ({ prev, next }: { prev: any; next: any }) => {
         <NavButton
           type="Previous"
           post={prev}
-          icon={<IconArrowLeft size={16} />}
+          icon={<IconArrowLeft size={16} color={siteColors.text.secondary} />}
         />
       )}
 
@@ -106,7 +106,7 @@ export const NavigationButtons = ({ prev, next }: { prev: any; next: any }) => {
         <NavButton
           type="Next"
           post={next}
-          icon={<IconArrowRight size={16} />}
+          icon={<IconArrowRight size={16} color={siteColors.text.secondary} />}
         />
       )}
     </Group>
@@ -230,12 +230,14 @@ export function BlogCard({ post }) {
         <Text style={{ color: siteColors.text.secondary }}>{post.excerpt}</Text>
         <Grid>
           <Badge
+            m={3}
             color={"gray"}
             variant={themeState == "light" ? "light" : "filled"}
           >
             {post.read_time} min read
           </Badge>
           <Badge
+            m={3}
             color={"orange"}
             variant={themeState == "light" ? "light" : "filled"}
           >
