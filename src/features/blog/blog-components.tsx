@@ -258,7 +258,7 @@ export function BlogCard2({ post }) {
 
 export function BlogCard({ post }) {
   const router = useRouter();
-  const { siteColors } = useTheme();
+  const { siteColors, themeState } = useTheme();
   const { sm } = useGlobalMediaQuery();
 
   return (
@@ -275,9 +275,6 @@ export function BlogCard({ post }) {
       }}
       sx={{
         backgroundColor: siteColors.header,
-        "&:hover": {
-          backgroundColor: "#fafafa",
-        },
       }}
       onClick={() => router.push(`/blog/${post.slug}`)}
     >
