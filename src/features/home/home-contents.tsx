@@ -93,7 +93,7 @@ export default function HomeContents({
             {blog.map((p) => {
               return (
                 <Grid.Col key={p.title} span={12}>
-                  <BlogCard post={p} hideShadows />
+                  <BlogCard post={p} />
                 </Grid.Col>
               );
             })}

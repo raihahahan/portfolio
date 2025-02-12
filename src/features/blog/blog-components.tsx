@@ -256,7 +256,7 @@ export function BlogCard2({ post }) {
   );
 }
 
-export function BlogCard({ post, hideShadows }) {
+export function BlogCard({ post }) {
   const router = useRouter();
   const { siteColors } = useTheme();
   const { sm } = useGlobalMediaQuery();
