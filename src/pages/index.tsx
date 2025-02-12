@@ -41,7 +41,7 @@ export const getStaticProps: GetStaticProps = async () => {
     const projects = await getProjectsAsync(1);
     const resume = await getResumeAsync();
     const education = await getEducationAsync();
-    const blog = await fetchBlogs(2);
+    const blog = await fetchBlogs(1);
 
     return {
       props: { tagline, projects, resume, education, blog },

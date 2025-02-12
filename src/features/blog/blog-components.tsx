@@ -210,7 +210,7 @@ export function TableOfContents({ headings }) {
   );
 }
 
-export function BlogCard({ post }) {
+export function BlogCard2({ post }) {
   const router = useRouter();
   const { siteColors, themeState } = useTheme();
   return (
@@ -252,6 +252,70 @@ export function BlogCard({ post }) {
           </Badge>
         </Grid>
       </Group>
+    </Card>
+  );
+}
+
+export function BlogCard({ post, hideShadows }) {
+  const router = useRouter();
+  const { siteColors } = useTheme();
+  const { sm } = useGlobalMediaQuery();
+
+  return (
+    <Card
+      key={post.slug}
+      shadow={"sm"}
+      p="lg"
+      radius="md"
+      style={{
+        cursor: "pointer",
+        width: sm ? "100%" : undefined,
+        color: siteColors.text.primary,
+        // maxWidth: 400,
+      }}
+      sx={{
+        backgroundColor: siteColors.header,
+        "&:hover": {
+          backgroundColor: "#fafafa",
+        },
+      }}
+      onClick={() => router.push(`/blog/${post.slug}`)}
+    >
+      {/* Date */}
+      <Text size="sm" color="gray" mb="xs">
+        {new Date(post.published_at).toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}
+      </Text>
+
+      {/* Title */}
+      <Text size="xl" weight={600} mb="xs">
+        {post.title}
+      </Text>
+
+      {/* Excerpt */}
+      <Text size="sm" color={siteColors.text.secondary} lineClamp={3}>
+        {post.excerpt}
+      </Text>
+
+      {/* Meta Info */}
+      <Group position="apart" mt="md">
+        <Badge color="gray" variant="light">
+          {post.read_time} min read
+        </Badge>
+      </Group>
+
+      {/* Read More Link */}
+      <Text
+        size="sm"
+        color="red"
+        mt="md"
+        style={{ cursor: "pointer", fontWeight: 500 }}
+      >
+        Read note →
+      </Text>
     </Card>
   );
 }
