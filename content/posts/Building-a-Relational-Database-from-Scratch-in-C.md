@@ -7,10 +7,12 @@ next_post: ''
 excerpt: Overview
 ---
 
+> Github link: [https://github.com/raihahahan/cpp-database](https://github.com/raihahahan/cpp-database)
+
 # Introduction
 
-I've recently started learning C++ and decided to build a relational database from scratch. This inspiration came from Martin Kleppmann’s Designing Data-Intensive Applications (DDIA). The early chapters introduced the internal mechanics of storage engines like Bitcask, LevelDB and RocksDB. It dives into the database structures of databases: log-structured merge trees (LSM-trees) and B-trees.
-
+I've recently started learning C++ and decided to build a relational database from scratch. This inspiration came from Martin Kleppmann’s Designing Data-Intensive Applications (DDIA). The early chapters introduced the internal mechanics of storage engines like Bitcask, LevelDB and RocksDB. It dives into the database structures of databases: log-structured merge trees (LSM-trees) and B-trees. \
+\
 This post is the first part of a series of (upcoming) posts which outlines the high-level plan, design decisions, and phased roadmap I’ve structured around this project.
 
 # Why Build a Database?
@@ -23,16 +25,18 @@ Building one from scratch teaches:
 * How compaction or page splitting works in practice
 * How concurrency, transactions, and crash recovery are implemented
 
+\
 It's also an excuse for me to learn C++.
 
 # Project overview
-
-This project is divided into four phases. As of the time of writing this post, I have yet to start on any of it.
 
 1. **Phase 1:** Key-Value Store with LSM-Tree Storage
 2. **Phase 2:** Key-Value Store with B-Tree Storage
 3. **Phase 3:** Adding a relational layer
 4. **Phase 4:** SQL and Query Execution
+
+\
+This project is divided into four phases. As of the time of writing this post, I have yet to start on any of it.
 
 # Phase 1: Key-Value Store with LSM-Tree Storage
 
@@ -45,6 +49,7 @@ The first step is to build a basic key-value store using an LSM-tree storage eng
 * **SSTables:** Immutable, sorted files flushed from the memtable
 * **Compactor:** Merges SSTables and drops overwritten/deleted keys
 
+\
 The get path checks the memtable, then recent SSTables, and so on. Each SSTable has a sparse in-memory index to reduce scan overhead. This gives me a fast, durable, and append-only key-value store.
 
 # Phase 2 Key-Value Store with B-Tree Storage
@@ -59,11 +64,12 @@ Once the LSM version is working, I plan to add a second storage engine based on 
 
 ## Components
 
-The B-tree structure enables efficient lookups and range scans, with nodes aligned to page boundaries for cache and I/O efficiency.
-
 * **BTree Nodes:** Each node stores sorted keys and child pointers
 * **Pager:** Manages reading/writing pages to disk
 * **Buffer Manager**: Caches pages in memory and handles eviction
+
+\
+The B-tree structure enables efficient lookups and range scans, with nodes aligned to page boundaries for cache and I/O efficiency.
 
 # Phase 3: Adding a Relational Layer
 
@@ -74,6 +80,7 @@ At this point, I will build a logical layer on top of the key-value storage engi
 * Transactions and isolation
 * SQL-like APIs
 
+\
 This turns the storage engine into an actual database, with support for structured data and multiple tables.
 
 ## Components
