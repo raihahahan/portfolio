@@ -22,7 +22,7 @@ export const isHeaderLink = (props) =>
 
 export const extractHeaderId = (props) => {
   return props?.children?.props?.content
-    ?.map((t) => t.text.replaceAll(" ", "-"))
+    ?.map((t) => t?.text?.replaceAll(" ", "-"))
     .join("")
     .toLowerCase();
 };
