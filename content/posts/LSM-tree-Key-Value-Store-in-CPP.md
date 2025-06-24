@@ -199,7 +199,7 @@ std::optional<std::string> SegmentManager::get(const std:: string& key) const {
 
 ## Duplicate Keys and Latest Value Resolution
 
-Since every flush creates a new SSTable file, it's possible (and expected) that the same key appears in multiple segments—this happens every time a key is updated.\
+Since every flush creates a new SSTable file, it's possible (and expected) that the same key appears in multiple segments. This happens every time a key is updated.\
 \
 Rather than scanning all segments blindly, our index map always gets updated with the latest offset each time a new flush occurs. So even though old versions of the key exist in older segments, reads always return the latest value because:
 
@@ -207,7 +207,7 @@ Rather than scanning all segments blindly, our index map always gets updated wit
 * We only seek to the most recent file+offset pair for any key
 
 \
-This approach keeps writes simple and fast—but does leave obsolete data lying around.
+This approach keeps writes simple and fast, but does leave obsolete data lying around.
 
 ## Solving Duplicates: Compaction
 
