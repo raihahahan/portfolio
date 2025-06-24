@@ -1,12 +1,14 @@
 ---
 title: LSM-tree Key-Value Store in C++
 published_at: 2025-06-23T16:00:00.000Z
-read_time: 6
+read_time: 8
 prev_post: content/posts/Building-Databases-from-Scratch-in-CPP.md
 next_post: ''
 excerpt: LSM-Trees
 ---
 
+> An LSM-tree is a write-optimised, append-only data structure that buffers writes in memory and flushes them to disk in sorted chunks. It’s commonly used in modern databases like Cassandra for fast write-heavy workloads.\
+> \
 > Github link: [https://github.com/raihahahan/cpp-kv-database](https://github.com/raihahahan/cpp-kv-database)
 
 # Introduction
@@ -81,10 +83,11 @@ It can be thought of as a multi-level linked list, where each higher level skips
 \
 We're inserting key "D".
 
-\
-Level 2:  \[HEAD] ──────────────▶ \[G]\
-Level 1:   \[HEAD] ───▶ \[C] ─────▶ \[G]\
-Level 0:  \[HEAD] ─▶ \[A] ─▶ \[C] ─▶ \[E] ─▶ \[G]
+```
+Level 2: [HEAD] ──────────────▶[G]
+Level 1: [HEAD] ───▶[C] ─────▶[G]
+Level 0: [HEAD] ─▶[A] ─▶[C] ─▶[E] ─▶[G]
+```
 
 \
 **Step 1: Traverse and fill update\[]**
@@ -137,10 +140,13 @@ for (int i = 0; i < 2; ++i) {
 ```
 
 \
-Final Skip List\
-Level 2:   \[HEAD] ──────────────▶ \[G]\
-Level 1:   \[HEAD] ───▶ \[C] ─▶ \[D] ─▶ \[G]\
-Level 0:   \[HEAD] ─▶ \[A] ─▶ \[C] ─▶ \[D] ─▶ \[E] ─▶ \[G]
+Final Skip List
+
+```
+Level 2: [HEAD] ──────────────▶ [G]
+Level 1: [HEAD] ───▶ [C] ─▶ [D] ─▶ [G]
+Level 0: [HEAD] ─▶ [A] ─▶ [C] ─▶ [D] ─▶ [E] ─▶ [G]
+```
 
 # SSTable Segments
 
@@ -263,13 +269,13 @@ To delete a record, we need to append a special deletion record to the data file
 \
 1\. On Delete
 
-* Append a tombstone record ("\x01\_\_TOMBSTONE\_\_") to the WAL and insert it into the Memtable: wal.append(WalRecord{OpType::DELETE, key, ""}); memTable.put(key, TOMBSTONE); 
+* Append a tombstone record ("\x01\_\_TOMBSTONE\_\_") to the WAL and insert it into the Memtable: wal.append(WalRecord{OpType::DELETE, key, ""}); memTable.put(key, TOMBSTONE);
 
 \
 2\. On Flush
 
-* Treat tombstone values like normal key-values during flush. 
-* Tombstones are written to SSTable segments and indexed. 
+* Treat tombstone values like normal key-values during flush.
+* Tombstones are written to SSTable segments and indexed.
 
 \
 3\. On Get
@@ -280,18 +286,43 @@ To delete a record, we need to append a special deletion record to the data file
 \
 4\. On GetRange
 
-* From Memtable: Skip entries whose value is a tombstone when walking the skiplist. 
-* From SegmentManager:  Iterate over indexMap and skip keys with tombstone values during get().
+* From Memtable: Skip entries whose value is a tombstone when walking the skiplist.
+* From SegmentManager: Iterate over indexMap and skip keys with tombstone values during get().
 
 \
 5\. On Compaction
 
-* Gather all data using index map from segments. 
-* Filter out tombstones before writing to the new compacted segment. 
-* Rebuild indexMap only with live data. 
-* Delete all old segment files. 
+* Gather all data using index map from segments.
+* Filter out tombstones before writing to the new compacted segment.
+* Rebuild indexMap only with live data.
+* Delete all old segment files.
 
-# CLI Interface
+# Daemon process
+
+The database can be run as a daemon process. It's a persistent operation that runs in the background. Below are some details behind turning it into a daemon process.
+
+## Ensuring Singleton: Lock Mechanism
+
+The background process needs to be a single instance. Previously, calling ./db\_main multiple times will spawn multiple instances of the process. Thus, a lock file /tmp/kvdb.lock is used. \
+\
+When the process starts, it attempts to acquire an exclusive advsiory lock on this file using lockf() syscall. If another db\_main process is already running and holding the lock, our new instance will detect this and exit gracefully. The lock is tied to the file descriptor held by the running daemon, so it's automatically released on process exit.
+
+## Parent-Child relationship
+
+To become a background service, db\_main undergoes a daemonization process.
+
+1. On executing db\_main, it immediately fork()s itself, creating a child process.
+2. The original parent then exit()s. This detaches the child process from the controlling terminal, ensuring it continues to run even after the shell closes.
+3. The child process now acquires the single-instance lock, changes directory to \~/kvdb, creates its own session, redirects standard output and error streams to daemon.log and runs the database engine.
+
+## IPC: Unix Domain Sockets
+
+In order for programs to interact with the db process (such as the CLI program below), unix domain sockets are used. Instead of using network sockets (which would invoke IP addresses and ports), Unix Domain Sockets facilitate inter-process communication (IPC) on the same machine using a special socket file (e.g \~/kvdb/db.sock).
+
+1. Daemon creates and binds to this socket file, listening for incoming connections
+2. CLI (or any client) connects to this socket file
+
+## CLI program
 
 The CLI provides an interactive shell to issue commands like:
 
@@ -311,4 +342,3 @@ This project lays the foundation for more advanced database features. Some ideas
 * Add Bloom Filters to avoid unnecessary disk lookups
 * Configurable flush threshold based on memory size
 * Support for a B-Tree storage engine to enable SQL-style range queries
-* Host the database as a long-running process (like PostgreSQL) and interact via socket or custom CLI
