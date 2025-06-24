@@ -256,6 +256,41 @@ In the second diagram:
 \
 Merging performs a k-way merge (like merge sort), always preferring values from newer segments when duplicates are found. This results in a single clean segment with only the latest values for all keys.
 
+# Caveat: Deleting records with tombstone values
+
+To delete a record, we need to append a special deletion record to the data file called a tombstone. Below is a summary of the behaviour:
+
+\
+1\. On Delete
+
+* Append a tombstone record ("\x01\_\_TOMBSTONE\_\_") to the WAL and insert it into the Memtable: wal.append(WalRecord{OpType::DELETE, key, ""}); memTable.put(key, TOMBSTONE); 
+
+\
+2\. On Flush
+
+* Treat tombstone values like normal key-values during flush. 
+* Tombstones are written to SSTable segments and indexed. 
+
+\
+3\. On Get
+
+* From Memtable: If value is a tombstone, return std::nullopt.
+* From Disk (SegmentManager): Seek and read value. If tombstone, return std::nullopt.
+
+\
+4\. On GetRange
+
+* From Memtable: Skip entries whose value is a tombstone when walking the skiplist. 
+* From SegmentManager:  Iterate over indexMap and skip keys with tombstone values during get().
+
+\
+5\. On Compaction
+
+* Gather all data using index map from segments. 
+* Filter out tombstones before writing to the new compacted segment. 
+* Rebuild indexMap only with live data. 
+* Delete all old segment files. 
+
 # CLI Interface
 
 The CLI provides an interactive shell to issue commands like:
