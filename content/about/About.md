@@ -3,7 +3,7 @@
 
 I’m a Computer Science student at the National University of Singapore. I’ve worked as a software engineering intern at Binance, GovTech, and Cynapse AI. \
 \
-I'm building a [relational database in C++](https://github.com/raihahahan/cpp-relational-db), with ideas inspired from Postgres and sqlite. I'm passionate about database internals and distributed systems, and currently diving deep into C++. I’ve also built and published several mobile apps
+I'm building a [relational database in C++](https://github.com/raihahahan/cpp-relational-db), with ideas inspired from Postgres and sqlite. I'm passionate about database internals and distributed systems, and currently diving deep into C++. I’ve also built and published several mobile apps.
 
 ## Experience
 
@@ -15,7 +15,7 @@ I'm building a [relational database in C++](https://github.com/raihahahan/cpp-re
 ## Favourite projects
 
 1. [Relational database implementation](https://github.com/raihahahan/cpp-relational-db): (WIP) Implementation of a relational database in C++ from scratch
-2. [LSM-tree key-val database](https://mraihan.dev/blog/LSM-tree-Key-Value-Store-in-CPP): Implementation of a write-optimised database using LSM trees, inspired by [RocksDB](https://rocksdb.org/) 
+2. [LSM-tree key-val database](https://mraihan.dev/blog/LSM-tree-Key-Value-Store-in-CPP): Implementation of a write-optimised database using LSM trees, inspired by [RocksDB](https://rocksdb.org/)
 3. [MakeMySheet](https://mraihan.dev/blog/MakeMySheet-Part-1---Introduction): Convert music audio to music sheet using the [Pop2Piano](https://sweetcocoa.github.io/pop2piano_samples/) model
 4. [LockedIn](https://apps.apple.com/sg/app/lockedin-focus-app-blocker/id6747810033): (iOS app) Focus timer that blocks distracting apps and charges you if you try to end your session early
 
