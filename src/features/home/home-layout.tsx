@@ -15,7 +15,6 @@ import {
   IconBrandLinkedin,
   IconDownload,
   IconMail,
-  IconPaperclip,
 } from "@tabler/icons";
 import { links } from "./home-data";
 import useGlobalMediaQuery from "../../common/hooks/useGlobalMediaQueries";
