@@ -385,7 +385,7 @@ export const ContentSection = ({ content, min_read }) => {
       className="relative py-16 bg-white overflow-auto text-black sm:max-w-full lg:max-w-screen-lg mx-auto"
     >
       <div className="relative px-4 sm:px-6 lg:px-8">
-        {min_read && (
+        {min_read ? (
           <Badge
             mb={30}
             color={"gray"}
@@ -393,7 +393,7 @@ export const ContentSection = ({ content, min_read }) => {
           >
             {min_read} min read
           </Badge>
-        )}
+        ) : null}
         <div className="text-lg mx-auto">
           <TinaMarkdown components={components(siteColors)} content={content} />
         </div>
