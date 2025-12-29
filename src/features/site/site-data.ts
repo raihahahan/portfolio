@@ -11,10 +11,6 @@ const anchorData: { title: anchorTitles; anchorRoute: routes }[] = [
     anchorRoute: process.env.NEXT_PUBLIC_RESUME as any,
   },
   {
-    title: "About",
-    anchorRoute: "/about",
-  },
-  {
     title: "Blog",
     anchorRoute: "/blog",
   },

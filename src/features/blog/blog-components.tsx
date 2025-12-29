@@ -341,7 +341,7 @@ const components = (siteColors) => ({
   br: (props) => <br className="my-2" {...props} />,
   a: (props) => (
     <Anchor
-      className="text-orangered-500 underline hover:text-orangered-700 transition duration-200"
+      className="text-orangered-500 hover:text-orangered-700 transition duration-200"
       target={isHeaderLink(props) ? undefined : "_blank"}
       id={isHeaderLink(props) ? (props.url as string).substring(1) : undefined}
       rel="noopener noreferrer"
@@ -385,7 +385,7 @@ export const ContentSection = ({ content, min_read }) => {
       className="relative py-16 bg-white overflow-auto text-black sm:max-w-full lg:max-w-screen-lg mx-auto"
     >
       <div className="relative px-4 sm:px-6 lg:px-8">
-        {min_read && (
+        {min_read ? (
           <Badge
             mb={30}
             color={"gray"}
@@ -393,7 +393,7 @@ export const ContentSection = ({ content, min_read }) => {
           >
             {min_read} min read
           </Badge>
-        )}
+        ) : null}
         <div className="text-lg mx-auto">
           <TinaMarkdown components={components(siteColors)} content={content} />
         </div>

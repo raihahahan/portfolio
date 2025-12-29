@@ -1,7 +1,8 @@
 import { supabase } from "../../server/config";
+import client from "../../../tina/__generated__/client";
 
 export const homeIntroTextData =
-  "A relatively new developer looking to gain experience.";
+  "Computer Science student with a passion in Software Engineering.";
 
 export const getTaglineAsync = async (): Promise<string> => {
   const { data, error } = await supabase.from("tagline").select("data");
@@ -15,6 +16,28 @@ export const getTaglineAsync = async (): Promise<string> => {
     return homeIntroTextData;
   }
 };
+
+export async function fetchHomeAbout() {
+  const aboutRes = await client.queries.aboutConnection();
+  if (
+    aboutRes === null ||
+    aboutRes === undefined ||
+    !aboutRes.data ||
+    !aboutRes.data.aboutConnection ||
+    !aboutRes.data.aboutConnection.edges
+  ) {
+    throw new Error("Failed to fetch.");
+  }
+  let about = aboutRes?.data?.aboutConnection?.edges.map((post) => {
+    return {
+      content: post?.node?.body ?? "",
+    };
+  });
+
+  if (about.length != 1) return "";
+
+  return about[0].content;
+}
 
 interface ILink {
   title: string;

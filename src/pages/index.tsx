@@ -1,60 +1,35 @@
 import { GetStaticProps } from "next";
 import HomeContents from "../features/home/home-contents";
-import { getTaglineAsync, homeIntroTextData } from "../features/home/home-data";
-import { projectDataType } from "../features/projects/project-types";
-import { getProjectsAsync } from "../features/projects/project-data";
 import {
-  getEducationAsync,
-  getResumeAsync,
-} from "../features/resume/resume-data";
-import { ResumeItem } from "../features/resume/resume-types";
-import { fetchBlogs } from "../features/blog/blog-data";
-import { Post } from "../../tina/__generated__/types";
+  fetchHomeAbout,
+  getTaglineAsync,
+  homeIntroTextData,
+} from "../features/home/home-data";
 
 export default function Home({
   tagline,
-  projects,
-  resume,
-  education,
-  blog,
+  homeAbout,
 }: {
   tagline: string;
-  projects: projectDataType[];
-  resume: ResumeItem[];
-  education: ResumeItem[];
-  blog: Post[];
+  homeAbout: string;
 }) {
-  return (
-    <HomeContents
-      tagline={tagline}
-      projects={projects}
-      resume={resume}
-      education={education}
-      blog={blog}
-    />
-  );
+  return <HomeContents tagline={tagline} homeAbout={homeAbout} />;
 }
 
 export const getStaticProps: GetStaticProps = async () => {
   try {
     const tagline = await getTaglineAsync();
-    const projects = await getProjectsAsync(1);
-    const resume = await getResumeAsync();
-    const education = await getEducationAsync();
-    const blog = await fetchBlogs(1);
+    const homeAbout = await fetchHomeAbout();
 
     return {
-      props: { tagline, projects, resume, education, blog },
+      props: { tagline, homeAbout },
       revalidate: 10,
     };
   } catch (error) {
     return {
       props: {
         tagline: homeIntroTextData,
-        projects: [],
-        resume: [],
-        education: [],
-        blog: [],
+        homeAbout: "",
       },
       revalidate: 10,
     };
