@@ -83,6 +83,19 @@ export default defineConfig({
           router: ({ document }) => `/blog/${document._sys.filename}`,
         },
       },
+      {
+        name: "about",
+        label: "About",
+        path: "content/about",
+        fields: [
+          {
+            type: "rich-text",
+            name: "body",
+            label: "Body",
+            isBody: true,
+          },
+        ],
+      },
     ],
   },
 });
