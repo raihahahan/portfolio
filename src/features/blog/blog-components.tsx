@@ -341,7 +341,7 @@ const components = (siteColors) => ({
   br: (props) => <br className="my-2" {...props} />,
   a: (props) => (
     <Anchor
-      className="text-orangered-500 underline hover:text-orangered-700 transition duration-200"
+      className="text-orangered-500 hover:text-orangered-700 transition duration-200"
       target={isHeaderLink(props) ? undefined : "_blank"}
       id={isHeaderLink(props) ? (props.url as string).substring(1) : undefined}
       rel="noopener noreferrer"
