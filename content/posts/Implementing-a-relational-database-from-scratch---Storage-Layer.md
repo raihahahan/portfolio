@@ -1,11 +1,12 @@
 ---
 title: Implementing a relational database from scratch - Storage Layer
-published_at: 2025-12-27T20:00:00.000Z
+published_at: '2025-12-27T20:00:00.000Z'
 read_time: 10
-prev_post: content/posts/Building-Databases-from-Scratch-in-CPP.md
+prev_post: null
 next_post: content/posts/Relational-Database-Implementation---Access-Layer-Heap.md
 excerpt: 'Storage, Buffer Manager, Slotted Page Organisation'
 ---
+
 
 > This blog is part of a series of posts where I document how I built a relational database from scratch in C++, following concepts from Postgresql and sqlite.\
 > \

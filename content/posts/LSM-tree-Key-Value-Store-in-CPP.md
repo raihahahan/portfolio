@@ -1,11 +1,12 @@
 ---
 title: LSM-tree Key-Value Store in C++
-published_at: 2025-06-23T16:00:00.000Z
+published_at: '2025-06-23T16:00:00.000Z'
 read_time: 8
-prev_post: content/posts/Building-Databases-from-Scratch-in-CPP.md
+prev_post: null
 next_post: ''
 excerpt: LSM-Trees
 ---
+
 
 > An LSM-tree is a write-optimised, append-only data structure that buffers writes in memory and flushes them to disk in sorted chunks. It’s commonly used in modern databases like Cassandra for fast write-heavy workloads.\
 > \
