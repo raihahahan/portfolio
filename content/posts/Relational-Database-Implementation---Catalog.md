@@ -1,7 +1,7 @@
 ---
 title: Relational Database Implementation - Catalog Layer
 published_at: 2025-12-29T20:00:00.000Z
-read_time: 14
+read_time: 15
 prev_post: content/posts/Relational-Database-Implementation---Access-Layer-Heap.md
 next_post: ''
 excerpt: Catalog Layer and DB server
