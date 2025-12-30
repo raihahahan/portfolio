@@ -363,7 +363,6 @@ const components = (siteColors) => ({
     );
   },
   img: (props) => {
-    console.log(props);
     return (
       <>
         <br />
