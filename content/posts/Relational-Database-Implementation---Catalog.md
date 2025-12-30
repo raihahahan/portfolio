@@ -269,7 +269,7 @@ std::optional<TableInfo> TablesCatalog::Lookup(std::string_view table_name) {
   for (auto it = _hf.begin(); it != _hf.end(); ++it) {
     auto rec = *it;
     auto bytes = std::span<const uint8_t>{
-      reinterpret_cast<const uint8_t *> (rec.data),
+      reinterpret_cast<const uint8_t*> (rec.data),
       rec.size
     };
 
@@ -351,9 +351,7 @@ static_assert(!std::is_trivially_copyable_v<Row>,
 
 This is a deliberate design choice. Catalog records should be encoded explicitly, rather than relying on raw memory copies, to make layout assumptions visible and auditable. The encoding logic itself is handled by the codec layer, which is explained in the next section.\
 \
-Concrete catalog tables then inherit from this base using a CRTP-style pattern:\
-\
-
+Concrete catalog tables then inherit from this base using a CRTP-style pattern:
 
 ```cpp
 // db_tables
