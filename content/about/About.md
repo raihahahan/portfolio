@@ -5,7 +5,7 @@ I’m a Computer Science student at the National University of Singapore. I’ve
 \
 I'm building a [relational database in C++](https://github.com/raihahahan/cpp-relational-db), with ideas inspired from Postgres and sqlite. I'm passionate about database internals and distributed systems, and currently diving deep into C++. I’ve also built and published several mobile apps.
 
-## Tools I built for myself
+## Tools I built for myself ([view all](https://github.com/raihahahan))
 
 1. [ParkMyBike](https://apps.apple.com/us/app/parkmybike-bicycle-parking/id6741011216): An iOS app that shows bicycle parking locations around Singapore
 2. [SG Locations](https://github.com/raihahahan/singapore-places-names): Built this to create my own locations drop down on text search for [ParkMyBike](https://apps.apple.com/us/app/parkmybike-bicycle-parking/id6741011216) as I couldn't afford Google APIs back then
