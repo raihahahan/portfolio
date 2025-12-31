@@ -425,9 +425,9 @@ public:
 
 This avoids virtual dispatch while still allowing each catalog table to define its own lookup and query logic.
 
-# Encoding records
+# Encoding and decoding records
 
-The `Codec` class is responsible for translating structured catalog metadata into raw bytes that can be stored inside heap files, and for reconstructing those structures when reading from disk. This layer sits at the boundary between strongly typed C++ objects and the untyped byte-oriented storage provided by the access layer. In essence, it translates records (each row in the table) into bytes, and translates back them from bytes into the record struct.
+The `Codec` class is responsible for translating structured catalog metadata (i.e rows in the table) into raw bytes that can be stored inside heap files, and for reconstructing those structures when reading from disk. This layer sits at the boundary between strongly typed C++ objects and the untyped byte-oriented storage provided by the access layer.
 
 ## Why not `memcpy` entire structs?
 
@@ -437,7 +437,7 @@ Most table rows contain variable-length fields such as `std::string`, which mana
 \
 Instead, catalog records are encoded field-by-field using a small set of well-defined primitives, depending on whether they are fixed-width or variable-width.
 
-## Compile-time layout guarantees
+## Compile-time layout guarantees: C++20 concepts
 
 ### Fixed-width columns
 
@@ -452,7 +452,7 @@ template <typename T>
 
 These constraints are applied to fixed-width values such as integers and identifiers. Any attempt to serialise a type that violates these constraints fails at compile time rather than silently producing an invalid on-disk representation.
 
-### `std::is_trivially_copyable`
+#### `std::is_trivially_copyable`
 
 This trait guarantees that a type can be copied byte-for-byte using memcpy without invoking constructors, destructors, or custom copy logic. In practice, this means avoiding any of the below:
 
@@ -463,7 +463,7 @@ This trait guarantees that a type can be copied byte-for-byte using memcpy witho
 \
 Primitive integers and small POD-like (Plain Old Data) types fall into this category.
 
-### `std::is_standard_layout`
+#### `std::is_standard_layout`
 
 This trait guarantees that a type has a predictable memory layout compatible with C-style structs. In particular:
 
@@ -489,14 +489,14 @@ concept VariableWidthSerializable =
 
 This concept does not make assumptions about object layout or trivial copyability. Instead, it defines a structural interface that a type must satisfy in order to be encoded as a variable-length value. Specifically, a variable-width serialisable type must:
 
-* expose a contiguous byte representation via data()
-* provide its length explicitly via size()
+* expose a contiguous byte representation via `data()`
+* provide its length explicitly via `size()`
 
 \
 Types that satisfy this contract can be encoded by writing a length prefix followed by the raw byte sequence. This makes the on-disk representation self-describing and avoids reliance on null terminators or implicit conventions. \
 \
-Importantly, the concept is intentionally minimal. It allows different string-like views (std::string, std::string\_view, and similar lightweight wrappers) to share the same encoding logic without coupling the codec to a specific container type.
-
+It allows different string-like views (`std::string`, `std::string_view`, and similar lightweight wrappers) to share the same encoding logic without coupling the codec to a specific container type.\
+\
 As with fixed-width values, any attempt to serialise a type that does not meet these requirements fails at compile time. This prevents accidental misuse and ensures that variable-width fields are always encoded in a predictable and explicit manner.
 
 ## Encoding primitives
@@ -532,9 +532,9 @@ inline void WriteData(std::vector<uint8_t>& buf, T v) {
 
 Fixed-width and variable-width encodings share the same interface, with overload selection driven entirely by compile-time constraints. This produces a compact and self-describing encoding without relying on null terminators. Decoding mirrors this process by reading values sequentially from a byte span while advancing an explicit offset.
 
-## Record-level codecs
+## Implementing `Codec`s
 
-Each catalog row type has a corresponding codec that defines how it is serialised and deserialised. For example, the table catalog codec encodes a TableInfo record field-by-field:
+Each catalog type has a corresponding codec that defines how it is serialised and deserialised. For example, the table catalog codec encodes a TableInfo record field-by-field:
 
 ```cpp
 std::vector<uint8_t> TableInfoCodec::Encode(const TableInfo& row) {
