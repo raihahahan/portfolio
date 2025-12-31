@@ -17,8 +17,7 @@ I'm building a [relational database in C++](https://github.com/raihahahan/cpp-re
 1. [Relational database implementation](https://github.com/raihahahan/cpp-relational-db): (WIP) Implementation of a relational database in C++ from scratch
 2. [LSM-tree key-val database](https://mraihan.dev/blog/LSM-tree-Key-Value-Store-in-CPP): Implementation of a write-optimised database using LSM trees, inspired by [RocksDB](https://rocksdb.org/)
 3. [MakeMySheet](https://mraihan.dev/blog/MakeMySheet-Part-1---Introduction): Convert music audio to music sheet using the [Pop2Piano](https://sweetcocoa.github.io/pop2piano_samples/) model
-4. [LockedIn](https://apps.apple.com/sg/app/lockedin-focus-app-blocker/id6747810033): (iOS app) Focus timer that blocks distracting apps and charges you if you try to end your session early\
-
+4. [LockedIn](https://apps.apple.com/sg/app/lockedin-focus-app-blocker/id6747810033): (iOS app) Focus timer that blocks distracting apps and charges you if you try to end your session early
 
 ## Experience ([view all](https://drive.google.com/file/d/12H1uszG5iJbZCxI_mxIId0RPNKZavwYy/view))
 

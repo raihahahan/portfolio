@@ -9,6 +9,12 @@ excerpt: Catalog Layer and DB server
 
 > This blog is part of a series of posts where I document how I built a relational database from scratch in C++, following concepts from Postgresql and sqlite. (Start from [here](/blog/Implementing-a-relational-database-from-scratch---Storage-Layer))\
 > \
+> Summary of this post:\
+> 1\. Catalog layer manages the database's metadata (tables, types, columns etc)\
+> 2\. Catalog table uses heap iterator directly for sequential scan\
+> 3\. Encoding and decoding rows are done with a generic Codec class\
+> 4\. DB server handles creating and connecting to different databases\
+> \
 > Github: [https://github.com/raihahahan/cpp-relational-db](https://github.com/raihahahan/cpp-relational-db)
 
 # Introduction
@@ -119,19 +125,19 @@ The key idea here is that the physical location of the system catalogs is fixed 
 \
 At this stage, no metadata is interpreted or validated beyond opening the heap files. The catalog simply re-establishes access to the underlying system tables, which are then queried as needed by higher layers.\
 \
-Note: an improvement here could be that IsInitialised() checks for the existence of the catalog pages too instead of just the magic number.
+Note: an improvement here could be that `IsInitialised()` checks for the existence of the catalog pages too instead of just the magic number.
 
 ### Bootstrapping the catalog
 
 If the database is not initialised, the catalog enters the bootstrap path. This process is responsible for creating the minimal set of metadata needed for the database to describe itself.\
 \
-Bootstrapping proceeds in a carefully defined order. First, page 0 is allocated and initialized as the catalog root page:
+Bootstrapping proceeds in a carefully defined order. First, page 0 is allocated and initialised as the catalog root page:
 
 ```cpp
 page_id_t pid = _dm->AllocatePage();
 assert(pid == ROOT_PAGE_ID);
 char page[config::PAGE_SIZE]{};
-auto* hdr = reinterpret_cast<storage::DBHeaderPage*> (page);
+auto* hdr = reinterpret_cast<storage::DBHeaderPage*>(page);
 hdr->magic = config::DB_MAGIC;
 _dm->WritePage(pid, page);
 ```
@@ -187,7 +193,10 @@ Once the heap pages for system catalogs exist on disk, the catalog constructs in
 
 ```cpp
 _tables.emplace(TablesCatalog(
-  HeapFile::Open(_bm, _dm, DB_TABLES_FILE_ID, DB_TABLES_ROOT_PAGE_ID)
+  HeapFile::Open(_bm, // buffer manager
+                _dm,  // disk manager
+                DB_TABLES_FILE_ID, // heap file id
+                DB_TABLES_ROOT_PAGE_ID) // page id
 ));
 ```
 
@@ -204,7 +213,7 @@ void Catalog::InsertBuiltinTypes() {
   // INT
   _types.value().Insert(TypeInfo{
     .type_id = INT_TYPE,
-    .size = INT_SIZE
+    .size = INT_SIZE // in bytes
   });
 
   // TEXT (variable length)
@@ -261,8 +270,7 @@ This also keeps the catalog layer independent of the query engine, avoiding circ
 
 Each catalog table is backed by a heap file. Operations such as looking up a table by name or retrieving all columns for a table are implemented as sequential scans over the heap file.\
 \
-For example, looking up a table by name involves iterating over all records in db\_tables, decoding each record, and comparing the table name:\
-
+For example, looking up a table by name involves iterating over all records in db\_tables, decoding each record, and comparing the table name:
 
 ```cpp
 std::optional<TableInfo> TablesCatalog::Lookup(std::string_view table_name) {
@@ -282,9 +290,41 @@ std::optional<TableInfo> TablesCatalog::Lookup(std::string_view table_name) {
 }
 ```
 
-Similarly, retrieving all columns for a table is implemented by scanning db\_attributes and filtering on table\_id.\
-\
-This approach is intentionally straightforward. The goal here is correctness and clarity rather than performance. Once a query execution engine and indexing structures (e.g. B+ trees) are introduced, these catalog operations can be reimplemented using indexed lookups or query plans instead of manual iteration.
+Similarly, retrieving all columns for a table is implemented by scanning `db_attributes` and filtering on `table_id`.
+
+```cpp
+std::vector<ColumnInfo> AttributesCatalog::GetColumns(table_id_t table_id) {
+    std::vector<ColumnInfo> res;
+    for (auto it = _hf.begin(); it != _hf.end(); ++it) {
+        auto rec = *it;
+        auto bytes = std::span<const uint8_t>{
+            reinterpret_cast<const uint8_t*>(rec.data),
+            rec.size
+        };
+        
+        auto col = codec::ColumnInfoCodec::Decode(bytes);
+        if (col.table_id == table_id) {
+            res.emplace_back(col);
+        }
+    }
+    return res;
+}
+
+std::vector<TypeInfo> TypesCatalog::GetTypes() {
+    std::vector<TypeInfo> res;
+    for (auto it = _hf.begin(); it != _hf.end(); ++it) {
+        auto rec = *it;
+        auto bytes = std::span<const uint8_t>{
+            reinterpret_cast<const uint8_t*>(rec.data),
+            rec.size
+        };
+        
+        auto type = codec::TypeInfoCodec::Decode(bytes);
+        res.emplace_back(type);
+    }
+    return res;
+}
+```
 
 ## Difference from the query executor
 
@@ -305,6 +345,7 @@ To avoid duplicating heap-file logic across different catalog tables, a common b
 
 ```cpp
 template <typename Row, typename Codec>
+requires CatalogCodec<Row, Codec> // explained below
 class CatalogTable {
 public:
   explicit CatalogTable(HeapFile hf): _hf { std::move(hf) } {}
@@ -331,7 +372,7 @@ This keeps the mechanics of heap-file interaction centralised while allowing eac
 
 ## CRTP, concepts, and compile-time constraints
 
-The catalog table abstraction uses templates and concepts to enforce correctness at compile time. A CatalogCodec concept ensures that every catalog table provides a matching codec with Encode and Decode functions:
+The catalog table abstraction uses templates and concepts to enforce correctness at compile time. A `CatalogCodec` concept ensures that every catalog table provides a matching codec with Encode and Decode functions: (Note: see the section below for the explanation on the `Codec` class)
 
 ```cpp
 template <typename Row, typename Codec>
@@ -351,7 +392,7 @@ static_assert(!std::is_trivially_copyable_v<Row>,
 
 This is a deliberate design choice. Catalog records should be encoded explicitly, rather than relying on raw memory copies, to make layout assumptions visible and auditable. The encoding logic itself is handled by the codec layer, which is explained in the next section.\
 \
-Concrete catalog tables then inherit from this base using a CRTP-style pattern:
+Concrete catalog tables then inherit from this base using a [CRTP-style pattern](https://stackoverflow.com/a/4173298):
 
 ```cpp
 // db_tables
@@ -390,17 +431,17 @@ The catalog codec is responsible for translating structured catalog metadata int
 \
 Unlike user data, catalog records are part of the database’s internal state. Bugs here can corrupt the database’s understanding of itself, so the codec is designed to be explicit, predictable, and conservative.
 
-## Why not memcpy entire structs?
+## Why not `memcpy` entire structs?
 
 A tempting approach would be to write catalog structs directly to disk using memcpy. This is deliberately avoided.\
 \
-Most catalog rows contain fields such as std::string, which manage heap-allocated memory internally. Blindly copying such objects would serialise pointer values rather than the underlying data, producing invalid on-disk representations. Even for structs without dynamic fields, layout and padding are easy to get wrong unless explicitly constrained.\
+Most catalog rows contain fields such as `std::string`, which manage heap-allocated memory internally. Blindly copying such objects would serialise pointer values rather than the underlying data, producing invalid on-disk representations. Even for structs without dynamic fields, layout and padding are easy to get wrong unless explicitly constrained.\
 \
 Instead, catalog records are encoded field-by-field using a small set of well-defined primitives.
 
 ## Compile-time layout guarantees
 
-To make these assumptions explicit, the codec relies on two C++ type traits: std::is\_trivially\_copyable and std::is\_standard\_layout.
+To make these assumptions explicit, the codec relies on two C++ type traits: `std::is_trivially_copyable` and `std::is_standard_layout`.
 
 ```cpp
 template <typename T>
@@ -411,18 +452,18 @@ template <typename T>
 
 These constraints are applied to fixed-width values such as integers and identifiers.
 
-### std::is\_trivially\_copyable
+### `std::is_trivially_copyable`
 
-This trait guarantees that a type can be copied byte-for-byte using memcpy without invoking constructors, destructors, or custom copy logic. In practice, this means:
+This trait guarantees that a type can be copied byte-for-byte using memcpy without invoking constructors, destructors, or custom copy logic. In practice, this means avoiding any of the below:
 
-* no dynamic memory ownership
-* no virtual functions
-* no user-defined copy semantics
+* dynamic memory ownership
+* virtual functions
+* user-defined copy semantics
 
 \
 Primitive integers and small POD-like (Plain Old Data) types fall into this category.
 
-### std::is\_standard\_layout
+### `std::is_standard_layout`
 
 This trait guarantees that a type has a predictable memory layout compatible with C-style structs. In particular:
 
@@ -446,8 +487,7 @@ template <FixedWidthSerializable T>
 }
 ```
 
-Fixed-width values are appended directly to the buffer in their in-memory representation. Strings are handled separately by writing a length prefix followed by raw bytes:\
-
+Fixed-width values are appended directly to the buffer in their in-memory representation. Strings are handled separately by writing a length prefix followed by raw bytes:
 
 ```cpp
 inline void WriteString(std::vector<uint8_t>& buf, std::string_view s) {

@@ -4,7 +4,7 @@ published_at: 2025-12-28T20:00:00.000Z
 read_time: 6
 prev_post: >-
   content/posts/Implementing-a-relational-database-from-scratch---Storage-Layer.md
-next_post: ''
+next_post: content/posts/Relational-Database-Implementation---Catalog.md
 excerpt: Heap Files
 ---
 

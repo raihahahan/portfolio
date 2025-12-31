@@ -45,6 +45,11 @@ export const Codeblock = ({ children, language }) => {
 export const NavigationButtons = ({ prev, next }: { prev: any; next: any }) => {
   const { siteColors, themeState } = useTheme();
   const { sm, md } = useGlobalMediaQuery();
+  const MAX_LEN = 48;
+  const title = (post) =>
+    post.title.length > MAX_LEN
+      ? post.title.slice(0, MAX_LEN - 1) + "…"
+      : post.title;
 
   const NavButton = ({ type, post }) => (
     <Button
@@ -88,7 +93,7 @@ export const NavigationButtons = ({ prev, next }: { prev: any; next: any }) => {
             wordWrap: "break-word",
           }}
         >
-          {post.title}
+          {title(post)}
         </div>
       </div>
     </Button>
