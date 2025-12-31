@@ -530,7 +530,28 @@ inline void WriteData(std::vector<uint8_t>& buf, T v) {
 };
 ```
 
-Fixed-width and variable-width encodings share the same interface, with overload selection driven entirely by compile-time constraints. This produces a compact and self-describing encoding without relying on null terminators. Decoding mirrors this process by reading values sequentially from a byte span while advancing an explicit offset.
+Fixed-width and variable-width encodings share the same interface, with overload selection driven entirely by compile-time constraints. This produces a compact and self-describing encoding without relying on null terminators. \
+\
+Decoding mirrors this process by reading values sequentially from a byte span while advancing an explicit offset.
+
+```cpp
+template <FixedWidthSerializable T>
+inline T ReadData(std::span<const uint8_t> buf, size_t& off) {
+    T res;
+    std::memcpy(&res, buf.data() + off, sizeof(res));
+    off += sizeof(res);
+    return res;
+};
+
+template <VariableWidthSerializable T>
+inline T ReadData(std::span<const uint8_t> buf, 
+                                size_t& off) {
+    auto len = ReadData<uint32_t>(buf, off);
+    std::string s(reinterpret_cast<const char*>(buf.data() + off), len);
+    off += len;
+    return s;
+};
+```
 
 ## Implementing `Codec`s
 
