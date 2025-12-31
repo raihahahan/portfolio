@@ -425,23 +425,23 @@ public:
 
 This avoids virtual dispatch while still allowing each catalog table to define its own lookup and query logic.
 
-# Encoding catalog records
+# Encoding records
 
-The catalog codec is responsible for translating structured catalog metadata into raw bytes that can be stored inside heap files, and for reconstructing those structures when reading from disk. This layer sits at the boundary between strongly typed C++ objects and the untyped byte-oriented storage provided by the access layer.\
-\
-Unlike user data, catalog records are part of the database’s internal state. Bugs here can corrupt the database’s understanding of itself, so the codec is designed to be explicit, predictable, and conservative.
+The `Codec` class is responsible for translating structured catalog metadata into raw bytes that can be stored inside heap files, and for reconstructing those structures when reading from disk. This layer sits at the boundary between strongly typed C++ objects and the untyped byte-oriented storage provided by the access layer. In essence, it translates records (each row in the table) into bytes, and translates back them from bytes into the record struct.
 
 ## Why not `memcpy` entire structs?
 
 A tempting approach would be to write catalog structs directly to disk using memcpy. This is deliberately avoided.\
 \
-Most catalog rows contain fields such as `std::string`, which manage heap-allocated memory internally. Blindly copying such objects would serialise pointer values rather than the underlying data, producing invalid on-disk representations. Even for structs without dynamic fields, layout and padding are easy to get wrong unless explicitly constrained.\
+Most table rows contain variable-length fields such as `std::string`, which manage heap-allocated memory internally. Blindly copying such objects would serialise pointer values rather than the underlying data, producing invalid on-disk representations. Even for structs without dynamic fields, layout and padding are easy to get wrong unless explicitly constrained.\
 \
-Instead, catalog records are encoded field-by-field using a small set of well-defined primitives.
+Instead, catalog records are encoded field-by-field using a small set of well-defined primitives, depending on whether they are fixed-width or variable-width.
 
 ## Compile-time layout guarantees
 
-To make these assumptions explicit, the codec relies on C++20 concepts built on top of std::is\_trivially\_copyable and std::is\_standard\_layout. These concepts act as compile-time contracts that constrain which types are allowed to participate in fixed-width serialisation.
+### Fixed-width columns
+
+To make these assumptions explicit, the codec relies on C++20 concepts built on top of `std::is_trivially_copyable` and `std::is_standard_layout`. These concepts act as compile-time contracts that constrain which types are allowed to participate in fixed-width serialisation.
 
 ```cpp
 template <typename T>
@@ -474,6 +474,31 @@ This trait guarantees that a type has a predictable memory layout compatible wit
 \
 Together, these traits ensure that copying a value’s bytes to disk and reading them back later will faithfully reconstruct the original value. Only types that satisfy both properties are allowed to be serialised using the fixed-width helpers.
 
+### Variable-width columns
+
+Variable-width columns like names, identifiers, and other textual metadata vary in length and cannot be written directly using a raw memory copy. For these cases, the codec relies on a separate concept that captures the requirements for variable-width serialisation.
+
+```cpp
+template <typename T>
+concept VariableWidthSerializable =
+    requires (T v) {
+        { v.data() } -> std::convertible_to<const char*>;
+        { v.size() } -> std::convertible_to<size_t>;
+    };
+```
+
+This concept does not make assumptions about object layout or trivial copyability. Instead, it defines a structural interface that a type must satisfy in order to be encoded as a variable-length value. Specifically, a variable-width serialisable type must:
+
+* expose a contiguous byte representation via data()
+* provide its length explicitly via size()
+
+\
+Types that satisfy this contract can be encoded by writing a length prefix followed by the raw byte sequence. This makes the on-disk representation self-describing and avoids reliance on null terminators or implicit conventions. \
+\
+Importantly, the concept is intentionally minimal. It allows different string-like views (std::string, std::string\_view, and similar lightweight wrappers) to share the same encoding logic without coupling the codec to a specific container type.
+
+As with fixed-width values, any attempt to serialise a type that does not meet these requirements fails at compile time. This prevents accidental misuse and ensures that variable-width fields are always encoded in a predictable and explicit manner.
+
 ## Encoding primitives
 
 The codec defines a small set of low-level utilities for writing and reading values from a byte buffer.
@@ -493,7 +518,7 @@ template <FixedWidthSerializable T>
 
 ### Variable-width encoding
 
-Not all catalog fields have a fixed representation. Strings and similar types require a length prefix followed by raw bytes. These are handled using a separate concept that describes size-addressable views over contiguous memory.
+Variable-length values are encoded as its size followed by its byte representation.
 
 ```cpp
 template <VariableWidthSerializable T>
