@@ -450,10 +450,10 @@ template <typename T>
       std::is_standard_layout_v<T>;
 ```
 
-These constraints are applied to fixed-width values such as integers and identifiers. Any attempt to serialise a type that violates these constraints fails at compile time rather than silently producing an invalid on-disk representation.
-
-#### `std::is_trivially_copyable`
-
+These constraints are applied to fixed-width values such as integers and identifiers. Any attempt to serialise a type that violates these constraints fails at compile time rather than silently producing an invalid on-disk representation.\
+\
+**`std::is_trivially_copyable`**\
+\
 This trait guarantees that a type can be copied byte-for-byte using memcpy without invoking constructors, destructors, or custom copy logic. In practice, this means avoiding any of the below:
 
 * dynamic memory ownership
@@ -463,8 +463,10 @@ This trait guarantees that a type can be copied byte-for-byte using memcpy witho
 \
 Primitive integers and small POD-like (Plain Old Data) types fall into this category.
 
-#### `std::is_standard_layout`
+\
+**`std::is_standard_layout`**
 
+\
 This trait guarantees that a type has a predictable memory layout compatible with C-style structs. In particular:
 
 * members are laid out in declaration order
