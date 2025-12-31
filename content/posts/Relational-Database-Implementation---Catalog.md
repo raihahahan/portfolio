@@ -441,7 +441,7 @@ Instead, catalog records are encoded field-by-field using a small set of well-de
 
 ## Compile-time layout guarantees
 
-To make these assumptions explicit, the codec relies on two C++ type traits: `std::is_trivially_copyable` and `std::is_standard_layout`.
+To make these assumptions explicit, the codec relies on C++20 concepts built on top of std::is\_trivially\_copyable and std::is\_standard\_layout. These concepts act as compile-time contracts that constrain which types are allowed to participate in fixed-width serialisation.
 
 ```cpp
 template <typename T>
@@ -450,7 +450,7 @@ template <typename T>
       std::is_standard_layout_v<T>;
 ```
 
-These constraints are applied to fixed-width values such as integers and identifiers.
+These constraints are applied to fixed-width values such as integers and identifiers. Any attempt to serialise a type that violates these constraints fails at compile time rather than silently producing an invalid on-disk representation.
 
 ### `std::is_trivially_copyable`
 
@@ -478,27 +478,34 @@ Together, these traits ensure that copying a value’s bytes to disk and reading
 
 The codec defines a small set of low-level utilities for writing and reading values from a byte buffer.
 
+### Fixed-width encoding
+
+Fixed-width values are appended directly to the buffer in their in-memory representation, but only if they satisfy the fixed width constraint.
+
 ```cpp
 template <FixedWidthSerializable T>
-  inline void WriteInt(std::vector<uint8_t>& buf, T v) {
+  inline void WriteData(std::vector<uint8_t>& buf, T v) {
     uint8_t bytes[sizeof(T)];
     std:: memcpy(bytes, & v, sizeof(v));
     buf.insert(buf.end(), bytes, bytes + sizeof(v));
 }
 ```
 
-Fixed-width values are appended directly to the buffer in their in-memory representation. Strings are handled separately by writing a length prefix followed by raw bytes:
+### Variable-width encoding
+
+Not all catalog fields have a fixed representation. Strings and similar types require a length prefix followed by raw bytes. These are handled using a separate concept that describes size-addressable views over contiguous memory.
 
 ```cpp
-inline void WriteString(std::vector<uint8_t>& buf, std::string_view s) {
-    WriteInt(buf, static_cast<uint32_t>(s.size()));
+template <VariableWidthSerializable T>
+inline void WriteData(std::vector<uint8_t>& buf, T v) {
+    WriteData(buf, static_cast<uint32_t>(v.size()));
     buf.insert(buf.end(),
-      reinterpret_cast<const uint8_t*>(s.data()),
-      reinterpret_cast<const uint8_t*>(s.data() + s.size()));
-}
+                reinterpret_cast<const uint8_t*>(v.data()),
+                reinterpret_cast<const uint8_t*>(v.data() + v.size()));
+};
 ```
 
-This produces a compact and self-describing encoding without relying on null terminators. Decoding mirrors this process by reading values sequentially from a byte span while advancing an explicit offset.
+Fixed-width and variable-width encodings share the same interface, with overload selection driven entirely by compile-time constraints. This produces a compact and self-describing encoding without relying on null terminators. Decoding mirrors this process by reading values sequentially from a byte span while advancing an explicit offset.
 
 ## Record-level codecs
 
@@ -507,10 +514,10 @@ Each catalog row type has a corresponding codec that defines how it is serialise
 ```cpp
 std::vector<uint8_t> TableInfoCodec::Encode(const TableInfo& row) {
   std::vector<uint8_t> buf;
-  utilities::WriteInt(buf, row.first_page_id);
-  utilities::WriteInt(buf, row.heap_file_id);
-  utilities::WriteInt(buf, row.table_id);
-  utilities::WriteString(buf, row.table_name);
+  utilities::WriteData(buf, row.first_page_id);
+  utilities::WriteData(buf, row.heap_file_id);
+  utilities::WriteData(buf, row.table_id);
+  utilities::WriteData(buf, row.table_name);
   return buf;
 }
 ```
@@ -521,10 +528,10 @@ Decoding reverses the process in the same order:
 TableInfo TableInfoCodec::Decode(std::span<const uint8_t> bytes) {
     TableInfo t;
     size_t off = 0;
-    t.first_page_id = utilities::ReadInt<page_id_t>(bytes, off);
-    t.heap_file_id = utilities::ReadInt<file_id_t>(bytes, off);
-    t.table_id = utilities::ReadInt<table_id_t>(bytes, off);
-    t.table_name = utilities::ReadString(bytes, off);
+    t.first_page_id = utilities::ReadData<page_id_t>(bytes, off);
+    t.heap_file_id = utilities::ReadData<file_id_t>(bytes, off);
+    t.table_id = utilities::ReadData<table_id_t>(bytes, off);
+    t.table_name = utilities::ReadData<std::string>(bytes, off);
     return t;
 }
 ```
