@@ -185,13 +185,13 @@ With that, a minimal working engine program can now be created as seen below (wh
 ```cpp
 DiskManager* dm = new DiskManager("database.db");
 BufferManager* bm = new BufferManager(CLOCK, dm);
-Catalog* catalog = new Catalog(bm, dm);
+Catalog* cat = new Catalog(bm, dm);
 
 // initialise catalog
-catalog->Init();
+cat->Init();
 
 // initialise table manager
-TableManager manager{catalog};
+TableManager manager{cat};
 
 // create table
 // first need to create schema
