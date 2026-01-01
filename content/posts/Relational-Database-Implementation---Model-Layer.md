@@ -164,11 +164,11 @@ To optimise this, the TableManager maintains a cache of UserTable instances. Whe
 std::shared_ptr<UserTable> TableManager::OpenTable(std::string_view name) {
     if (_cache.contains(name)) return _cache[name];
 
-    auto table_info = _tables_catalog->Lookup(name);
+    auto table_info = _catalog->GetTablesCatalog()->Lookup(name);
     if (!table_info.has_value()) throw std::runtime_error("Invalid table name.");
-    
-    auto cols = _attr_catalog->GetColumns(table_info->table_id);
-    auto hf = access::HeapFile::Open(_bm, _dm, table_info->heap_file_id, table_info->first_page_id);
+
+    auto cols = _catalog->GetAttributesCatalog()->GetColumns(table_info->table_id);
+    auto hf = access::HeapFile::Open(_catalog->GetBm(), _catalog->GetDm(), table_info->heap_file_id, table_info->first_page_id);
 
     auto rel = std::make_shared<UserTable>(std::move(hf), std::move(cols), table_info->table_id);
     _cache[name] = rel;
@@ -188,25 +188,22 @@ BufferManager* bm = new BufferManager(CLOCK, dm);
 Catalog* cat = new Catalog(bm, dm);
 
 // initialise catalog
-cat->Init();
+catalog->Init();
+
+// initialise table manager
+TableManager manager{catalog};
 
 // create table
-// first need to create columns
+// first need to create schema
 auto id_col_id = util::GenerateUUID();
-std::vector<catalog::RawColumnInfo> cols = {
+auto name_col_id = util::GenerateUUID();
+std::vector<catalog::RawColumnInfo> schema = {
     { id_col_id, "id", catalog::INT_TYPE, 1 },
     { name_col_id, "name", catalog::TEXT_TYPE, 2}
 };
-auto table_id = cat->CreateTable("students", cols);
 
-// table manager
-TableManager manager{
-    cat->GetTablesCatalog(),
-    cat->GetAttributesCatalog(), 
-    bm, 
-    dm
-};
-
+// table operations
+auto table_id = manager.CreateTable("students", schema);
 auto students_table = manager.OpenTable("students");
 std::vector<Value> row = { uint32_t{1}, "Raihan" };
 auto rid = students_table.Insert(row);
