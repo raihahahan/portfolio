@@ -72,6 +72,22 @@ std::optional<RID> UserTable::Insert(const std::vector<Value> values) {
 In contrast, below is a snippet of derived catalog tables:
 
 ```cpp
+// base catalog table
+template <typename Row, typename Codec>
+requires CatalogCodec<Row, Codec>
+class CatalogTable : public model::Relation {
+    static_assert(!std::is_trivially_copyable_v<Row>,
+        "Catalog rows must use explicit codecs, not memcpy");
+public:
+    explicit CatalogTable(HeapFile hf) : Relation{std::move(hf)} {};
+    std::optional<db::access::RID> Insert(const Row& row) {
+        auto bytes = Codec::Encode(row);
+        auto rid = InsertRaw(bytes, bytes.size());
+        return rid;
+    }
+    ...
+};
+
 // db_tables
 class TablesCatalog
     : public CatalogTable<TableInfo, codec::TableInfoCodec> {
