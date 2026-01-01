@@ -46,12 +46,12 @@ std::optional<RID> Relation::InsertRaw(std::span<const uint8_t> bytes, size_t le
 
 ```
 
-## Static vs Dynamic: CRTP and Dispatch
+## Static vs. Dynamic: CRTP and Metadata-Driven Logic
 
-A key design challenge was handling the difference between internal system tables ([Catalogs](/blog/Relational-Database-Implementation---Catalog)) and user-created tables.
+A key design challenge was handling the difference between internal system tables (Catalogs) and user-created tables.
 
-1. **Catalog Tables (CRTP)**: Since the schemas for system catalogs are known at compile-time and hardcoded, I use the Curiously Recurring Template Pattern (CRTP). This allows for static polymorphism, enabling the compiler to optimise access and serialisation without the overhead of virtual function calls.
-2. **User Tables (Dynamic Dispatch)**: User tables have schemas defined at runtime. We don't know the columns or types until the user executes a `CREATE TABLE` statement. Therefore, `UserTable` relies on dynamic dispatch and runtime metadata (a ColumnInfo vector) to handle operations.
+* Catalog Tables (CRTP): Since the schemas for system catalogs are known at compile-time and hardcoded, I use the Curiously Recurring Template Pattern (CRTP). This allows for static polymorphism, enabling the compiler to optimise access and serialisation without the overhead of virtual function calls.
+* User Tables (Metadata-Driven): User tables have schemas defined at runtime. We don't know the columns or types until a user executes a CREATE TABLE statement. Unlike the Catalog, which uses template-level specialisation, UserTable relies on metadata-driven logic. It uses a runtime ColumnInfo vector to instruct the DynamicCodec on how to interpret raw bytes, providing the flexibility of a dynamic schema without the need for complex vtable hierarchies.
 
 \
 The `UserTable` implementation stores this dynamic schema and uses it to drive the serialisation process:
@@ -67,6 +67,30 @@ std::optional<RID> UserTable::Insert(const std::vector<Value> values) {
   return InsertRaw(bytes, bytes.size());
 }
 
+```
+
+In contrast, below is a snippet of derived catalog tables:
+
+```cpp
+// db_tables
+class TablesCatalog
+    : public CatalogTable<TableInfo, codec::TableInfoCodec> {
+public:
+    using Base = CatalogTable<TableInfo, codec::TableInfoCodec>;
+    using Base::Base;
+
+    std::optional<TableInfo> Lookup(std::string_view table_name);
+};
+
+// db_attributes
+class AttributesCatalog
+    : public CatalogTable<ColumnInfo, codec::ColumnInfoCodec> {
+public:
+    using Base = CatalogTable<ColumnInfo, codec::ColumnInfoCodec>;
+    using Base::Base;
+
+    std::vector<ColumnInfo> GetColumns(table_id_t table_id);
+};
 ```
 
 # `Dynamic Codec`
