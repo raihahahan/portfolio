@@ -25,7 +25,7 @@ This layer is responsible for translating logical rows (represented as C++ varia
 This post covers:
 
 * The design of the Relation base class and UserTable
-* The choice between CRTP and dynamic dispatch for schema management
+* Difference between user tables and catalog tables.\\
 * Binary serialisation via the DynamicCodec
 * The TableManager caching registry
 
@@ -178,14 +178,47 @@ std::shared_ptr<UserTable> TableManager::OpenTable(std::string_view name) {
 
 This ensures that different parts of the database engine (like the query executor and the optimiser) are always working with the same consistent table object.
 
+# Minimal working engine
+
+With that, a minimal working engine program can now be created as seen below (where only inserting into user table works):
+
+```cpp
+DiskManager* dm = new DiskManager("database.db");
+BufferManager* bm = new BufferManager(CLOCK, dm);
+Catalog* cat = new Catalog(bm, dm);
+
+// initialise catalog
+cat->Init();
+
+// create table
+// first need to create columns
+auto id_col_id = util::GenerateUUID();
+std::vector<catalog::RawColumnInfo> cols = {
+    { id_col_id, "id", catalog::INT_TYPE, 1 },
+    { name_col_id, "name", catalog::TEXT_TYPE, 2}
+};
+auto table_id = cat->CreateTable("students", cols);
+
+// table manager
+TableManager manager{
+    cat->GetTablesCatalog(),
+    cat->GetAttributesCatalog(), 
+    bm, 
+    dm
+};
+
+auto students_table = manager.OpenTable("students");
+std::vector<Value> row = { uint32_t{1}, "Raihan" };
+auto rid = students_table.Insert(row);
+
+```
+
 # Future Work
 
 The model layer currently supports basic types and simple sequential inserts. Moving forward, I plan to:
 
 * Expand the Value variant to support floats, booleans, and nulls.
-* Implement a TableScanner that integrates with the Heap File Iterators.
 * Add support for primary keys and foreign key constraints within the UserTable logic.
-* Integrate index lookups directly into the TableManager workflow
 
 # Summary
 
