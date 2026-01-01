@@ -3,7 +3,7 @@ title: Relational Database Implementation - Catalog Layer
 published_at: 2025-12-29T20:00:00.000Z
 read_time: 15
 prev_post: content/posts/Relational-Database-Implementation---Access-Layer-Heap.md
-next_post: ''
+next_post: content/posts/Relational-Database-Implementation---Model-Layer.md
 excerpt: Catalog Layer and DB server
 ---
 
@@ -562,10 +562,10 @@ Each catalog type has a corresponding codec that defines how it is serialised an
 ```cpp
 std::vector<uint8_t> TableInfoCodec::Encode(const TableInfo& row) {
   std::vector<uint8_t> buf;
-  utilities::WriteData(buf, row.first_page_id);
-  utilities::WriteData(buf, row.heap_file_id);
-  utilities::WriteData(buf, row.table_id);
-  utilities::WriteData(buf, row.table_name);
+  util::data::WriteData(buf, row.first_page_id);
+  util::data::WriteData(buf, row.heap_file_id);
+  util::data::WriteData(buf, row.table_id);
+  util::data::WriteData(buf, row.table_name);
   return buf;
 }
 ```
@@ -576,10 +576,10 @@ Decoding reverses the process in the same order:
 TableInfo TableInfoCodec::Decode(std::span<const uint8_t> bytes) {
     TableInfo t;
     size_t off = 0;
-    t.first_page_id = utilities::ReadData<page_id_t>(bytes, off);
-    t.heap_file_id = utilities::ReadData<file_id_t>(bytes, off);
-    t.table_id = utilities::ReadData<table_id_t>(bytes, off);
-    t.table_name = utilities::ReadData<std::string>(bytes, off);
+    t.first_page_id = util::data::ReadData<page_id_t>(bytes, off);
+    t.heap_file_id = util::data::ReadData<file_id_t>(bytes, off);
+    t.table_id = util::data::ReadData<table_id_t>(bytes, off);
+    t.table_name = util::data::ReadData<std::string>(bytes, off);
     return t;
 }
 ```
@@ -649,16 +649,6 @@ Switching databases is therefore just a matter of selecting a different DiskMana
 
 # Summary
 
-With the storage, access, and catalog layers implemented, the database now has a solid foundation. Pages can be persisted to disk, cached in memory, organised into heap files, and described using a self-contained catalog. Most importantly, the system can now understand its own structure after a restart.\
+The Catalog layer now enables the database to hold metadata information as tables themselves. The final piece before I can start working on the Query Evaluation engine (SQL parser, Executor, Optimiser) is to implement the logic and API for user tables. \
 \
-At this point, the database is no longer just a collection of low-level components. It has a coherent data model: tables exist as heap files, records are addressable via RIDs, and schema information is stored and recovered through the catalog. This is the minimum infrastructure required for a relational database to behave like a database rather than a storage engine.
-
-## What can be built now
-
-With these layers in place, I can now build a complete end-to-end prototype. A parser and query executor can be layered on top of the catalog and access layer to support basic SQL operations such as CREATE TABLE, INSERT, and SELECT.\
-\
-Once a working prototype exists, the focus can shift toward more advanced database concerns. A query optimiser can be introduced to reason about access paths and operator ordering, replacing sequential scans with cost-based decisions. Index structures such as B+ trees can be integrated into the access layer to accelerate both catalog and user queries.\
-\
-Beyond that, concurrency control and recoverability are the next major milestones. Supporting multiple concurrent transactions requires careful coordination between locking, logging, and buffer management. Recovery mechanisms such as write-ahead logging are needed to ensure durability and correctness in the presence of crashes.\
-\
-In the future, this database can be extended for distributed systems: replication, sharding, and coordination across multiple nodes.
+User tables are the same as Catalog tables, in the sense that they are both relations and stored as heap files. However, minor differences exist in the way we insert their rows, as catalog tables have hardcoded, pre-defined columns while user tables have dynamic schemas. More is explained in the next post.
