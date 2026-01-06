@@ -3,7 +3,7 @@ title: Relational Database Implementation - Model Layer
 published_at: 2025-12-31T16:00:00.000Z
 read_time: 5
 prev_post: content/posts/Relational-Database-Implementation---Catalog.md
-next_post: ''
+next_post: content/posts/Relational-Database-Implementation---Executor.md
 excerpt: Model Layer - The layer that makes the database schema aware
 ---
 
@@ -195,11 +195,9 @@ TableManager manager{cat};
 
 // create table
 // first need to create schema
-auto id_col_id = util::GenerateUUID();
-auto name_col_id = util::GenerateUUID();
 std::vector<catalog::RawColumnInfo> schema = {
-    { id_col_id, "id", catalog::INT_TYPE, 1 },
-    { name_col_id, "name", catalog::TEXT_TYPE, 2}
+    { "id", catalog::INT_TYPE, 1 },
+    { "name", catalog::TEXT_TYPE, 2}
 };
 
 // table operations
