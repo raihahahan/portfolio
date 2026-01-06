@@ -1,7 +1,7 @@
 ---
 title: Relational Database Implementation - Executor Engine
 published_at: 2026-01-05T16:00:00.000Z
-read_time: 3
+read_time: 10
 prev_post: content/posts/Relational-Database-Implementation---Model-Layer.md
 next_post: ''
 excerpt: The "Volcano execution model"
