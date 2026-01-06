@@ -10,7 +10,9 @@ excerpt: The "Volcano execution model"
 > This blog is part of a series of posts where I document how I built a relational database from scratch in C++, following concepts from Postgresql and sqlite ([start here](https://mraihan.dev/blog/Implementing-a-relational-database-from-scratch---Storage-Layer)).\
 > \
 > **Summary of this post:**\
-> \
+> 1\. Operators are the building block of SQL queries\
+> 2\. Volcano iterator model provides a pull-based interface to process tuples \
+> 3\. Operators can be composed in an execution pipeline\
 > \
 > **Github:** [https://github.com/raihahahan/cpp-relational-db](https://github.com/raihahahan/cpp-relational-db)
 
@@ -90,8 +92,7 @@ Example: sequential scan
 
 Non-leaf operators have children (e.g. two for joins, one for filter). Their main responsibility is to transform tuples coming from the child and do not access storage directly. This separation keeps higher-level operators storage-agnostic.\
 \
-Examples: filter, projection, limit\
-
+Examples: filter, projection, limit\\
 
 ## SeqScanOp
 
