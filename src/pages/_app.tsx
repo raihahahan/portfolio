@@ -10,6 +10,7 @@ import SiteLayout from "../features/site/site-layout";
 import { makeSiteTitle, siteTitleNames } from "../features/site/site-utils";
 import { routes } from "../features/site/site-types";
 import { ReduxProvider } from "../redux/store";
+import { Analytics } from "@vercel/analytics/next";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const route = useRouter();
