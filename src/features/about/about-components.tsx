@@ -61,8 +61,8 @@ export function AboutProfileIcon({
   url,
   extraStyles,
 }: {
-  width?: number | string;
-  height?: number | string;
+  width?: number;
+  height?: number;
   url?: string;
   extraStyles?: CSSProperties;
 }) {
@@ -71,8 +71,8 @@ export function AboutProfileIcon({
       alt="profile-icon"
       priority
       src={url ?? aboutImageSrc}
-      width={width ?? "100vw"}
-      height={height ?? "100vw"}
+      width={width ?? 100}
+      height={height ?? 100}
       style={extraStyles}
     />
   );

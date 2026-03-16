@@ -87,7 +87,7 @@ export function CustomAnchor({
   const { siteColors } = useTheme();
   const route = useRouter();
   return (
-    <Link href={anchorRoute} passHref>
+    <Link href={anchorRoute}>
       <Anchor
         onClick={openControl ? () => openControl.setOpened(false) : undefined}
         style={{
@@ -178,18 +178,14 @@ export default function MainHeader({
             mr="xl"
           />
         </MediaQuery>
-        <Link href="/" passHref>
-          <a onClick={() => setOpened(false)}>
-            <RectangleTitle
-              widthSize={200}
-              type={themeState == "light" ? "default" : "dark"}
-            />
-          </a>
+        <Link href="/" onClick={() => setOpened(false)}>
+          <RectangleTitle
+            widthSize={200}
+            type={themeState == "light" ? "default" : "dark"}
+          />
         </Link>
-        <Link href="/" passHref>
-          <a>
-            <div></div>
-          </a>
+        <Link href="/">
+          <div></div>
         </Link>
         <ToggleThemeButton color={siteColors.text.primary} size={24} />
         <div
@@ -281,15 +277,13 @@ export function MainHeader2({
         }}
       >
         {/* Left: Icon */}
-        <Link href="/" passHref>
-          <a onClick={() => setOpened(false)}>
-            <AboutProfileIcon
-              url={faceImageSrc}
-              width={"39px"}
-              height={"39px"}
-              extraStyles={{ borderRadius: 300 }}
-            />
-          </a>
+        <Link href="/" onClick={() => setOpened(false)}>
+          <AboutProfileIcon
+            url={faceImageSrc}
+            width={39}
+            height={39}
+            extraStyles={{ borderRadius: 300 }}
+          />
         </Link>
 
         {/* Center: Links */}

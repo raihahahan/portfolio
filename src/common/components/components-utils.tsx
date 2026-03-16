@@ -17,13 +17,13 @@ export function LinkText({
 }) {
   const { siteColors } = useTheme();
   return (
-    <Link href={link}>
-      <a
-        target={"_blank"}
-        style={{ color: siteColors.text.links, ...(extraTextStyles as object) }}
-      >
-        {text}
-      </a>
+    <Link
+      href={link}
+      target={"_blank"}
+      style={{ color: siteColors.text.links, ...(extraTextStyles as object) }}>
+
+      {text}
+
     </Link>
   );
 }
