@@ -1,12 +1,11 @@
 ---
 title: Implementing a relational database from scratch - Storage Layer
-published_at: '2025-12-27T20:00:00.000Z'
+published_at: "2025-12-27T20:00:00.000Z"
 read_time: 10
 prev_post: null
 next_post: content/posts/Relational-Database-Implementation---Access-Layer-Heap.md
-excerpt: 'Storage, Buffer Manager, Slotted Page Organisation'
+excerpt: "Storage, Buffer Manager, Slotted Page Organisation"
 ---
-
 
 > This blog is part of a series of posts where I document how I built a relational database from scratch in C++, following concepts from Postgresql and sqlite.\
 > \
@@ -20,11 +19,13 @@ excerpt: 'Storage, Buffer Manager, Slotted Page Organisation'
 
 # Introduction
 
-I was first inspired to build a database from scratch upon reading Designing Data Intensive Applications, which led me to build a simple write-optimised key-value store backed by LSM trees. Last semester, I took CS3223, an NUS module about database internals focused on the storage layer, concurrency management and recoverability. This motivated me to build a relational database from scratch.
+I was first inspired to build a database from scratch upon reading Designing Data Intensive Applications, which led me to build a simple write-optimised key-value store backed by LSM trees. Last semester, I took CS3223, an NUS module about database internals focused on the storage layer, concurrency management and recoverability. This motivated me to build a relational database from scratch.\
+\
+At the core of any database system is the storage layer. Databases operate on fixed-size pages rather than individual bytes because this aligns with how operating systems and disk hardware perform I/O. Reading and writing in block-sized chunks amortises the cost of disk seeks and simplifies buffer management.
 
 ![](/images/blog/relational-db/architecture.png)
 
-The plan is to build the components starting from the Storage and Access layers (Files and Access, Buffer, Disk Managers), followed by the Catalog Layer, Query Evaluation Engine, Recovery Manager and finally, the Concurrency Control. As of the time of writing, the Storage, Access and Catalog layers have been implemented.
+The plan is to build the components starting from the Storage and Access layers (Files and Access, Buffer, Disk Managers), followed by the Catalog Layer, Query Evaluation Engine, Recovery Manager and finally, the Concurrency Control. Since then, the full pipeline has been implemented: Storage, Access, Catalog, Model, Executor, Parser, and Planner layers, forming a working end-to-end SQL engine.
 
 # Overview: Storage Layer
 
@@ -95,10 +96,10 @@ The buffer manager manages a fixed-size pool of memory frames, where each frame 
 
 A frame represents a single slot in the buffer pool. Each frame stores:
 
-* the `page_id` currently loaded in the frame
-* a `pin_count` indicating how many clients are currently using the page
-* a dirty flag indicating whether the page has been modified
-* a fixed-size data buffer of `PAGE_SIZE` bytes
+- the `page_id` currently loaded in the frame
+- a `pin_count` indicating how many clients are currently using the page
+- a dirty flag indicating whether the page has been modified
+- a fixed-size data buffer of `PAGE_SIZE` bytes
 
 \
 At initialisation, all frames are empty and placed into a free list.
@@ -107,10 +108,10 @@ At initialisation, all frames are empty and placed into a free list.
 
 On construction, the buffer manager allocates a fixed number of frames, determined by `BUFFER_POOL_SIZE`. Each frame is initialised with:
 
-* `page_id = INVALID_PAGE_ID`
-* `pin_count = 0`
-* `dirty = 0`
-* a newly allocated data buffer
+- `page_id = INVALID_PAGE_ID`
+- `pin_count = 0`
+- `dirty = 0`
+- a newly allocated data buffer
 
 \
 All frames start in the free list (note: this free list is different from the one in the Disk Manager), indicating that they are available to load pages. A replacement policy is also initialised at this point. In this implementation, the CLOCK replacement policy is used.
@@ -159,9 +160,9 @@ if (it != page_table_.end()) {
 }
 ```
 
-* the corresponding frame is looked up via the in-memory page table
-* the frame is pinned (its pin count is incremented)
-* the replacement policy is notified of the access
+- the corresponding frame is looked up via the in-memory page table
+- the frame is pinned (its pin count is incremented)
+- the replacement policy is notified of the access
 
 \
 The frame is then returned directly without any disk I/O.\
@@ -185,9 +186,9 @@ if (!free_list_.empty()) {
 }
 ```
 
-* if the victim frame is dirty, it is flushed to disk
-* the old page-to-frame mapping is removed
-* the frame metadata is reset
+- if the victim frame is dirty, it is flushed to disk
+- the old page-to-frame mapping is removed
+- the frame metadata is reset
 
 \
 Once a frame is available, the requested page is read from disk into the frame, the page table is updated, and the frame is pinned before being returned.
@@ -203,8 +204,8 @@ return frame;
 
 Each frame maintains a `pin_count` that tracks how many clients are currently using the page.
 
-* requesting a page increments the pin count
-* releasing a page decrements the pin count
+- requesting a page increments the pin count
+- releasing a page decrements the pin count
 
 \
 A frame with a non-zero pin count is considered in use and cannot be evicted. When a frame’s pin count drops to zero, it becomes eligible for eviction and is reported to the replacement policy. This ensures that pages currently in use are never evicted.
@@ -215,8 +216,8 @@ When a page is modified, it is marked dirty using `mark_dirty`. Dirty pages are 
 \
 A dirty page is flushed to disk when:
 
-* it is selected as an eviction victim
-* `flush_all` is called
+- it is selected as an eviction victim
+- `flush_all` is called
 
 \
 Flushing writes the page’s contents back to disk and clears the dirty flag.
@@ -243,12 +244,12 @@ class IReplacementPolicy {
 
 This design follows the strategy pattern, where the buffer manager delegates eviction decisions to a policy object, while remaining agnostic to the concrete algorithm being used. The buffer manager notifies the policy of key lifecycle events:
 
-* a page is accessed (page hit)
-* a page is loaded into a frame
-* a frame becomes unpinned and eligible for eviction.
+- a page is accessed (page hit)
+- a page is loaded into a frame
+- a frame becomes unpinned and eligible for eviction.
 
 \
-When eviction is required, the buffer manager simply calls choose\_victim(), and the policy returns a frame to evict. This separation cleanly decouples page management from replacement strategy, making the buffer manager simpler and easier to extend.
+When eviction is required, the buffer manager simply calls choose_victim(), and the policy returns a frame to evict. This separation cleanly decouples page management from replacement strategy, making the buffer manager simpler and easier to extend.
 
 ### CLOCK replacement policy
 
@@ -258,9 +259,9 @@ The CLOCK policy is an efficient approximation of Least Recently Used (LRU). Ins
 
 The CLOCK policy maintains:
 
-* a circular array of frame pointers
-* a reference bit for each frame
-* a “clock hand” that scans frames in a circular manner
+- a circular array of frame pointers
+- a reference bit for each frame
+- a “clock hand” that scans frames in a circular manner
 
 \
 Each frame is assigned a stable index at initialisation, allowing the policy to associate metadata (reference bits) with frames efficiently.
@@ -269,15 +270,15 @@ Each frame is assigned a stable index at initialisation, allowing the policy to 
 
 Each frame has a reference bit that represents whether the page was accessed recently.
 
-* a reference bit of 1 indicates recent usage
-* a reference bit of 0 indicates that the page has not been used recently
+- a reference bit of 1 indicates recent usage
+- a reference bit of 0 indicates that the page has not been used recently
 
 \
 The reference bits are updated as follows:
 
-* on page access (hit): set to 1
-* on page load: set to 1
-* when a frame is unpinned: reset to 0
+- on page access (hit): set to 1
+- on page load: set to 1
+- when a frame is unpinned: reset to 0
 
 \
 Resetting the reference bit on unpin prevents pages from being immediately evicted while still allowing them to age naturally if they are not accessed again.
@@ -315,9 +316,9 @@ When eviction is required, the CLOCK policy scans frames starting from the curre
 \
 The clock hand advances after each inspection. If no victim is found after a full pass (or two passes in this implementation), eviction fails (another design consideration would be to keep it looping until it finds a victim, but this would cause the eviction to run unbounded). This ensures that:
 
-* recently used pages are retained
-* only unpinned pages are evicted
-* eviction runs in bounded time
+- recently used pages are retained
+- only unpinned pages are evicted
+- eviction runs in bounded time
 
 ### Why CLOCK?
 
@@ -395,7 +396,7 @@ std::optional<uint16_t> SlottedPage::Insert(const char* data, std::size_t len) {
 ```
 
 \
-Updates attempt to reuse existing space where possible. If the new record fits within the original allocation, it is overwritten in place. Otherwise, no-op. As a TODO, the record should be written to a new location within the page and the slot is updated to point to the new offset. This avoids shifting other records and keeps updates localised.
+Updates attempt to reuse existing space where possible. If the new record fits within the original allocation, it is overwritten in place. Otherwise, the record is written to a new location within the page and the slot is updated to point to the new offset. This avoids shifting other records and keeps updates localised.
 
 ```cpp
 bool SlottedPage::Update(uint16_t slot_id, const char* new_data, std::size_t len) {
@@ -440,3 +441,11 @@ bool SlottedPage::Delete(uint16_t slot_id) {
 # Summary
 
 By separating disk I/O from in-memory page management, the buffer manager significantly improves performance while preserving correctness. Higher layers of the database interact exclusively with pages in memory, without needing to reason about disk access directly.
+
+# References
+
+- [PostgreSQL source: `src/backend/storage/smgr/md.c`](https://github.com/postgres/postgres/blob/master/src/backend/storage/smgr/md.c) - magnetic disk storage manager, the low-level disk I/O layer
+- [PostgreSQL source: `src/backend/storage/buffer/bufmgr.c`](https://github.com/postgres/postgres/blob/master/src/backend/storage/buffer/bufmgr.c) - buffer manager implementation (pin, unpin, eviction)
+- [PostgreSQL source: `src/include/storage/bufpage.h`](https://github.com/postgres/postgres/blob/master/src/include/storage/bufpage.h) - page header and item pointer definitions (slotted page layout)
+- [PostgreSQL Documentation: Database Page Layout](https://www.postgresql.org/docs/current/storage-page-layout.html) - official docs on how PostgreSQL lays out data within a page, including the page header, item pointers, and free space
+- [The Internals of PostgreSQL: Buffer Manager](https://www.interdb.jp/pg/pgsql08.html) - detailed walkthrough of PostgreSQL's buffer manager, including the clock-sweep replacement algorithm and pin/unpin semantics

@@ -16,6 +16,10 @@ excerpt: Model Layer - The layer that makes the database schema aware
 > \
 > **Github:** [https://github.com/raihahahan/cpp-relational-db](https://github.com/raihahahan/cpp-relational-db)
 
+# Recap
+
+In previous posts, I built the storage layer (disk manager, buffer manager, slotted pages), the access layer (heap files and heap iterators for sequential scans), and the catalog layer, which bootstraps and manages the database’s own metadata (tables, columns, and types) stored in the same heap files as user data. At this point, the system can persist pages, cache them in memory, scan records, and describe its own schema. What’s missing is a way to work with user-defined tables that have runtime-dynamic schemas.
+
 # Introduction
 
 The model layer serves as the logical bridge between the physical storage (Heap Files, Pages) and the database's higher-level abstractions (Tables, Rows, Values). While the access layer provides raw record storage, the model layer introduces the concept of a "Table", a structured entity with a defined schema, specific data types, and named columns.\
@@ -24,10 +28,10 @@ This layer is responsible for translating logical rows (represented as C++ varia
 \
 This post covers:
 
-* The design of the Relation base class and UserTable
-* Difference between user tables and catalog tables.\\
-* Binary serialisation via the DynamicCodec
-* The TableManager caching registry
+- The design of the Relation base class and UserTable
+- Difference between user tables and catalog tables.\\
+- Binary serialisation via the DynamicCodec
+- The TableManager caching registry
 
 # User Tables and Relations
 
@@ -50,8 +54,8 @@ std::optional<RID> Relation::InsertRaw(std::span<const uint8_t> bytes, size_t le
 
 A key design challenge was handling the difference between internal system tables (Catalogs) and user-created tables.
 
-* Catalog Tables (CRTP): Since the schemas for system catalogs are known at compile-time and hardcoded, I use the Curiously Recurring Template Pattern (CRTP). This allows for static polymorphism, enabling the compiler to optimise access and serialisation without the overhead of virtual function calls.
-* User Tables (Metadata-Driven): User tables have schemas defined at runtime. We don't know the columns or types until a user executes a CREATE TABLE statement. Unlike the Catalog, which uses template-level specialisation, UserTable relies on metadata-driven logic. It uses a runtime ColumnInfo vector to instruct the DynamicCodec on how to interpret raw bytes, providing the flexibility of a dynamic schema without the need for complex vtable hierarchies.
+- Catalog Tables (CRTP): Since the schemas for system catalogs are known at compile-time and hardcoded, I use the Curiously Recurring Template Pattern (CRTP). This allows for static polymorphism, enabling the compiler to optimise access and serialisation without the overhead of virtual function calls.
+- User Tables (Metadata-Driven): User tables have schemas defined at runtime. We don't know the columns or types until a user executes a CREATE TABLE statement. Unlike the Catalog, which uses template-level specialisation, UserTable relies on metadata-driven logic. It uses a runtime ColumnInfo vector to instruct the DynamicCodec on how to interpret raw bytes, providing the flexibility of a dynamic schema without the need for complex vtable hierarchies.
 
 \
 The `UserTable` implementation stores this dynamic schema and uses it to drive the serialisation process:
@@ -137,7 +141,7 @@ The codec uses `std::visit` to handle the `Value` variant (which can be a `uint3
 std::vector<uint8_t> DynamicCodec::Encode(
     const std::vector<Value>& values,
     const std::vector<ColumnInfo> schema) {
-    
+
     std::vector<uint8_t> buffer;
     for (size_t i = 0; i < values.size(); ++i) {
         applyPadding(buffer, schema[i].type_id);
@@ -212,19 +216,23 @@ auto rid = students_table.Insert(row);
 
 The model layer currently supports basic types and simple sequential inserts. Moving forward, I plan to:
 
-* Expand the Value variant to support floats, booleans, and nulls.
-* Add support for primary keys and foreign key constraints within the UserTable logic.
+- Expand the Value variant to support floats, booleans, and nulls.
+- Add support for primary keys and foreign key constraints within the UserTable logic.
 
 # Summary
 
 With the storage, access, and catalog layers implemented, the database now has a solid foundation. Pages can be persisted to disk, cached in memory, organised into heap files, and described using a self-contained catalog. Schema-aware rows are able to be inserted into user tables, and user tables can be created.
 
-## What can be built now
+## What has been built since (Update 19/03/2026)
 
-With these layers in place, I can now build a complete end-to-end prototype. A parser and query executor can be layered on top of the catalog, model and access layer to support basic SQL operations such as CREATE TABLE, INSERT, and SELECT.\
+Since this post, a full SQL pipeline has been implemented on top of these layers: a parser (lexer, recursive-descent parser, and analyzer), a planner (logical plan to physical operator tree), and an executor engine with operators for SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, and DROP TABLE. The database now supports end-to-end SQL execution from a REPL.\
 \
-Once a working prototype exists, the focus can shift toward more advanced database concerns. A query optimiser can be introduced to reason about access paths and operator ordering, replacing sequential scans with cost-based decisions. Index structures such as B+ trees can be integrated into the access layer to accelerate both catalog and user queries.\
-\
-Beyond that, concurrency control and recoverability are the next major milestones. Supporting multiple concurrent transactions requires careful coordination between locking, logging, and buffer management. Recovery mechanisms such as write-ahead logging are needed to ensure durability and correctness in the presence of crashes.\
-\
-In the future, this database can be extended for distributed systems: replication, sharding, and coordination across multiple nodes.
+The next major milestones are index structures (B+ trees, hash indexes) for efficient lookups, a query optimiser to reason about access paths and operator ordering, concurrency control and recoverability (write-ahead logging, transaction management), and eventually distributed concerns like replication and sharding.
+
+# References
+
+- [PostgreSQL source: `src/backend/access/common/heaptuple.c`](https://github.com/postgres/postgres/blob/master/src/backend/access/common/heaptuple.c) - heap tuple formation, deconstruction, and serialisation (analogous to DynamicCodec)
+- [PostgreSQL source: `src/include/access/htup_details.h`](https://github.com/postgres/postgres/blob/master/src/include/access/htup_details.h) - heap tuple header layout and field access macros
+- [PostgreSQL source: `src/backend/utils/cache/relcache.c`](https://github.com/postgres/postgres/blob/master/src/backend/utils/cache/relcache.c) - relation descriptor cache (analogous to TableManager's caching of open tables)
+- [PostgreSQL Documentation: Database Page Layout](https://www.postgresql.org/docs/current/storage-page-layout.html) - official docs on how heap tuples are laid out within a page, including alignment and the tuple header
+- [The Internals of PostgreSQL: Heap Tuple Structure](https://www.interdb.jp/pg/pgsql05/02.html) - covers heap tuple headers, null bitmaps, and how PostgreSQL packs column values into a byte sequence
