@@ -16,6 +16,10 @@ excerpt: Heap Files
 > \
 > Github: [https://github.com/raihahahan/cpp-relational-db](https://github.com/raihahahan/cpp-relational-db)
 
+# Recap
+
+In the [previous post](/blog/Implementing-a-relational-database-from-scratch---Storage-Layer), I covered the storage layer: the disk manager, which provides page-based persistent I/O, the buffer manager, which caches pages in memory and manages eviction using a pluggable replacement policy (CLOCK), and the slotted page layout, which organises variable-length records within a single page. Together, these components give us the ability to read, write, and cache fixed-size pages, but they don't yet define how records are organised across pages.
+
 # Introduction
 
 The access layer sits above the storage layer and is responsible for defining how records are organised and accessed on disk. While the storage layer deals with pages, frames, and persistence, the access layer introduces higher-level abstractions such as files, records, and iterators.\
@@ -24,8 +28,8 @@ In a relational database, the access layer typically includes multiple access me
 \
 This post covers the design and implementation of:
 
-* heap files, which store records across multiple pages
-* heap iterators, which allow sequential scans over heap files
+- heap files, which store records across multiple pages
+- heap iterators, which allow sequential scans over heap files
 
 # Heap file
 
@@ -33,8 +37,8 @@ A heap file represents a table of records. It is the simplest access method for 
 \
 In this design, a heap file consists of:
 
-* a linked list of heap pages
-* each heap page internally organised using a slotted page layout
+- a linked list of heap pages
+- each heap page internally organised using a slotted page layout
 
 ## Heap page layout
 
@@ -43,7 +47,7 @@ Each heap page begins with a small heap-specific header, followed by a slotted p
 ```cpp
 struct HeapPageHeader {
   page_id_t next_page_id;
-};    
+};
 
 ```
 
@@ -90,7 +94,7 @@ std::optional<Record>HeapFile::Get(const RID& rid) {
   auto sp = SlottedPage::FromBuffer(frame->data, sizeof(HeapPageHeader));
   auto data = sp.Get(rid.slot_id);
   _bm->release(rid.page_id);
-  
+
   if (data.has_value()) {
     return Record{rid, (*data).first.data(), (*data).second};
   }
@@ -174,10 +178,10 @@ The heap iterator traverses:
 
 The iterator maintains:
 
-* the current page ID
-* the current slot index
-* a pointer to the heap file
-* a boolean indicating whether a next record exists
+- the current page ID
+- the current slot index
+- a pointer to the heap file
+- a boolean indicating whether a next record exists
 
 ### Advancing the iterator
 
@@ -213,9 +217,9 @@ void HeapIterator::Advance() {
 
 This ensures that:
 
-* deleted records are skipped
-* pages are traversed lazily
-* buffer manager pins are correctly balanced
+- deleted records are skipped
+- pages are traversed lazily
+- buffer manager pins are correctly balanced
 
 ### Using the iterator
 
@@ -251,7 +255,7 @@ HeapIterator& HeapIterator::operator++() {
 }
 
 // usage
-for (auto it = hf.begin(); it != it.end(); ++it) {
+for (auto it = hf.begin(); it != hf.end(); ++it) {
   auto rec = *it;
 }
 ```
@@ -260,10 +264,10 @@ for (auto it = hf.begin(); it != it.end(); ++it) {
 
 Heap files provide a simple and flexible storage format, but they do not support efficient lookups or range queries. In future iterations, this access layer can be extended with:
 
-* B+ tree indexes for ordered access and range scans
-* hash indexes for fast equality lookups
-* integration with the catalog to map tables to heap files
-* support for large values via overflow storage ([TOAST-style](https://www.crunchydata.com/blog/postgres-toast-the-greatest-thing-since-sliced-bread) design)
+- B+ tree indexes for ordered access and range scans
+- hash indexes for fast equality lookups
+- integration with the catalog to map tables to heap files (update 19/03/2026: now implemented in the catalog and model layers)
+- support for large values via overflow storage ([TOAST-style](https://www.crunchydata.com/blog/postgres-toast-the-greatest-thing-since-sliced-bread) design)
 
 \
 These access methods can reuse the same underlying storage and buffer management infrastructure, while providing different performance trade-offs.

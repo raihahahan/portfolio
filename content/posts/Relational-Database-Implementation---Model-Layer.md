@@ -16,6 +16,10 @@ excerpt: Model Layer - The layer that makes the database schema aware
 > \
 > **Github:** [https://github.com/raihahahan/cpp-relational-db](https://github.com/raihahahan/cpp-relational-db)
 
+# Recap
+
+In previous posts, I built the storage layer (disk manager, buffer manager, slotted pages), the access layer (heap files and heap iterators for sequential scans), and the catalog layer, which bootstraps and manages the database’s own metadata (tables, columns, and types) stored in the same heap files as user data. At this point, the system can persist pages, cache them in memory, scan records, and describe its own schema. What’s missing is a way to work with user-defined tables that have runtime-dynamic schemas.
+
 # Introduction
 
 The model layer serves as the logical bridge between the physical storage (Heap Files, Pages) and the database's higher-level abstractions (Tables, Rows, Values). While the access layer provides raw record storage, the model layer introduces the concept of a "Table", a structured entity with a defined schema, specific data types, and named columns.\
@@ -219,12 +223,8 @@ The model layer currently supports basic types and simple sequential inserts. Mo
 
 With the storage, access, and catalog layers implemented, the database now has a solid foundation. Pages can be persisted to disk, cached in memory, organised into heap files, and described using a self-contained catalog. Schema-aware rows are able to be inserted into user tables, and user tables can be created.
 
-## What can be built now
+## What has been built since (Update 19/03/2026)
 
-With these layers in place, I can now build a complete end-to-end prototype. A parser and query executor can be layered on top of the catalog, model and access layer to support basic SQL operations such as CREATE TABLE, INSERT, and SELECT.\
+Since this post, a full SQL pipeline has been implemented on top of these layers: a parser (lexer, recursive-descent parser, and analyzer), a planner (logical plan to physical operator tree), and an executor engine with operators for SELECT, INSERT, UPDATE, DELETE, CREATE TABLE, and DROP TABLE. The database now supports end-to-end SQL execution from a REPL.\
 \
-Once a working prototype exists, the focus can shift toward more advanced database concerns. A query optimiser can be introduced to reason about access paths and operator ordering, replacing sequential scans with cost-based decisions. Index structures such as B+ trees can be integrated into the access layer to accelerate both catalog and user queries.\
-\
-Beyond that, concurrency control and recoverability are the next major milestones. Supporting multiple concurrent transactions requires careful coordination between locking, logging, and buffer management. Recovery mechanisms such as write-ahead logging are needed to ensure durability and correctness in the presence of crashes.\
-\
-In the future, this database can be extended for distributed systems: replication, sharding, and coordination across multiple nodes.
+The next major milestones are index structures (B+ trees, hash indexes) for efficient lookups, a query optimiser to reason about access paths and operator ordering, concurrency control and recoverability (write-ahead logging, transaction management), and eventually distributed concerns like replication and sharding.

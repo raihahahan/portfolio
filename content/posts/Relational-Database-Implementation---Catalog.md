@@ -17,6 +17,10 @@ excerpt: Catalog Layer and DB server
 > \
 > Github: [https://github.com/raihahahan/cpp-relational-db](https://github.com/raihahahan/cpp-relational-db)
 
+# Recap
+
+In the previous posts, I built the storage layer, a disk manager for page-based I/O, a buffer manager that caches pages in memory with CLOCK eviction, and slotted pages for organising variable-length records within a page. On top of that, the access layer introduced heap files: a linked list of pages that stores records in no particular order, along with a heap iterator for sequential scans. With these in place, we can persist, cache, and scan raw records, but the system has no knowledge of what those records represent.
+
 # Introduction
 
 The catalog layer is responsible for managing the database’s metadata. This includes information about tables, columns, types, and how these pieces are laid out on disk. In many ways, the catalog is the database describing itself. This is also how [Postgres maintains metadata of its database system](https://www.postgresql.org/docs/current/catalogs.html).\
@@ -94,22 +98,22 @@ If the database is already initialised, the catalog follows the load path. In th
 ```cpp
 void Catalog::LoadCatalogs() {
   auto table_hf = HeapFile::Open(
-      _bm, 
-      _dm, 
+      _bm,
+      _dm,
       DB_TABLES_FILE_ID,
       DB_TABLES_ROOT_PAGE_ID
   );
 
   auto attr_hf = HeapFile::Open(
-      _bm, 
-      _dm, 
+      _bm,
+      _dm,
       DB_ATTRIBUTES_FILE_ID,
       DB_ATTRIBUTES_ROOT_PAGE_ID
   );
 
   auto types_hf = HeapFile::Open(
-      _bm, 
-      _dm, 
+      _bm,
+      _dm,
       DB_TYPES_FILE_ID,
       DB_TYPES_ROOT_PAGE_ID
   );
@@ -301,7 +305,7 @@ std::vector<ColumnInfo> AttributesCatalog::GetColumns(table_id_t table_id) {
             reinterpret_cast<const uint8_t*>(rec.data),
             rec.size
         };
-        
+
         auto col = codec::ColumnInfoCodec::Decode(bytes);
         if (col.table_id == table_id) {
             res.emplace_back(col);
@@ -318,7 +322,7 @@ std::vector<TypeInfo> TypesCatalog::GetTypes() {
             reinterpret_cast<const uint8_t*>(rec.data),
             rec.size
         };
-        
+
         auto type = codec::TypeInfoCodec::Decode(bytes);
         res.emplace_back(type);
     }
@@ -546,7 +550,7 @@ inline T ReadData(std::span<const uint8_t> buf, size_t& off) {
 };
 
 template <VariableWidthSerializable T>
-inline T ReadData(std::span<const uint8_t> buf, 
+inline T ReadData(std::span<const uint8_t> buf,
                                 size_t& off) {
     auto len = ReadData<uint32_t>(buf, off);
     std::string s(reinterpret_cast<const char*>(buf.data() + off), len);

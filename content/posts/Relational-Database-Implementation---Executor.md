@@ -198,9 +198,9 @@ table->Insert({Value{2}, Value{"Bob"}});
 table->Insert({Value{3}, Value{"Carol"}});
 
 // compose scan within a filter
-auto scan = executor::SeqScanOp(*table);
+auto scan = std::make_unique<executor::SeqScanOp>(*table);
 executor::FilterOp filter{
-      std::make_unique<executor::SeqScanOp>(scan), 
+      std::move(scan), 
       [](const common::Tuple& t) {
           return std::get<uint32_t>(t.GetValues()[0]) >= 2;
       }
@@ -265,7 +265,7 @@ void ProjectionOp::Close() {
 auto table = db.table_mgr->OpenTable("students");
 table->Insert({Value{1}, Value{"Alice"}});
 
-auto scan = executor::SeqScanOp(*table);
+auto scan = std::make_unique<executor::SeqScanOp>(*table);
 std::unordered_set<uint16_t> cols = {2}; // project name only
 std::vector<ColumnInfo> out_schema;
 out_schema.emplace_back(
@@ -276,7 +276,7 @@ out_schema.emplace_back(
 
 // compose scan within projection
 executor::ProjectionOp proj{
-    std::make_unique<executor::SeqScanOp>(scan),
+    std::move(scan),
     cols,
     std::make_shared<const common::Schema>(out_schema)
 };
@@ -364,6 +364,10 @@ EXPECT_FALSE(limit.Next().has_value());
 limit.Close();
 ```
 
+## DML Operators
+
+In addition to the read-path operators above, the engine includes operators for data modification: `InsertOp`, `UpdateOp`, and `DeleteOp`. These follow the same Volcano interface (`Open`/`Next`/`Close`) and are used for INSERT, UPDATE, and DELETE statements respectively. `InsertOp` is a leaf operator that writes rows directly to a table, while `UpdateOp` and `DeleteOp` pull tuples from a child operator (typically a scan with a filter) and apply modifications.
+
 ## Operator Composition
 
 Operators are composed bottom-up to form a physical execution plan.\
@@ -406,7 +410,7 @@ auto proj = std::make_unique<ProjectionOp>(
   std::make_shared<const Schema>(out_schema)
 );
 
-auto limit = std::make_unique<LimitOp(
+auto limit = std::make_unique<LimitOp>(
   std::move(proj), 1
 );
 
@@ -428,7 +432,7 @@ The Executor is a thin orchestration layer. Its responsibilities are simple:
 \
 There are two execution modes:
 
-* fire-and-forget execution (e.g. future INSERT, DELETE)
+* fire-and-forget execution (e.g. INSERT, UPDATE, DELETE)
 * collecting results (used for SELECT)
 
 ```cpp
@@ -468,10 +472,11 @@ This avoids accidental sharing, lifetime bugs and hidden cycles in the operator 
 
 # Conclusion
 
-The executor engine simply takes in an operator tree and executes it. This is built from an SQL query to a logical plan, then to a physical plan and finally an operator tree. The next step is to build the query evaluation engine from a top-down approach (i.e starting from the SQL parser, then planner and optimiser).\
+The executor engine simply takes in an operator tree and executes it. This is built from an SQL query to a logical plan, then to a physical plan and finally an operator tree. Since writing this post, the SQL parser (lexer, recursive-descent parser, and semantic analyzer) and planner (logical plan to physical operator tree) have been implemented, forming a complete end-to-end SQL pipeline.\
 \
-Once a working end-to-end relation db engine is created (from SQL parser to disk manager), the following improvements can be done:
+Future improvements include:
 
 1. Add more operators (joins, order by, aggregate etc)
-2. Add table namespaces (e.g public.users, auth.users, catalog.tables etc)
-3. Lots of refactoring within the codebase
+2. Add index-based access methods (B+ tree scans, hash lookups)
+3. Add table namespaces (e.g public.users, auth.users, catalog.tables etc)
+4. Concurrency control and recovery (write-ahead logging, transaction management)
