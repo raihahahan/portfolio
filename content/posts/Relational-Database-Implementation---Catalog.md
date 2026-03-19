@@ -35,8 +35,8 @@ This post starts by describing the core Catalog abstraction, which acts as the c
 
 The Catalog class is the main entry point into the catalog layer. It owns and coordinates all system catalogs, and is responsible for ensuring that metadata is correctly initialised and loaded on startup. Conceptually, the catalog has two modes of operation:
 
-* bootstrap, when the database is created for the first time
-* load, when an existing database is opened and metadata already exists on disk
+- bootstrap, when the database is created for the first time
+- load, when an existing database is opened and metadata already exists on disk
 
 ## Ownership and lifecycle
 
@@ -150,9 +150,9 @@ Writing the magic number is the final step that marks the database as initialise
 \
 Next, fixed root pages are allocated for each system catalog heap file:
 
-* db\_tables
-* db\_attributes
-* db\_types
+- db_tables
+- db_attributes
+- db_types
 
 \
 Each of these heap files is assigned a predefined root page ID. These page IDs are asserted during bootstrap to ensure that the on-disk layout matches the expected structure.
@@ -255,9 +255,9 @@ At this point, the catalog is fully initialised. Subsequent restarts will detect
 \
 This bootstrapping process ensures that the catalog is:
 
-* discoverable via fixed root pages
-* stored using the same mechanisms as user data
-* fully reconstructible after restart
+- discoverable via fixed root pages
+- stored using the same mechanisms as user data
+- fully reconstructible after restart
 
 \
 It also clearly separates one-time initialisation from normal database operation, which simplifies reasoning about correctness and recovery.
@@ -274,7 +274,7 @@ This also keeps the catalog layer independent of the query engine, avoiding circ
 
 Each catalog table is backed by a heap file. Operations such as looking up a table by name or retrieving all columns for a table are implemented as sequential scans over the heap file.\
 \
-For example, looking up a table by name involves iterating over all records in db\_tables, decoding each record, and comparing the table name:
+For example, looking up a table by name involves iterating over all records in db_tables, decoding each record, and comparing the table name:
 
 ```cpp
 std::optional<TableInfo> TablesCatalog::Lookup(std::string_view table_name) {
@@ -336,9 +336,9 @@ It is important to note that this iteration logic lives entirely inside the cata
 \
 Later on, the query executor will:
 
-* operate on user tables
-* build logical and physical plans
-* support predicates, joins, and projections
+- operate on user tables
+- build logical and physical plans
+- support predicates, joins, and projections
 
 \
 By contrast, the catalog performs fixed-purpose scans with hard-coded logic. This separation keeps the catalog usable during system startup, before the query engine even exists.
@@ -368,8 +368,8 @@ protected:
 
 Each concrete catalog table specifies:
 
-* the row type it stores (e.g. TableInfo, ColumnInfo)
-* the codec used to encode and decode that row type
+- the row type it stores (e.g. TableInfo, ColumnInfo)
+- the codec used to encode and decode that row type
 
 \
 This keeps the mechanics of heap-file interaction centralised while allowing each catalog table to expose domain-specific operations.
@@ -460,9 +460,9 @@ These constraints are applied to fixed-width values such as integers and identif
 \
 This trait guarantees that a type can be copied byte-for-byte using memcpy without invoking constructors, destructors, or custom copy logic. In practice, this means avoiding any of the below:
 
-* dynamic memory ownership
-* virtual functions
-* user-defined copy semantics
+- dynamic memory ownership
+- virtual functions
+- user-defined copy semantics
 
 \
 Primitive integers and small POD-like (Plain Old Data) types fall into this category.
@@ -473,9 +473,9 @@ Primitive integers and small POD-like (Plain Old Data) types fall into this cate
 \
 This trait guarantees that a type has a predictable memory layout compatible with C-style structs. In particular:
 
-* members are laid out in declaration order
-* there is no unexpected reordering
-* the object representation is well-defined
+- members are laid out in declaration order
+- there is no unexpected reordering
+- the object representation is well-defined
 
 \
 Together, these traits ensure that copying a value’s bytes to disk and reading them back later will faithfully reconstruct the original value. Only types that satisfy both properties are allowed to be serialised using the fixed-width helpers.
@@ -495,8 +495,8 @@ concept VariableWidthSerializable =
 
 This concept does not make assumptions about object layout or trivial copyability. Instead, it defines a structural interface that a type must satisfy in order to be encoded as a variable-length value. Specifically, a variable-width serialisable type must:
 
-* expose a contiguous byte representation via `data()`
-* provide its length explicitly via `size()`
+- expose a contiguous byte representation via `data()`
+- provide its length explicitly via `size()`
 
 \
 Types that satisfy this contract can be encoded by writing a length prefix followed by the raw byte sequence. This makes the on-disk representation self-describing and avoids reliance on null terminators or implicit conventions. \
@@ -602,9 +602,9 @@ In this design, each database corresponds to a single .db file on disk, followin
 \
 This means:
 
-* each database file contains its own catalog root page
-* catalog metadata is not shared across databases
-* opening a different database is equivalent to opening a different file
+- each database file contains its own catalog root page
+- catalog metadata is not shared across databases
+- opening a different database is equivalent to opening a different file
 
 \
 The catalog layer itself is unaware of other databases. It operates entirely within the context of a single DiskManager.
@@ -656,3 +656,11 @@ Switching databases is therefore just a matter of selecting a different DiskMana
 The Catalog layer now enables the database to hold metadata information as tables themselves. The final piece before I can start working on the Query Evaluation engine (SQL parser, Executor, Optimiser) is to implement the logic and API for user tables. \
 \
 User tables are the same as Catalog tables, in the sense that they are both relations and stored as heap files. However, minor differences exist in the way we insert their rows, as catalog tables have hardcoded, pre-defined columns while user tables have dynamic schemas. More is explained in the next post.
+
+# References
+
+- [PostgreSQL source: `src/include/catalog/pg_class.h`](https://github.com/postgres/postgres/blob/master/src/include/catalog/pg_class.h) - system catalog for relations (analogous to `db_tables`)
+- [PostgreSQL source: `src/include/catalog/pg_attribute.h`](https://github.com/postgres/postgres/blob/master/src/include/catalog/pg_attribute.h) - system catalog for column metadata (analogous to `db_attributes`)
+- [PostgreSQL source: `src/include/catalog/pg_type.h`](https://github.com/postgres/postgres/blob/master/src/include/catalog/pg_type.h) - system catalog for type definitions (analogous to `db_types`)
+- [PostgreSQL source: `src/backend/catalog/`](https://github.com/postgres/postgres/tree/master/src/backend/catalog) - catalog management routines (bootstrap, indexing, dependency tracking)
+- [PostgreSQL Documentation: System Catalogs](https://www.postgresql.org/docs/current/catalogs.html) - official reference for all of PostgreSQL's system catalog tables (`pg_class`, `pg_attribute`, `pg_type`, etc.) and their columns

@@ -3,7 +3,7 @@ title: Relational Database Implementation - Executor Engine
 published_at: 2026-01-05T16:00:00.000Z
 read_time: 10
 prev_post: content/posts/Relational-Database-Implementation---Model-Layer.md
-next_post: ''
+next_post: content/posts/Relational-Database-Implementation---Parser.md
 excerpt: The "Volcano execution model"
 ---
 
@@ -480,3 +480,12 @@ Future improvements include:
 2. Add index-based access methods (B+ tree scans, hash lookups)
 3. Add table namespaces (e.g public.users, auth.users, catalog.tables etc)
 4. Concurrency control and recovery (write-ahead logging, transaction management)
+
+# References
+
+* [PostgreSQL source: `src/backend/executor/execMain.c`](https://github.com/postgres/postgres/blob/master/src/backend/executor/execMain.c) - main executor entry point (ExecutorStart, ExecutorRun, ExecutorEnd)
+* [PostgreSQL source: `src/backend/executor/nodeSeqscan.c`](https://github.com/postgres/postgres/blob/master/src/backend/executor/nodeSeqscan.c) - sequential scan operator implementation
+* [PostgreSQL source: `src/backend/executor/nodeResult.c`](https://github.com/postgres/postgres/blob/master/src/backend/executor/nodeResult.c) - result/filter operator
+* [PostgreSQL Documentation: Executor](https://www.postgresql.org/docs/current/executor.html) - official overview of how PostgreSQL's executor processes a plan tree
+* [Volcano - An Extensible and Parallel Query Evaluation System (Graefe, 1994)](https://paperhub.s3.amazonaws.com/dace52a42c07f7f8348b08dc2b186061.pdf) - the original paper that introduced the iterator model used by PostgreSQL and most modern databases
+* [The SQL Query Roadtrip: The Execution Engine](https://internals-for-interns.com/posts/postgres-executor/) - walkthrough of how PostgreSQL's executor implements the Volcano iterator model
