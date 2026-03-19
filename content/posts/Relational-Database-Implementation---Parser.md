@@ -401,9 +401,9 @@ The parser turns raw SQL strings into fully typed, catalog-validated representat
 
 # References
 
-* [PostgreSQL source: `src/backend/parser/scan.l`](https://github.com/postgres/postgres/blob/master/src/backend/parser/scan.l) - lexer (flex-based tokeniser for SQL)
-* [PostgreSQL source: `src/backend/parser/gram.y`](https://github.com/postgres/postgres/blob/master/src/backend/parser/gram.y) - parser (bison grammar). PostgreSQL uses a generated parser rather than hand-written recursive descent, but the grammar rules correspond closely to the parse functions in this implementation
-* [PostgreSQL source: `src/backend/parser/analyze.c`](https://github.com/postgres/postgres/blob/master/src/backend/parser/analyze.c) - semantic analysis (name resolution, type checking, star expansion)
+* [PostgreSQL source: `scan.l`](https://github.com/postgres/postgres/blob/master/src/backend/parser/scan.l) - lexer (flex-based tokeniser for SQL)
+* [PostgreSQL source: `gram.y`](https://github.com/postgres/postgres/blob/master/src/backend/parser/gram.y) - parser (bison grammar). PostgreSQL uses a generated parser rather than hand-written recursive descent, but the grammar rules correspond closely to the parse functions in this implementation
+* [PostgreSQL source: `analyze.c`](https://github.com/postgres/postgres/blob/master/src/backend/parser/analyze.c) - semantic analysis (name resolution, type checking, star expansion)
 * [PostgreSQL Documentation: The Parser Stage](https://www.postgresql.org/docs/current/parser-stage.html) - official docs on how PostgreSQL's parser transforms SQL text into a parse tree
 * [Crafting Interpreters: Parsing Expressions](https://craftinginterpreters.com/parsing-expressions.html) - Robert Nystrom's chapter on recursive-descent parsing with precedence climbing, the same technique used in this implementation
 * [The SQL Query Roadtrip: Parsing and Analysis](https://internals-for-interns.com/posts/postgresql-sql-parsing/) - covers how PostgreSQL transforms SQL text into a validated Query tree through lexing, parsing, and semantic analysis

@@ -274,7 +274,7 @@ These access methods can reuse the same underlying storage and buffer management
 
 # References
 
-- [PostgreSQL source: `src/backend/access/heap/heapam.c`](https://github.com/postgres/postgres/blob/master/src/backend/access/heap/heapam.c) - heap access method (insert, delete, update, sequential scan)
-- [PostgreSQL source: `src/include/access/heapam.h`](https://github.com/postgres/postgres/blob/master/src/include/access/heapam.h) - heap access method interface
+- [PostgreSQL source: `heapam.c`](https://github.com/postgres/postgres/blob/master/src/backend/access/heap/heapam.c) - heap access method (insert, delete, update, sequential scan)
+- [PostgreSQL source: `heapam.h`](https://github.com/postgres/postgres/blob/master/src/include/access/heapam.h) - heap access method interface
 - [PostgreSQL Documentation: Database Physical Storage](https://www.postgresql.org/docs/current/storage.html) - official docs on how PostgreSQL organises files, pages, and free space within a tablespace
 - [The Internals of PostgreSQL: Heap Table File](https://www.interdb.jp/pg/pgsql01/03.html) - covers how heap tables and their pages are structured in PostgreSQL, including the free space map and visibility map

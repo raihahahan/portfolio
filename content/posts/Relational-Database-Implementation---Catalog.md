@@ -659,8 +659,8 @@ User tables are the same as Catalog tables, in the sense that they are both rela
 
 # References
 
-- [PostgreSQL source: `src/include/catalog/pg_class.h`](https://github.com/postgres/postgres/blob/master/src/include/catalog/pg_class.h) - system catalog for relations (analogous to `db_tables`)
-- [PostgreSQL source: `src/include/catalog/pg_attribute.h`](https://github.com/postgres/postgres/blob/master/src/include/catalog/pg_attribute.h) - system catalog for column metadata (analogous to `db_attributes`)
-- [PostgreSQL source: `src/include/catalog/pg_type.h`](https://github.com/postgres/postgres/blob/master/src/include/catalog/pg_type.h) - system catalog for type definitions (analogous to `db_types`)
-- [PostgreSQL source: `src/backend/catalog/`](https://github.com/postgres/postgres/tree/master/src/backend/catalog) - catalog management routines (bootstrap, indexing, dependency tracking)
+- [PostgreSQL source: `pg_class.h`](https://github.com/postgres/postgres/blob/master/src/include/catalog/pg_class.h) - system catalog for relations (analogous to `db_tables`)
+- [PostgreSQL source: `pg_attribute.h`](https://github.com/postgres/postgres/blob/master/src/include/catalog/pg_attribute.h) - system catalog for column metadata (analogous to `db_attributes`)
+- [PostgreSQL source: `pg_type.h`](https://github.com/postgres/postgres/blob/master/src/include/catalog/pg_type.h) - system catalog for type definitions (analogous to `db_types`)
+- [PostgreSQL source: `catalog/`](https://github.com/postgres/postgres/tree/master/src/backend/catalog) - catalog management routines (bootstrap, indexing, dependency tracking)
 - [PostgreSQL Documentation: System Catalogs](https://www.postgresql.org/docs/current/catalogs.html) - official reference for all of PostgreSQL's system catalog tables (`pg_class`, `pg_attribute`, `pg_type`, etc.) and their columns

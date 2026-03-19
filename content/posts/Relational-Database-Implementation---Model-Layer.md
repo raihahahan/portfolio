@@ -231,8 +231,8 @@ The next major milestones are index structures (B+ trees, hash indexes) for effi
 
 # References
 
-- [PostgreSQL source: `src/backend/access/common/heaptuple.c`](https://github.com/postgres/postgres/blob/master/src/backend/access/common/heaptuple.c) - heap tuple formation, deconstruction, and serialisation (analogous to DynamicCodec)
-- [PostgreSQL source: `src/include/access/htup_details.h`](https://github.com/postgres/postgres/blob/master/src/include/access/htup_details.h) - heap tuple header layout and field access macros
-- [PostgreSQL source: `src/backend/utils/cache/relcache.c`](https://github.com/postgres/postgres/blob/master/src/backend/utils/cache/relcache.c) - relation descriptor cache (analogous to TableManager's caching of open tables)
+- [PostgreSQL source: `heaptuple.c`](https://github.com/postgres/postgres/blob/master/src/backend/access/common/heaptuple.c) - heap tuple formation, deconstruction, and serialisation (analogous to DynamicCodec)
+- [PostgreSQL source: `htup_details.h`](https://github.com/postgres/postgres/blob/master/src/include/access/htup_details.h) - heap tuple header layout and field access macros
+- [PostgreSQL source: `relcache.c`](https://github.com/postgres/postgres/blob/master/src/backend/utils/cache/relcache.c) - relation descriptor cache (analogous to TableManager's caching of open tables)
 - [PostgreSQL Documentation: Database Page Layout](https://www.postgresql.org/docs/current/storage-page-layout.html) - official docs on how heap tuples are laid out within a page, including alignment and the tuple header
 - [The Internals of PostgreSQL: Heap Tuple Structure](https://www.interdb.jp/pg/pgsql05/02.html) - covers heap tuple headers, null bitmaps, and how PostgreSQL packs column values into a byte sequence

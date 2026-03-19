@@ -451,8 +451,8 @@ The planner completes the automated SQL pipeline. An SQL string now flows throug
 
 # References
 
-* [PostgreSQL source: `src/backend/optimizer/plan/planner.c`](https://github.com/postgres/postgres/blob/master/src/backend/optimizer/plan/planner.c) - main planner entry point (standard_planner, subquery_planner)
-* [PostgreSQL source: `src/backend/optimizer/plan/createplan.c`](https://github.com/postgres/postgres/blob/master/src/backend/optimizer/plan/createplan.c) - converts the best path into a physical plan tree (analogous to PhysicalPlanner::Build)
-* [PostgreSQL source: `src/backend/optimizer/path/allpaths.c`](https://github.com/postgres/postgres/blob/master/src/backend/optimizer/path/allpaths.c) - path enumeration for base relations and joins. PostgreSQL explores many candidate paths before choosing the cheapest, whereas this implementation does a direct one-to-one mapping
+* [PostgreSQL source: `planner.c`](https://github.com/postgres/postgres/blob/master/src/backend/optimizer/plan/planner.c) - main planner entry point (standard_planner, subquery_planner)
+* [PostgreSQL source: `createplan.c`](https://github.com/postgres/postgres/blob/master/src/backend/optimizer/plan/createplan.c) - converts the best path into a physical plan tree (analogous to PhysicalPlanner::Build)
+* [PostgreSQL source: `allpaths.c`](https://github.com/postgres/postgres/blob/master/src/backend/optimizer/path/allpaths.c) - path enumeration for base relations and joins. PostgreSQL explores many candidate paths before choosing the cheapest, whereas this implementation does a direct one-to-one mapping
 * [PostgreSQL Documentation: Planner/Optimizer](https://www.postgresql.org/docs/current/planner-optimizer.html) - official overview of how PostgreSQL generates and selects query plans
 * [The SQL Query Roadtrip: The Query Planner](https://internals-for-interns.com/posts/postgres-query-planner/) - detailed walkthrough of how PostgreSQL's planner chooses execution strategies, including cost estimation and path selection

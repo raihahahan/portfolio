@@ -444,8 +444,8 @@ By separating disk I/O from in-memory page management, the buffer manager signif
 
 # References
 
-- [PostgreSQL source: `src/backend/storage/smgr/md.c`](https://github.com/postgres/postgres/blob/master/src/backend/storage/smgr/md.c) - magnetic disk storage manager, the low-level disk I/O layer
-- [PostgreSQL source: `src/backend/storage/buffer/bufmgr.c`](https://github.com/postgres/postgres/blob/master/src/backend/storage/buffer/bufmgr.c) - buffer manager implementation (pin, unpin, eviction)
-- [PostgreSQL source: `src/include/storage/bufpage.h`](https://github.com/postgres/postgres/blob/master/src/include/storage/bufpage.h) - page header and item pointer definitions (slotted page layout)
+- [PostgreSQL source: `md.c`](https://github.com/postgres/postgres/blob/master/src/backend/storage/smgr/md.c) - magnetic disk storage manager, the low-level disk I/O layer
+- [PostgreSQL source: `bufmgr.c`](https://github.com/postgres/postgres/blob/master/src/backend/storage/buffer/bufmgr.c) - buffer manager implementation (pin, unpin, eviction)
+- [PostgreSQL source: `bufpage.h`](https://github.com/postgres/postgres/blob/master/src/include/storage/bufpage.h) - page header and item pointer definitions (slotted page layout)
 - [PostgreSQL Documentation: Database Page Layout](https://www.postgresql.org/docs/current/storage-page-layout.html) - official docs on how PostgreSQL lays out data within a page, including the page header, item pointers, and free space
 - [The Internals of PostgreSQL: Buffer Manager](https://www.interdb.jp/pg/pgsql08.html) - detailed walkthrough of PostgreSQL's buffer manager, including the clock-sweep replacement algorithm and pin/unpin semantics
