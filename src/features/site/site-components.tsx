@@ -26,7 +26,7 @@ export function MyNavbar({
   return (
     <Navbar
       className={`${classes.navbar}`}
-      style={{ backgroundColor: siteColors.navbar }}
+      style={{ backgroundColor: siteColors.navbar, padding: 0 }}
       width={{ base: "100%", sm: 0 }}
       hidden={!openControl.opened}
     >
@@ -54,6 +54,8 @@ export function AnchorLinks({
         flexDirection: isSmall ? "column" : "row",
         backgroundColor: !isSmall ? "transparent" : siteColors.background,
         height: isSmall ? "100vh" : undefined,
+        alignItems: isSmall ? "center" : undefined,
+        gap: isSmall ? 12 : undefined,
       }}
     >
       {anchorData.map((item) => {
@@ -112,13 +114,14 @@ export function MyFooter({ extraStyles }: { extraStyles?: CSSProperties }) {
       id="FOOTER"
       style={{
         backgroundColor: colors.header,
-        width: "100vw",
+        width: "100%",
         height: "auto",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "row",
         paddingTop: sm ? 20 : 0,
+        paddingBottom: sm ? 24 : 10,
         ...extraStyles,
       }}
     >
@@ -128,6 +131,7 @@ export function MyFooter({ extraStyles }: { extraStyles?: CSSProperties }) {
           flexDirection: sm ? "column" : "row",
           justifyContent: "center",
           alignItems: "center",
+          gap: sm ? 12 : undefined,
         }}
       >
         {footerData.map((item) => {
@@ -259,7 +263,7 @@ export function MainHeader2({
         alignItems: "center",
         justifyContent: "center", // Center all content
         backgroundColor: sm && opened ? siteColors.background : "transparent",
-        margin: 10,
+        margin: sm && opened ? "0 10px" : 10,
         position: "fixed",
         top: sm && opened ? 0 : isHeaderVisible ? 0 : "-90px",
         transition: "top 0.3s ease",
