@@ -395,6 +395,114 @@ The parser currently supports a useful subset of SQL. Future improvements includ
 \
 The keyword table already reserves these words, so they cannot be used as identifiers. Extending the parser to support them is a matter of adding the corresponding parse functions and AST nodes.
 
+# Example
+
+1. SQL Query: SELECT name FROM users WHERE age >= 2
+2. Tokens:
+
+```
+[Keyword "SELECT"]  [Identifier "name"]  [Keyword "FROM"]
+[Identifier "users"]  [Keyword "WHERE"]  [Identifier "age"]
+[Operator ">="]  [Number "21"]  [EndOfFile]
+```
+
+3\. AST
+
+```json
+{
+  "node": "SelectStmt",
+  "target_list": [
+    {
+      "node": "ResTarget",
+      "val": {
+        "node": "ColumnRef",
+        "name": "name"
+      },
+      "alias": ""
+    }
+  ],
+  "from_table": "users",
+  "where": {
+    "node": "BinaryExpr",
+    "op": ">=",
+    "lhs": {
+      "node": "ColumnRef",
+      "name": "age"
+    },
+    "rhs": {
+      "node": "Literal",
+      "lit_type": "Integer",
+      "value": "21"
+    }
+  },
+  "limit": null
+}
+```
+
+4\. AnalyzedStmt:
+
+```json
+{
+  "type": "Select",
+  "select_query": {
+    "range_table": {
+      "table_id": 4,
+      "table_name": "users",
+      "heap_page_id": 7
+    },
+    "table_columns": [
+      {
+        "col_name": "id",
+        "type_id": 1,
+        "ordinal_position": 1
+      },
+      {
+        "col_name": "name",
+        "type_id": 2,
+        "ordinal_position": 2
+      },
+      {
+        "col_name": "age",
+        "type_id": 1,
+        "ordinal_position": 3
+      }
+    ],
+    "target_list": [
+      {
+        "name": "name",
+        "resno": 1,
+        "column": {
+          "col_name": "name",
+          "type_id": 2,
+          "ordinal_position": 2
+        }
+      }
+    ],
+    "where_clause": {
+      "node": "AnalyzedBinaryExpr",
+      "op": ">=",
+      "result_type": 1,
+      "lhs": {
+        "node": "AnalyzedColumnRef",
+        "result_type": 1,
+        "column": {
+          "col_name": "age",
+          "type_id": 1,
+          "ordinal_position": 3
+        }
+      },
+      "rhs": {
+        "node": "AnalyzedLiteral",
+        "result_type": 1,
+        "value": "21",
+        "lit_type": "Integer"
+      }
+    },
+    "limit_count": null
+  }
+}
+```
+
 # Summary
 
 The parser turns raw SQL strings into fully typed, catalog-validated representations in three clean stages. The lexer handles tokenisation and case-insensitive keyword recognition. The recursive-descent parser builds an AST that captures syntactic structure. The analyzer resolves names, checks types, and produces the `AnalyzedStmt` that the planner consumes. Each stage is independent and testable in isolation, and the three-stage design makes it straightforward to add new SQL features.
