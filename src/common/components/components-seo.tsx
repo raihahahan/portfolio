@@ -5,7 +5,7 @@ const SITE_NAME = "Raihan Rizqullah";
 export const SITE_URL = "https://mraihan.dev";
 export const DEFAULT_DESCRIPTION =
   "Software engineer portfolio featuring projects, technical writing, and experience in backend, distributed systems, and product engineering.";
-const DEFAULT_IMAGE = `${SITE_URL}/images/bg-component-light-lg-final.png`;
+const DEFAULT_IMAGE = `${SITE_URL}/images/final-xs-light.png`;
 
 type SeoProps = {
   title?: string;
