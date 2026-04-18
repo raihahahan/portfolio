@@ -4,7 +4,7 @@ import { makeSiteTitle } from "../../features/site/site-utils";
 const SITE_NAME = "Raihan Rizqullah";
 export const SITE_URL = "https://mraihan.dev";
 export const DEFAULT_DESCRIPTION =
-  "Software engineer portfolio featuring projects, technical writing, and experience in backend, distributed systems, and product engineering.";
+  "I'm Raihan Rizqullah, a Computer Science student at the National University of Singapore. This is where I share my learnings and projects as an aspiring software engineer.";
 const DEFAULT_IMAGE = `${SITE_URL}/images/final-xs-light.png`;
 
 type SeoProps = {
