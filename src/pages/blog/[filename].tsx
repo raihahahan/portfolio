@@ -50,7 +50,7 @@ const BlogPage = (props) => {
           },
           mainEntityOfPage: `https://mraihan.dev/blog/${data.post._sys.filename}`,
           url: `${SITE_URL}/blog/${data.post._sys.filename}`,
-          image: `${SITE_URL}/images/bg-component-light-lg-final.png`,
+          image: `${SITE_URL}/images/final-xs-light.png`,
         }}
       />
       <Head>

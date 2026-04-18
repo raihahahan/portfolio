@@ -33,7 +33,7 @@ export default function Home({
           "@type": "Person",
           name: "Raihan Rizqullah",
           url: "https://mraihan.dev",
-          image: "https://mraihan.dev/images/bg-component-light-lg-final.png",
+          image: "https://mraihan.dev/images/final-xs-light.png",
           sameAs: [
             process.env.NEXT_PUBLIC_GITHUB,
             process.env.NEXT_PUBLIC_LINKEDIN,
