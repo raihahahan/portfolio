@@ -116,12 +116,13 @@ export function MyFooter({ extraStyles }: { extraStyles?: CSSProperties }) {
         backgroundColor: colors.header,
         width: "100%",
         height: "auto",
+        minHeight: sm ? 72 : 88,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "row",
-        paddingTop: sm ? 20 : 0,
-        paddingBottom: sm ? 24 : 10,
+        paddingTop: sm ? 20 : 18,
+        paddingBottom: sm ? 24 : 18,
         ...extraStyles,
       }}
     >

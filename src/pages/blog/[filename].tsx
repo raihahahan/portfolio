@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Seo from "../../common/components/components-seo";
 import { useTina } from "tinacms/dist/react";
 import client from "../../../tina/__generated__/client";
 import HomeContentLayout from "../../features/home/home-layout";
@@ -20,6 +21,38 @@ const BlogPage = (props) => {
 
   return (
     <>
+      <Seo
+        title={data.post.title}
+        description={
+          data.post.excerpt ?? `Technical writing: ${data.post.title}`
+        }
+        path={`/blog/${data.post._sys.filename}`}
+        type="article"
+        publishedTime={data.post.published_at}
+        keywords={[
+          "technical blog",
+          "software engineering",
+          "system design",
+          "databases",
+          data.post.title,
+        ]}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: data.post.title,
+          description:
+            data.post.excerpt ?? `Technical writing: ${data.post.title}`,
+          datePublished: data.post.published_at,
+          author: {
+            "@type": "Person",
+            name: "Raihan Rizqullah",
+            url: "https://mraihan.dev",
+          },
+          mainEntityOfPage: `https://mraihan.dev/blog/${data.post._sys.filename}`,
+          url: `https://mraihan.dev/blog/${data.post._sys.filename}`,
+          image: "https://mraihan.dev/images/bg-component-light-lg-final.png",
+        }}
+      />
       <Head>
         {/* Tailwind CDN */}
         <link

@@ -8,22 +8,8 @@ export default class _Document extends Document {
 
   render() {
     return (
-      <Html>
+      <Html lang="en">
         <Head />
-        <meta
-          name="description"
-          content="Portfolio site for Raihan Rizqullah"
-        />
-        <meta
-          name="keywords"
-          content="nextjs, seo, web development, javascript, portfolio, typescript, python, software engineering, react, react native, ml"
-        />
-        <meta property="og:title" content="Raihan Rizqullah" />
-        <meta
-          property="og:description"
-          content="Portfolio site for Raihan Rizqullah"
-        />
-        <meta property="og:type" content="website" />
         <body>
           <Main />
           <NextScript />

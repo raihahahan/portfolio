@@ -1,5 +1,6 @@
 import { visit } from "unist-util-visit";
 import { Title } from "@mantine/core";
+import { IconLink } from "@tabler/icons";
 
 export function extractHeadings(markdown: any) {
   const headings: { text: string; id: string; level: number }[] = [];
@@ -31,12 +32,31 @@ export const constructHeading = (props, level) => {
   const id = extractHeaderId(props);
 
   return (
-    <Title
-      order={level}
+    <div
       id={id}
-      style={{ color: "orangered" }}
       className="mt-6 mb-6"
-      {...props}
-    />
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+      }}
+    >
+      <Title order={level} style={{ color: "orangered", margin: 0 }} {...props} />
+      <a
+        href={`#${id}`}
+        aria-label={`Link to section ${id}`}
+        title="Copy section link"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "gray",
+          textDecoration: "none",
+          cursor: "pointer",
+        }}
+      >
+        <IconLink size={16} />
+      </a>
+    </div>
   );
 };

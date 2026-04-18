@@ -1,4 +1,5 @@
 import { GetStaticProps } from "next";
+import Seo from "../common/components/components-seo";
 import HomeContents from "../features/home/home-contents";
 import {
   fetchHomeAbout,
@@ -13,7 +14,36 @@ export default function Home({
   tagline: string;
   homeAbout: string;
 }) {
-  return <HomeContents tagline={tagline} homeAbout={homeAbout} />;
+  return (
+    <>
+      <Seo
+        description="Portfolio of Raihan Rizqullah, featuring backend systems, distributed systems, mobile apps, and technical writing."
+        path="/"
+        keywords={[
+          "Raihan Rizqullah",
+          "software engineer",
+          "portfolio",
+          "distributed systems",
+          "backend engineer",
+          "mobile apps",
+          "technical blog",
+        ]}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: "Raihan Rizqullah",
+          url: "https://mraihan.dev",
+          image: "https://mraihan.dev/images/bg-component-light-lg-final.png",
+          sameAs: [
+            process.env.NEXT_PUBLIC_GITHUB,
+            process.env.NEXT_PUBLIC_LINKEDIN,
+          ].filter(Boolean),
+          jobTitle: "Software Engineer",
+        }}
+      />
+      <HomeContents tagline={tagline} homeAbout={homeAbout} />
+    </>
+  );
 }
 
 export const getStaticProps: GetStaticProps = async () => {

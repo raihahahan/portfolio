@@ -27,6 +27,35 @@ import { constructHeading, isHeaderLink } from "./blog-utils";
 import { TinaMarkdown } from "tinacms/dist/rich-text";
 import useGlobalMediaQuery from "../../common/hooks/useGlobalMediaQueries";
 
+function BlogContentLink(props) {
+  const { siteColors } = useTheme();
+
+  return (
+    <Anchor
+      {...props}
+      className={`cursor-pointer ${props.className ?? ""}`}
+      style={{
+        ...(props.style || {}),
+        color: siteColors.text.links,
+        textDecoration: "none",
+        transition: "color 150ms ease",
+      }}
+      onMouseEnter={(event) => {
+        props.onMouseEnter?.(event);
+        event.currentTarget.style.textDecoration = "underline";
+      }}
+      onMouseLeave={(event) => {
+        props.onMouseLeave?.(event);
+        event.currentTarget.style.textDecoration = "none";
+      }}
+      target={isHeaderLink(props) ? undefined : "_blank"}
+      id={isHeaderLink(props) ? (props.url as string).substring(1) : undefined}
+      rel="noopener noreferrer"
+      href={props.url}
+    />
+  );
+}
+
 export const Codeblock = ({ children, language }) => {
   return (
     <div className="w-full overflow-x-auto">
@@ -344,16 +373,7 @@ const components = (siteColors) => ({
   ul: (props) => <ul className="list-disc ml-5 mt-4" {...props} />, // Bullet lists
   li: (props) => <li className="mt-1" {...props} />, // List items spacing
   br: (props) => <br className="my-2" {...props} />,
-  a: (props) => (
-    <Anchor
-      className="text-orangered-500 hover:text-orangered-700 transition duration-200"
-      target={isHeaderLink(props) ? undefined : "_blank"}
-      id={isHeaderLink(props) ? (props.url as string).substring(1) : undefined}
-      rel="noopener noreferrer"
-      href={props.url}
-      {...props}
-    />
-  ),
+  a: (props) => <BlogContentLink {...props} />,
   code_block: (props) => {
     return <Codeblock language={props.lang}>{props.value}</Codeblock>;
   },
