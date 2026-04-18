@@ -1,5 +1,5 @@
 import { GetStaticProps } from "next";
-import Seo from "../common/components/components-seo";
+import Seo, { DEFAULT_DESCRIPTION } from "../common/components/components-seo";
 import HomeContents from "../features/home/home-contents";
 import {
   fetchHomeAbout,
@@ -17,7 +17,7 @@ export default function Home({
   return (
     <>
       <Seo
-        description="Portfolio of Raihan Rizqullah, featuring backend systems, distributed systems, mobile apps, and technical writing."
+        description={DEFAULT_DESCRIPTION}
         path="/"
         keywords={[
           "Raihan Rizqullah",

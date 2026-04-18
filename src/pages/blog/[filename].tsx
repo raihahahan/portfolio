@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Seo from "../../common/components/components-seo";
+import Seo, { SITE_URL } from "../../common/components/components-seo";
 import { useTina } from "tinacms/dist/react";
 import client from "../../../tina/__generated__/client";
 import HomeContentLayout from "../../features/home/home-layout";
@@ -49,8 +49,8 @@ const BlogPage = (props) => {
             url: "https://mraihan.dev",
           },
           mainEntityOfPage: `https://mraihan.dev/blog/${data.post._sys.filename}`,
-          url: `https://mraihan.dev/blog/${data.post._sys.filename}`,
-          image: "https://mraihan.dev/images/bg-component-light-lg-final.png",
+          url: `${SITE_URL}/blog/${data.post._sys.filename}`,
+          image: `${SITE_URL}/images/bg-component-light-lg-final.png`,
         }}
       />
       <Head>

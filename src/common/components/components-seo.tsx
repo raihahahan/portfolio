@@ -2,10 +2,10 @@ import Head from "next/head";
 import { makeSiteTitle } from "../../features/site/site-utils";
 
 const SITE_NAME = "Raihan Rizqullah";
-const SITE_URL = "https://mraihan.dev";
-const DEFAULT_DESCRIPTION =
-  "Software engineer portfolio of Raihan Rizqullah, featuring projects, technical writing, and experience in backend, distributed systems, and product engineering.";
-const DEFAULT_IMAGE = `${SITE_URL}/images/face.png`;
+export const SITE_URL = "https://mraihan.dev";
+export const DEFAULT_DESCRIPTION =
+  "Software engineer portfolio featuring projects, technical writing, and experience in backend, distributed systems, and product engineering.";
+const DEFAULT_IMAGE = `${SITE_URL}/images/bg-component-light-lg-final.png`;
 
 type SeoProps = {
   title?: string;
@@ -52,11 +52,17 @@ export default function Seo({
         name="robots"
         content={noindex ? "noindex, nofollow" : "index, follow"}
       />
-      <meta name="googlebot" content={noindex ? "noindex, nofollow" : "index, follow"} />
+      <meta
+        name="googlebot"
+        content={noindex ? "noindex, nofollow" : "index, follow"}
+      />
       <meta name="author" content={SITE_NAME} />
       <meta name="creator" content={SITE_NAME} />
       <meta name="publisher" content={SITE_NAME} />
-      <meta name="format-detection" content="telephone=no, address=no, email=no" />
+      <meta
+        name="format-detection"
+        content="telephone=no, address=no, email=no"
+      />
       <meta name="theme-color" content="#0e0e0e" />
       {keywords.length > 0 ? (
         <meta name="keywords" content={keywords.join(", ")} />
