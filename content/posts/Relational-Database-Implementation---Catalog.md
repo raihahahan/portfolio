@@ -87,7 +87,7 @@ bool Catalog::IsInitialised() const {
 }
 ```
 
-If the file is empty, or if the magic number does not match, the database is treated as uninitialised. This check is deliberately simple and conservative: if anything looks wrong, the system assumes that bootstrapping is required.\
+If the file is empty, or if the magic number does not match, the database is treated as uninitialised. This check is simple and conservative. If anything looks wrong, the system assumes that bootstrapping is required.\
 \
 The presence of the correct magic number on page 0 becomes the single source of truth for whether catalog metadata exists on disk.
 
@@ -189,7 +189,7 @@ assert(p3 == DB_TYPES_ROOT_PAGE_ID);
 }
 ```
 
-Each root page is then initialised as an empty heap page using the same heap page layout as user tables. This is a deliberate design choice: system catalogs are not stored using any special page format.
+Each root page is then initialised as an empty heap page using the same heap page layout as user tables. This means system catalogs are not stored using any special page format.
 
 ### Creating catalog table abstractions
 
@@ -266,7 +266,7 @@ It also clearly separates one-time initialisation from normal database operation
 
 The catalog tables are where metadata actually lives. Tables, columns, and types are all stored as records inside heap files, and the catalog layer provides structured access to this metadata. \
 \
-At this stage of the system, catalog access is deliberately simple. There is no query optimiser or execution engine yet, so all catalog lookups are implemented using explicit iteration over heap files. While this would be inefficient for user data, it is a reasonable and pragmatic choice for metadata, which is typically small and accessed infrequently.\
+At this stage of the system, catalog access is simple. There is no query optimiser or execution engine yet, so all catalog lookups are implemented using explicit iteration over heap files. While this would be inefficient for user data, it is a reasonable and pragmatic choice for metadata, which is typically small and accessed infrequently.\
 \
 This also keeps the catalog layer independent of the query engine, avoiding circular dependencies during early bootstrapping.
 
@@ -394,7 +394,7 @@ static_assert(!std::is_trivially_copyable_v<Row>,
   "Catalog rows must use explicit codecs, not memcpy");
 ```
 
-This is a deliberate design choice. Catalog records should be encoded explicitly, rather than relying on raw memory copies, to make layout assumptions visible and auditable. The encoding logic itself is handled by the codec layer, which is explained in the next section.\
+Catalog records should be encoded explicitly, rather than relying on raw memory copies, to make layout assumptions visible and auditable. The encoding logic itself is handled by the codec layer, which is explained in the next section.\
 \
 Concrete catalog tables then inherit from this base using a [CRTP-style pattern](https://stackoverflow.com/a/4173298):
 
@@ -435,7 +435,7 @@ The `Codec` class is responsible for translating structured catalog metadata (i.
 
 ## Why not `memcpy` entire structs?
 
-A tempting approach would be to write catalog structs directly to disk using memcpy. This is deliberately avoided.\
+A tempting approach would be to write catalog structs directly to disk using memcpy. This is avoided.\
 \
 Most table rows contain variable-length fields such as `std::string`, which manage heap-allocated memory internally. Blindly copying such objects would serialise pointer values rather than the underlying data, producing invalid on-disk representations. Even for structs without dynamic fields, layout and padding are easy to get wrong unless explicitly constrained.\
 \
